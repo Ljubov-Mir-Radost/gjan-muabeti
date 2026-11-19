@@ -3,142 +3,267 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Архива за превод — Видеа и Мурли</title>
+  <title>Гјан Архива — Видеа и Мурли</title>
   <style>
     :root {
-      --bg: #f4f6f9;
+      color-scheme: light;
+      --bg: #f3f5fa;
+      --bg-accent: radial-gradient(circle at top right, rgba(99, 102, 241, 0.08), transparent 45%);
       --card: #ffffff;
-      --text: #1e293b;
+      --surface: #f8fafc;
+      --surface-hover: #f1f5f9;
+      --text: #0f172a;
+      --text-soft: #334155;
       --muted: #64748b;
       --border: #e2e8f0;
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --primary-soft: #eff6ff;
+      --border-strong: #cbd5e1;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-soft: #eef2ff;
+      --primary-border: #c7d2fe;
       --success: #15803d;
       --success-bg: #f0fdf4;
+      --success-border: #bbf7d0;
       --warn: #b45309;
       --warn-bg: #fffbeb;
+      --warn-border: #fde68a;
+      --info: #1d4ed8;
+      --info-bg: #eff6ff;
+      --info-border: #bfdbfe;
       --danger: #b91c1c;
       --danger-bg: #fef2f2;
-      --radius: 12px;
+      --danger-border: #fecaca;
+      --shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #090e1a;
+      --bg-accent: radial-gradient(circle at top right, rgba(99, 102, 241, 0.14), transparent 50%);
+      --card: #111827;
+      --surface: #182235;
+      --surface-hover: #1f2c44;
+      --text: #f1f5f9;
+      --text-soft: #cbd5e1;
+      --muted: #94a3b8;
+      --border: #22304a;
+      --border-strong: #334668;
+      --primary: #818cf8;
+      --primary-hover: #6366f1;
+      --primary-soft: rgba(129, 140, 248, 0.15);
+      --primary-border: rgba(129, 140, 248, 0.35);
+      --success: #4ade80;
+      --success-bg: rgba(34, 197, 94, 0.12);
+      --success-border: rgba(34, 197, 94, 0.3);
+      --warn: #fbbf24;
+      --warn-bg: rgba(245, 158, 11, 0.12);
+      --warn-border: rgba(245, 158, 11, 0.3);
+      --info: #60a5fa;
+      --info-bg: rgba(59, 130, 246, 0.14);
+      --info-border: rgba(59, 130, 246, 0.32);
+      --danger: #f87171;
+      --danger-bg: rgba(239, 68, 68, 0.13);
+      --danger-border: rgba(239, 68, 68, 0.32);
+      --shadow: 0 10px 34px rgba(0, 0, 0, 0.35);
+      --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.28);
     }
 
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      background-image: var(--bg-accent);
       color: var(--text);
-      line-height: 1.5;
-      padding: 16px;
+      line-height: 1.55;
+      padding: 18px 14px 56px;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
 
     .container {
-      max-width: 680px;
-      margin: 12px auto 48px;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .auth-wrap {
+      max-width: 440px;
+      margin: 48px auto 0;
     }
 
     .card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 24px;
-      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+      padding: 26px;
+      box-shadow: var(--shadow);
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    /* Горен хедер */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+      flex-shrink: 0;
     }
 
     h1 {
-      margin: 0 0 6px;
-      font-size: 1.35rem;
+      margin: 0;
+      font-size: 1.28rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
     .version-tag {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 600;
       color: var(--muted);
-      background: #f1f5f9;
+      background: var(--surface);
       border: 1px solid var(--border);
       padding: 2px 7px;
       border-radius: 99px;
     }
 
-    .subtitle {
-      margin: 0 0 20px;
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
     .user-badge {
-      font-size: 0.88rem;
+      font-size: 0.84rem;
       color: var(--muted);
+      margin-top: 2px;
+    }
+    .user-badge strong { color: var(--text); font-weight: 600; }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .user-badge strong { color: var(--text); }
-
-    .btn-link {
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-size: 0.85rem;
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 38px;
+      padding: 0 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-soft);
+      font-size: 0.84rem;
+      font-weight: 600;
       cursor: pointer;
-      text-decoration: underline;
-      padding: 4px;
+      transition: 0.15s ease;
     }
-    .btn-link:hover { color: var(--danger); }
+    .icon-btn:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-strong);
+      color: var(--text);
+    }
 
+    .icon-btn.danger:hover {
+      color: var(--danger);
+      border-color: var(--danger-border);
+      background: var(--danger-bg);
+    }
+
+    /* Главни табови */
     .tabs {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 22px;
-      background: #e9eef5;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
       padding: 5px;
-      border-radius: 10px;
+      border-radius: 13px;
     }
 
     .tab-btn {
       border: none;
       background: transparent;
       padding: 10px 12px;
-      border-radius: 8px;
-      font-size: 0.95rem;
+      border-radius: 9px;
+      font-size: 0.92rem;
       font-weight: 600;
       color: var(--muted);
       cursor: pointer;
       transition: 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
     }
+
+    .tab-btn:hover { color: var(--text); }
 
     .tab-btn.active {
       background: var(--card);
       color: var(--primary);
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      box-shadow: var(--shadow-sm);
     }
 
-    .field {
-      margin-bottom: 18px;
+    .count-pill {
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: 99px;
+      background: var(--primary-soft);
+      color: var(--primary);
     }
+
+    /* Полиња во форма */
+    .form-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .field { margin-bottom: 18px; }
 
     label {
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       margin-bottom: 6px;
       gap: 8px;
       flex-wrap: wrap;
+      color: var(--text);
     }
 
     .label-right {
@@ -150,103 +275,109 @@
 
     .hint {
       font-weight: 400;
-      font-size: 0.8rem;
+      font-size: 0.79rem;
       color: var(--muted);
     }
 
     .auto-badge {
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 600;
       color: var(--primary);
       background: var(--primary-soft);
-      border: 1px solid #bfdbfe;
+      border: 1px solid var(--primary-border);
       padding: 2px 8px;
       border-radius: 99px;
       cursor: default;
     }
 
-    .auto-badge.clickable {
-      cursor: pointer;
-    }
-    .auto-badge.clickable:hover {
-      background: #dbeafe;
-    }
+    .auto-badge.clickable { cursor: pointer; }
+    .auto-badge.clickable:hover { filter: brightness(1.08); }
 
     input[type="text"],
     input[type="url"],
     input[type="password"],
+    input[type="search"],
+    select,
     textarea {
       width: 100%;
       padding: 11px 13px;
       border: 1px solid var(--border);
-      border-radius: 9px;
-      font-size: 16px;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
       font-family: inherit;
       color: var(--text);
-      background: #fff;
-      transition: border-color 0.15s;
+      background: var(--surface);
+      transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
     }
 
-    input:focus, textarea:focus {
+    input:focus, select:focus, textarea:focus {
       outline: none;
+      background: var(--card);
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+      box-shadow: 0 0 0 3px var(--primary-soft);
     }
 
     textarea {
       resize: vertical;
-      min-height: 105px;
+      min-height: 110px;
     }
 
+    /* YouTube картичка за преглед */
     .yt-preview {
       display: none;
       gap: 14px;
       padding: 12px;
-      background: #f8fafc;
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      margin-bottom: 16px;
+      border-radius: 12px;
+      margin-bottom: 18px;
       align-items: center;
     }
-
     .yt-preview.visible { display: flex; }
 
-    .yt-preview img {
-      width: 128px;
-      height: 72px;
-      object-fit: cover;
-      border-radius: 7px;
+    .yt-thumb-wrap {
+      position: relative;
+      width: 136px;
+      aspect-ratio: 16/9;
       flex-shrink: 0;
-      background: #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--border);
+    }
+    .yt-thumb-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .duration-overlay {
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+      background: rgba(15, 23, 42, 0.88);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 5px;
+      letter-spacing: 0.02em;
     }
 
     .yt-meta { min-width: 0; flex: 1; }
-
     .yt-title {
       font-weight: 600;
-      font-size: 0.93rem;
+      font-size: 0.9rem;
       margin-bottom: 4px;
+      word-break: break-word;
+      color: var(--text);
+    }
+    .yt-orig-caption {
+      font-size: 0.78rem;
+      color: var(--muted);
       word-break: break-word;
     }
 
-    .yt-sub {
-      font-size: 0.83rem;
-      color: var(--muted);
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .duration-pill {
-      background: #1e293b;
-      color: #fff;
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 99px;
-    }
-
+    /* Брзи хаштаг чипови од насловот */
     .quick-extract-row {
       display: flex;
       flex-wrap: wrap;
@@ -254,39 +385,38 @@
       gap: 6px;
       margin-top: 8px;
     }
-
     .quick-extract-label {
-      font-size: 0.78rem;
+      font-size: 0.77rem;
       color: var(--muted);
     }
-
     .quick-chip {
-      border: 1px dashed #93c5fd;
+      border: 1px dashed var(--primary-border);
       background: var(--primary-soft);
       color: var(--primary);
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
       padding: 3px 9px;
       border-radius: 99px;
       cursor: pointer;
     }
-    .quick-chip:hover { background: #dbeafe; }
+    .quick-chip:hover { filter: brightness(1.08); }
 
+    /* AI статус лента */
     .ai-status {
       display: none;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      font-size: 0.82rem;
-      padding: 7px 11px;
-      border-radius: 8px;
-      margin-bottom: 7px;
+      font-size: 0.81rem;
+      padding: 8px 12px;
+      border-radius: 9px;
+      margin-bottom: 8px;
+      border: 1px solid transparent;
     }
-
     .ai-status.visible { display: flex; }
-    .ai-status.loading { background: var(--primary-soft); color: var(--primary); }
-    .ai-status.success { background: var(--success-bg); color: var(--success); }
-    .ai-status.warn { background: var(--warn-bg); color: var(--warn); }
+    .ai-status.loading { background: var(--primary-soft); color: var(--primary); border-color: var(--primary-border); }
+    .ai-status.success { background: var(--success-bg); color: var(--success); border-color: var(--success-border); }
+    .ai-status.warn { background: var(--warn-bg); color: var(--warn); border-color: var(--warn-border); }
 
     .ai-status-left {
       display: flex;
@@ -303,14 +433,13 @@
       animation: spin 0.7s linear infinite;
       flex-shrink: 0;
     }
-
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .small-action-btn {
       border: 1px solid currentColor;
       background: transparent;
       color: inherit;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 600;
       padding: 3px 8px;
       border-radius: 6px;
@@ -318,6 +447,7 @@
       white-space: nowrap;
     }
 
+    /* Чипови */
     .chips-wrap {
       display: flex;
       flex-wrap: wrap;
@@ -327,18 +457,16 @@
 
     .chip {
       border: 1px solid var(--border);
-      background: #f8fafc;
-      color: var(--text);
-      font-size: 0.82rem;
+      background: var(--surface);
+      color: var(--text-soft);
+      font-size: 0.8rem;
       padding: 4px 10px;
       border-radius: 99px;
       cursor: pointer;
       transition: 0.12s;
       user-select: none;
     }
-
-    .chip:hover { border-color: var(--primary); }
-
+    .chip:hover { border-color: var(--primary); color: var(--primary); }
     .chip.selected {
       background: var(--primary);
       border-color: var(--primary);
@@ -358,17 +486,16 @@
       gap: 6px;
       background: var(--primary-soft);
       color: var(--primary);
-      border: 1px solid #bfdbfe;
-      font-size: 0.84rem;
+      border: 1px solid var(--primary-border);
+      font-size: 0.82rem;
       font-weight: 600;
       padding: 4px 10px;
       border-radius: 99px;
     }
-
     .active-tag button {
       border: none;
       background: none;
-      color: var(--primary);
+      color: inherit;
       font-weight: 700;
       cursor: pointer;
       padding: 0;
@@ -376,39 +503,330 @@
       line-height: 1;
     }
 
+    /* Известувања */
     .alert {
       display: none;
       padding: 12px 14px;
-      border-radius: 9px;
-      font-size: 0.9rem;
+      border-radius: 10px;
+      font-size: 0.89rem;
       margin-bottom: 16px;
+      border: 1px solid transparent;
     }
     .alert.visible { display: block; }
-    .alert.error { background: var(--danger-bg); color: var(--danger); border: 1px solid #fecaca; }
-    .alert.success { background: var(--success-bg); color: var(--success); border: 1px solid #bbf7d0; }
+    .alert.error { background: var(--danger-bg); color: var(--danger); border-color: var(--danger-border); }
+    .alert.success { background: var(--success-bg); color: var(--success); border-color: var(--success-border); }
 
+    /* Главно копче */
     .btn-primary {
       width: 100%;
       border: none;
-      background: var(--primary);
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
       color: #fff;
-      font-size: 1rem;
+      font-size: 0.98rem;
       font-weight: 600;
       padding: 13px 18px;
-      border-radius: 10px;
+      border-radius: 11px;
       cursor: pointer;
-      transition: background 0.15s;
+      transition: transform 0.1s, filter 0.15s;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25);
+    }
+    .btn-primary:hover:not(:disabled) { filter: brightness(1.08); }
+    .btn-primary:active:not(:disabled) { transform: scale(0.995); }
+    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; box-shadow: none; }
+
+    /* ================= АРХИВА И ПРЕБАРУВАЊЕ ================= */
+    .archive-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
     }
 
-    .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
-    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+    .sub-tabs {
+      display: inline-flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 4px;
+      border-radius: 10px;
+      gap: 4px;
+    }
+
+    .sub-tab-btn {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 7px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sub-tab-btn.active {
+      background: var(--card);
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .filters-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .search-row {
+      margin-bottom: 10px;
+    }
+
+    .filters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+    }
+
+    .filters-grid select {
+      padding: 9px 11px;
+      font-size: 0.86rem;
+      background: var(--card);
+    }
+
+    .tag-filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .results-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 0.84rem;
+      color: var(--muted);
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .clear-filters-btn {
+      border: none;
+      background: none;
+      color: var(--primary);
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 2px 6px;
+    }
+    .clear-filters-btn:hover { text-decoration: underline; }
+
+    .archive-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .item-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 15px;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+    .item-card:hover {
+      border-color: var(--border-strong);
+    }
+
+    .video-card-layout {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .card-thumb-link {
+      position: relative;
+      width: 200px;
+      aspect-ratio: 16/9;
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: var(--border);
+      display: block;
+    }
+    .card-thumb-link img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.2s;
+    }
+    .card-thumb-link:hover img { transform: scale(1.03); }
+
+    .card-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+    .card-title:hover { color: var(--primary); }
+
+    .status-select {
+      width: auto;
+      padding: 5px 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border-radius: 99px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .status-select.st-todo {
+      background: var(--warn-bg);
+      color: var(--warn);
+      border-color: var(--warn-border);
+    }
+    .status-select.st-progress {
+      background: var(--info-bg);
+      color: var(--info);
+      border-color: var(--info-border);
+    }
+    .status-select.st-done {
+      background: var(--success-bg);
+      color: var(--success);
+      border-color: var(--success-border);
+    }
+
+    .meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 9px;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 7px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text-soft);
+      cursor: pointer;
+    }
+    .meta-pill:hover { border-color: var(--primary); color: var(--primary); }
+
+    .card-desc {
+      font-size: 0.88rem;
+      color: var(--text-soft);
+      margin: 0 0 10px;
+      white-space: pre-line;
+    }
+
+    .card-note {
+      font-size: 0.82rem;
+      color: var(--muted);
+      background: var(--card);
+      border-left: 3px solid var(--primary);
+      padding: 6px 10px;
+      border-radius: 0 7px 7px 0;
+      margin-bottom: 10px;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+
+    .card-tag {
+      border: 1px solid var(--primary-border);
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 0.77rem;
+      font-weight: 600;
+      padding: 2px 9px;
+      border-radius: 99px;
+      cursor: pointer;
+    }
+    .card-tag:hover { filter: brightness(1.08); }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding-top: 9px;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .mini-btn {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text-soft);
+      font-size: 0.77rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 7px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .mini-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    .empty-state {
+      text-align: center;
+      padding: 42px 20px;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px dashed var(--border-strong);
+      border-radius: 14px;
+      font-size: 0.92rem;
+    }
 
     .hidden { display: none !important; }
 
-    @media (max-width: 520px) {
+    @media (max-width: 680px) {
       .card { padding: 18px; }
+      .grid-2 { grid-template-columns: 1fr; gap: 0; }
+      .video-card-layout { flex-direction: column; }
+      .card-thumb-link { width: 100%; }
       .yt-preview { flex-direction: column; align-items: flex-start; }
-      .yt-preview img { width: 100%; height: auto; aspect-ratio: 16/9; }
+      .yt-thumb-wrap { width: 100%; }
+      .tab-btn { font-size: 0.84rem; padding: 9px 6px; }
     }
   </style>
 </head>
@@ -416,165 +834,243 @@
   <div class="container">
 
     <!-- ЕКРАН ЗА НАЈАВА -->
-    <div id="authCard" class="card">
-      <h1>Архива за превод <span class="version-tag">v2.2</span></h1>
-      <p class="subtitle">Внеси го заедничкиот пристапен код и твоето име (се памтат во овој прелистувач).</p>
-
-      <div id="authError" class="alert error"></div>
-
-      <form id="authForm">
-        <div class="field">
-          <label for="inputName">Твое име</label>
-          <input type="text" id="inputName" placeholder="На пр. Ана" required />
+    <div id="authCard" class="auth-wrap">
+      <div class="card">
+        <div class="topbar" style="margin-bottom: 18px;">
+          <div class="brand">
+            <div class="brand-icon">✦</div>
+            <div>
+              <h1>Гјан Архива <span class="version-tag">v3.0</span></h1>
+              <div class="user-badge">Видеа за превод и Мурли</div>
+            </div>
+          </div>
+          <button type="button" class="icon-btn theme-toggle-btn" title="Промени тема">🌙</button>
         </div>
-        <div class="field">
-          <label for="inputCode">Пристапен код</label>
-          <input type="password" id="inputCode" placeholder="Внеси код..." required />
-        </div>
-        <button type="submit" id="authBtn" class="btn-primary">Влези</button>
-      </form>
+
+        <div id="authError" class="alert error"></div>
+
+        <form id="authForm">
+          <div class="field">
+            <label for="inputName">Твое име</label>
+            <input type="text" id="inputName" placeholder="На пр. Ана" required />
+          </div>
+          <div class="field">
+            <label for="inputCode">Пристапен код</label>
+            <input type="password" id="inputCode" placeholder="Внеси код..." required />
+          </div>
+          <button type="submit" id="authBtn" class="btn-primary">Влези</button>
+        </form>
+      </div>
     </div>
 
     <!-- ГЛАВНА АПЛИКАЦИЈА -->
     <div id="appCard" class="card hidden">
       <div class="topbar">
-        <div>
-          <h1>Додади во архива <span class="version-tag">v2.2</span></h1>
-          <div class="user-badge">Најавен/а како: <strong id="displayUser"></strong></div>
+        <div class="brand">
+          <div class="brand-icon">✦</div>
+          <div>
+            <h1>Гјан Архива <span class="version-tag">v3.0</span></h1>
+            <div class="user-badge">Најавен/а како: <strong id="displayUser"></strong></div>
+          </div>
         </div>
-        <button type="button" class="btn-link" id="logoutBtn">Одјави се</button>
+        <div class="topbar-actions">
+          <button type="button" class="icon-btn theme-toggle-btn" title="Светла / Ноќна тема">🌙</button>
+          <button type="button" class="icon-btn danger" id="logoutBtn">Одјави се</button>
+        </div>
       </div>
 
       <div class="tabs">
-        <button type="button" class="tab-btn active" data-tab="video">YouTube Видео</button>
-        <button type="button" class="tab-btn" data-tab="murli">Мурли</button>
+        <button type="button" class="tab-btn active" data-tab="video">+ Видео</button>
+        <button type="button" class="tab-btn" data-tab="murli">+ Мурли</button>
+        <button type="button" class="tab-btn" data-tab="archive">
+          Архива <span id="archiveTotalBadge" class="count-pill">0</span>
+        </button>
       </div>
 
       <div id="globalAlert" class="alert"></div>
 
-      <!-- ФОРМА 1: YOUTUBE ВИДЕО -->
-      <form id="videoForm">
-        <div class="field">
-          <label for="ytUrl">
-            YouTube линк
-            <span class="hint">Насловот, траењето, предавачот и темата се полнат веднаш</span>
-          </label>
-          <input type="url" id="ytUrl" placeholder="[https://www.youtube.com/watch?v=](https://www.youtube.com/watch?v=)..." required />
-        </div>
+      <!-- ТАБ 1: ДОДАДИ YOUTUBE ВИДЕО -->
+      <div id="videoTab" class="form-wrap">
+        <form id="videoForm">
+          <div class="field">
+            <label for="ytUrl">
+              YouTube линк
+              <span class="hint">Насловот, траењето, предавачот и темата се полнат веднаш</span>
+            </label>
+            <input type="url" id="ytUrl" placeholder="[https://www.youtube.com/watch?v=](https://www.youtube.com/watch?v=)..." required />
+          </div>
 
-        <div id="ytDuplicateAlert" class="alert error"></div>
+          <div id="ytDuplicateAlert" class="alert error"></div>
 
-        <div id="ytPreview" class="yt-preview">
-          <img id="ytThumb" src="" alt="Преглед на видео" />
-          <div class="yt-meta">
-            <div id="ytTitleText" class="yt-title"></div>
-            <div class="yt-sub">
-              <span id="ytDurationBadge" class="duration-pill"></span>
-              <span id="ytChannelText"></span>
+          <div id="ytPreview" class="yt-preview">
+            <div class="yt-thumb-wrap">
+              <img id="ytThumb" src="" alt="Преглед" />
+              <span id="ytDurationBadge" class="duration-overlay"></span>
+            </div>
+            <div class="yt-meta">
+              <div id="ytChannelText" class="yt-title"></div>
+              <div id="ytFullTitleText" class="yt-orig-caption"></div>
             </div>
           </div>
-        </div>
 
-        <div class="field">
-          <label for="ytTitleInput">
-            Наслов на видеото
-            <span class="hint">Се вчитува автоматски (можеш да го дотераш)</span>
-          </label>
-          <input type="text" id="ytTitleInput" placeholder="Насловот ќе се појави веднаш по внесување на линкот..." />
-          <div id="titleQuickTags" class="quick-extract-row hidden"></div>
-        </div>
-
-        <div class="field">
-          <label for="ytSpeaker">
-            Предавач
-            <span id="speakerAutoHint" class="auto-badge hidden"></span>
-          </label>
-          <input type="text" id="ytSpeaker" list="speakersDatalist" placeholder="Избери подолу или внеси нов..." required />
-          <datalist id="speakersDatalist"></datalist>
-          <div id="speakerChips" class="chips-wrap"></div>
-        </div>
-
-        <div class="field">
-          <label for="ytTopic">
-            Тема
-            <span id="topicAutoHint" class="auto-badge hidden"></span>
-          </label>
-          <input type="text" id="ytTopic" list="topicsDatalist" placeholder="Избери подолу или внеси нова..." required />
-          <datalist id="topicsDatalist"></datalist>
-          <div id="videoTopicChips" class="chips-wrap"></div>
-        </div>
-
-        <div class="field">
-          <label for="ytTagInput">
-            Хаштагови
-            <span class="label-right">
-              <span id="tagsAutoHint" class="auto-badge hidden"></span>
-              <span class="hint">Нов таг со Enter или запирка</span>
-            </span>
-          </label>
-          <div id="ytSelectedTags" class="selected-tags-box"></div>
-          <input type="text" id="ytTagInput" placeholder="На пр. Mansa Sakash (Enter за #MansaSakash)" />
-          <div id="videoTagChips" class="chips-wrap"></div>
-        </div>
-
-        <div class="field">
-          <label for="ytDesc">
-            Опис / Резиме
-            <span class="hint">Можеш слободно да го уредиш</span>
-          </label>
-          <div id="aiStatus" class="ai-status">
-            <div class="ai-status-left">
-              <div id="aiSpinner" class="spinner hidden"></div>
-              <span id="aiStatusText"></span>
-            </div>
-            <button type="button" id="aiActionBtn" class="small-action-btn hidden"></button>
+          <div class="field">
+            <label for="ytTitleInput">
+              Наслов на видеото (исчистен)
+              <span id="titleModeBadge" class="auto-badge clickable hidden">Користи цел наслов</span>
+            </label>
+            <input type="text" id="ytTitleInput" placeholder="Англискиот чист наслов ќе се појави тука..." required />
+            <div id="titleQuickTags" class="quick-extract-row hidden"></div>
           </div>
-          <textarea id="ytDesc" placeholder="Овде автоматски ќе се појави краткото AI резиме..."></textarea>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="ytSpeaker">
+                Предавач
+                <span id="speakerAutoHint" class="auto-badge hidden"></span>
+              </label>
+              <input type="text" id="ytSpeaker" list="speakersDatalist" placeholder="Избери или внеси..." required />
+              <datalist id="speakersDatalist"></datalist>
+              <div id="speakerChips" class="chips-wrap"></div>
+            </div>
+
+            <div class="field">
+              <label for="ytTopic">
+                Тема
+                <span id="topicAutoHint" class="auto-badge hidden"></span>
+              </label>
+              <input type="text" id="ytTopic" list="topicsDatalist" placeholder="Избери или внеси..." required />
+              <datalist id="topicsDatalist"></datalist>
+              <div id="videoTopicChips" class="chips-wrap"></div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="ytTagInput">
+              Хаштагови
+              <span class="label-right">
+                <span id="tagsAutoHint" class="auto-badge hidden"></span>
+                <span class="hint">Enter или запирка за нов таг</span>
+              </span>
+            </label>
+            <div id="ytSelectedTags" class="selected-tags-box"></div>
+            <input type="text" id="ytTagInput" placeholder="На пр. Mansa Sakash (Enter за #MansaSakash)" />
+            <div id="videoTagChips" class="chips-wrap"></div>
+          </div>
+
+          <div class="field">
+            <label for="ytDesc">
+              Опис / Резиме
+              <span class="hint">Слободно можеш да го дотераш</span>
+            </label>
+            <div id="aiStatus" class="ai-status">
+              <div class="ai-status-left">
+                <div id="aiSpinner" class="spinner hidden"></div>
+                <span id="aiStatusText"></span>
+              </div>
+              <button type="button" id="aiActionBtn" class="small-action-btn hidden"></button>
+            </div>
+            <textarea id="ytDesc" placeholder="Овде автоматски ќе се појави краткото AI резиме..."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="ytNote">Забелешка <span class="hint">(опционално)</span></label>
+            <input type="text" id="ytNote" placeholder="На пр. приоритет, интересен дел од 12:30..." />
+          </div>
+
+          <button type="submit" id="saveVideoBtn" class="btn-primary">Зачувај видео</button>
+        </form>
+      </div>
+
+      <!-- ТАБ 2: ДОДАДИ МУРЛИ -->
+      <div id="murliTab" class="form-wrap hidden">
+        <form id="murliForm">
+          <div class="field">
+            <label for="murliUrl">Линк до Мурли</label>
+            <input type="url" id="murliUrl" placeholder="https://..." required />
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="murliTitle">Наслов / Датум на Мурли</label>
+              <input type="text" id="murliTitle" placeholder="На пр. Сакар Мурли — 15.11.2026" required />
+            </div>
+
+            <div class="field">
+              <label for="murliTopic">Тема</label>
+              <input type="text" id="murliTopic" list="topicsDatalist" placeholder="Избери или внеси..." required />
+              <div id="murliTopicChips" class="chips-wrap"></div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="murliTagInput">
+              Хаштагови
+              <span class="hint">Enter или запирка за нов таг</span>
+            </label>
+            <div id="murliSelectedTags" class="selected-tags-box"></div>
+            <input type="text" id="murliTagInput" placeholder="На пр. Mansa Sakash (Enter за #MansaSakash)" />
+            <div id="murliTagChips" class="chips-wrap"></div>
+          </div>
+
+          <div class="field">
+            <label for="murliNote">Забелешка <span class="hint">(опционално)</span></label>
+            <textarea id="murliNote" style="min-height: 85px;" placeholder="Кратка белешка или поента..."></textarea>
+          </div>
+
+          <button type="submit" id="saveMurliBtn" class="btn-primary">Зачувај Мурли</button>
+        </form>
+      </div>
+
+      <!-- ТАБ 3: АРХИВА И ПРЕБАРУВАЊЕ -->
+      <div id="archiveTab" class="hidden">
+        <div class="archive-head">
+          <div class="sub-tabs">
+            <button type="button" class="sub-tab-btn active" data-archive-type="videos">
+              Видеа <span id="videosCountBadge" class="count-pill">0</span>
+            </button>
+            <button type="button" class="sub-tab-btn" data-archive-type="murli">
+              Мурли <span id="murliCountBadge" class="count-pill">0</span>
+            </button>
+          </div>
+          <button type="button" id="refreshArchiveBtn" class="icon-btn">↻ Освежи</button>
         </div>
 
-        <div class="field">
-          <label for="ytNote">Забелешка <span class="hint">(опционално)</span></label>
-          <input type="text" id="ytNote" placeholder="На пр. приоритет, интересен дел од 12:30..." />
+        <div class="filters-panel">
+          <div class="search-row">
+            <input type="search" id="archiveSearch" placeholder="🔍 Пребарувај по наслов, тема, предавач, опис, забелешка или #хаштаг..." />
+          </div>
+          <div class="filters-grid">
+            <select id="filterSpeaker">
+              <option value="">Сите предавачи</option>
+            </select>
+            <select id="filterTopic">
+              <option value="">Сите теми</option>
+            </select>
+            <select id="filterStatus">
+              <option value="">Сите статуси</option>
+              <option value="За превод">За превод</option>
+              <option value="Во тек">Во тек</option>
+              <option value="Преведено">Преведено</option>
+            </select>
+            <select id="filterSort">
+              <option value="newest">Најнови прво</option>
+              <option value="oldest">Најстари прво</option>
+              <option value="shortest">Најкратки прво</option>
+              <option value="longest">Најдолги прво</option>
+              <option value="title">Наслов (А–Ш)</option>
+            </select>
+          </div>
+          <div id="archiveTagBar" class="tag-filter-bar hidden"></div>
         </div>
 
-        <button type="submit" id="saveVideoBtn" class="btn-primary">Зачувај видео</button>
-      </form>
-
-      <!-- ФОРМА 2: МУРЛИ -->
-      <form id="murliForm" class="hidden">
-        <div class="field">
-          <label for="murliUrl">Линк до Мурли</label>
-          <input type="url" id="murliUrl" placeholder="https://..." required />
+        <div class="results-meta">
+          <span id="resultsCountText"></span>
+          <button type="button" id="clearFiltersBtn" class="clear-filters-btn hidden">✕ Исчисти филтри</button>
         </div>
 
-        <div class="field">
-          <label for="murliTitle">Наслов / Датум на Мурли</label>
-          <input type="text" id="murliTitle" placeholder="На пр. Сакар Мурли — 15.11.2026" required />
-        </div>
+        <div id="archiveList" class="archive-list"></div>
+      </div>
 
-        <div class="field">
-          <label for="murliTopic">Тема</label>
-          <input type="text" id="murliTopic" list="topicsDatalist" placeholder="Избери подолу или внеси нова..." required />
-          <div id="murliTopicChips" class="chips-wrap"></div>
-        </div>
-
-        <div class="field">
-          <label for="murliTagInput">
-            Хаштагови
-            <span class="hint">Нов таг со Enter или запирка</span>
-          </label>
-          <div id="murliSelectedTags" class="selected-tags-box"></div>
-          <input type="text" id="murliTagInput" placeholder="На пр. Mansa Sakash (Enter за #MansaSakash)" />
-          <div id="murliTagChips" class="chips-wrap"></div>
-        </div>
-
-        <div class="field">
-          <label for="murliNote">Забелешка <span class="hint">(опционално)</span></label>
-          <textarea id="murliNote" style="min-height: 75px;" placeholder="Кратка белешка или поента..."></textarea>
-        </div>
-
-        <button type="submit" id="saveMurliBtn" class="btn-primary">Зачувај Мурли</button>
-      </form>
     </div>
   </div>
 
@@ -585,14 +1081,19 @@
     const API_URL = 'https://script.google.com/macros/s/AKfycbwelW3qFkOtqY7NFFj8mgLHPk7u4jL0ttY-Dw5oc7Cdb-nbgSBDdIWGOoa3bwMwGyPb/exec';
 
     const STORAGE_KEY = 'archive_auth_v1';
+    const THEME_KEY = 'archive_theme_v1';
 
     const state = {
       accessCode: '',
       userName: '',
       lists: { topics: [], speakers: [], hashtags: [] },
+      archive: { videos: [], murli: [] },
+      archiveType: 'videos',
+      activeFilterTag: '',
       videoTags: [],
       murliTags: [],
       currentVideo: null,
+      showingFullTitle: false,
       lastFetchedId: null,
       userEditedDesc: false,
       userEditedSpeaker: false,
@@ -605,6 +1106,34 @@
     };
 
     const $ = id => document.getElementById(id);
+
+    /* ---------- НОЌНА / СВЕТЛА ТЕМА ---------- */
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem(THEME_KEY, theme);
+      document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+        btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+        btn.title = theme === 'dark' ? 'Префрли на светла тема' : 'Префрли на ноќна тема';
+      });
+    }
+
+    (function initTheme() {
+      const saved = localStorage.getItem(THEME_KEY);
+      if (saved === 'dark' || saved === 'light') {
+        applyTheme(saved);
+      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        applyTheme('dark');
+      } else {
+        applyTheme('light');
+      }
+    })();
+
+    document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme');
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+      });
+    });
 
     /* ---------- API ПОВИК ---------- */
     async function apiCall(payload) {
@@ -637,10 +1166,14 @@
         }
         localStorage.setItem(STORAGE_KEY, JSON.stringify({ name: state.userName, code: state.accessCode }));
         state.lists = res.lists || { topics: [], speakers: [], hashtags: [] };
+        state.archive = res.archive || { videos: [], murli: [] };
         $('displayUser').textContent = state.userName;
         $('authCard').classList.add('hidden');
         $('appCard').classList.remove('hidden');
         renderAllLists();
+        updateArchiveCounts();
+        populateArchiveFilters();
+        renderArchiveList();
       } catch (err) {
         showAlert('authError', 'Не може да се поврзе со серверот. Провери дали API_URL е точен.', 'error');
       } finally {
@@ -662,19 +1195,21 @@
       $('inputCode').value = '';
     });
 
-    /* ---------- ТАБОВИ ---------- */
+    /* ---------- ГЛАВНИ ТАБОВИ ---------- */
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         const tab = btn.dataset.tab;
-        $('videoForm').classList.toggle('hidden', tab !== 'video');
-        $('murliForm').classList.toggle('hidden', tab !== 'murli');
+        $('videoTab').classList.toggle('hidden', tab !== 'video');
+        $('murliTab').classList.toggle('hidden', tab !== 'murli');
+        $('archiveTab').classList.toggle('hidden', tab !== 'archive');
         hideAlert('globalAlert');
+        if (tab === 'archive') renderArchiveList();
       });
     });
 
-    /* ---------- БЕЏОВИ ЗА АВТОМАТСКИ ПРЕДЛОЗИ ---------- */
+    /* ---------- БЕЏОВИ ---------- */
     function setBadge(id, text, clickHandler) {
       const badge = $(id);
       badge.textContent = text;
@@ -693,7 +1228,7 @@
       badge.onclick = null;
     }
 
-    /* ---------- ПРИКАЗ НА ЛИСТИ И ЧИПОВИ ---------- */
+    /* ---------- ЛИСТИ И ЧИПОВИ ВО ФОРМИТЕ ---------- */
     function renderAllLists() {
       $('speakersDatalist').innerHTML = state.lists.speakers.map(s => `<option value="${escapeAttr(s)}">`).join('');
       $('topicsDatalist').innerHTML = state.lists.topics.map(t => `<option value="${escapeAttr(t)}">`).join('');
@@ -710,7 +1245,7 @@
       const box = $(containerId);
       const input = $(inputId);
       box.innerHTML = '';
-      items.forEach(item => {
+      items.slice(0, 12).forEach(item => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'chip' + (input.value.trim().toLowerCase() === item.toLowerCase() ? ' selected' : '');
@@ -765,10 +1300,9 @@
       renderQuickFillChips('videoTopicChips', state.lists.topics, 'ytTopic');
     }
 
-    /* ---------- БРЗО ИЗВЛЕКУВАЊЕ ТАГОВИ ОД НАСЛОВОТ (ВЕДНАШ) ---------- */
-    function renderQuickTitleTags(suggestedTopic, fullTitle) {
+    function renderQuickTitleTags(cleanTitle) {
       const box = $('titleQuickTags');
-      const source = (suggestedTopic || fullTitle || '').trim();
+      const source = (cleanTitle || '').trim();
       if (!source) {
         box.innerHTML = '';
         box.classList.add('hidden');
@@ -790,7 +1324,6 @@
         }
       };
 
-      // 1. Клучна фраза (пр. „Method of Mansa Sakash“ -> „#MansaSakash“)
       const corePhrase = source
         .replace(/^(?:method|power|art|secret|importance|way|ways|practice|role|value|meaning|science|key|keys)\s+of\s+/i, '')
         .replace(/^how\s+to\s+/i, '')
@@ -800,9 +1333,9 @@
         addCandidate(corePhrase);
       }
 
-      // 2. Поединечни подолги зборови од темата/насловот
-      const words = corePhrase.split(/[\s,|:\-–—]+/).filter(w => w.length >= 4 && !stop.has(w.toLowerCase()));
-      words.forEach(w => addCandidate(w));
+      corePhrase.split(/[\s,|:\-–—]+/)
+        .filter(w => w.length >= 4 && !stop.has(w.toLowerCase()))
+        .forEach(w => addCandidate(w));
 
       const top = candidates.slice(0, 5);
       if (!top.length) {
@@ -846,7 +1379,7 @@
 
       chipsBox.innerHTML = '';
       const lowerSelected = new Set(selectedArr.map(t => t.toLowerCase()));
-      state.lists.hashtags.forEach(tag => {
+      state.lists.hashtags.slice(0, 18).forEach(tag => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'chip' + (lowerSelected.has(tag.toLowerCase()) ? ' selected' : '');
@@ -863,12 +1396,10 @@
         .replace(/[^\w\u0400-\u04FF\s-]/g, '')
         .trim();
       if (!clean) return '';
-
       const words = clean.split(/\s+/).filter(Boolean);
       const joined = words.length > 1
         ? words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('')
         : words[0];
-
       return '#' + joined;
     }
 
@@ -920,7 +1451,7 @@
     bindTagInput('ytTagInput', 'video');
     bindTagInput('murliTagInput', 'murli');
 
-    /* ---------- YOUTUBE ЛИНК + AI ПРЕДЛОЗИ ВО ПОЗАДИНА ---------- */
+    /* ---------- YOUTUBE ЛИНК + AI ВО ПОЗАДИНА ---------- */
     function extractYouTubeId(url) {
       const match = String(url || '').trim().match(
         /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
@@ -937,9 +1468,19 @@
       clearTimeout(urlTimer);
       urlTimer = setTimeout(handleYouTubeInput, 100);
     });
-
     $('ytDesc').addEventListener('input', () => {
       state.userEditedDesc = true;
+    });
+
+    $('titleModeBadge').addEventListener('click', () => {
+      if (!state.currentVideo) return;
+      state.showingFullTitle = !state.showingFullTitle;
+      $('ytTitleInput').value = state.showingFullTitle
+        ? state.currentVideo.fullTitle
+        : state.currentVideo.title;
+      $('titleModeBadge').textContent = state.showingFullTitle
+        ? 'Врати исчистен наслов'
+        : 'Користи цел наслов';
     });
 
     async function handleYouTubeInput() {
@@ -954,11 +1495,13 @@
 
       state.lastFetchedId = videoId;
       state.currentVideo = null;
+      state.showingFullTitle = false;
       state.userEditedDesc = false;
       state.pendingAiSummary = null;
       $('ytDesc').value = '';
       $('ytTitleInput').value = '';
       $('titleQuickTags').classList.add('hidden');
+      $('titleModeBadge').classList.add('hidden');
 
       if (state.speakerAutoFilled) {
         $('ytSpeaker').value = '';
@@ -1000,24 +1543,26 @@
 
         state.currentVideo = meta;
         $('ytThumb').src = meta.thumbnail || '';
-        $('ytTitleText').textContent = meta.title;
-        $('ytTitleInput').value = meta.title || '';
         $('ytDurationBadge').textContent = meta.duration || '—';
-        $('ytChannelText').textContent = meta.channelTitle || '';
+        $('ytChannelText').textContent = meta.channelTitle || 'YouTube';
+        $('ytFullTitleText').textContent = meta.fullTitle || meta.title;
+        $('ytTitleInput').value = meta.title || '';
         $('ytPreview').classList.add('visible');
 
-        // Брзи чипови за хаштаг веднаш извлечени од насловот
-        renderQuickTitleTags(meta.suggestedTopic, meta.title);
+        if (meta.fullTitle && meta.fullTitle !== meta.title) {
+          $('titleModeBadge').textContent = 'Користи цел наслов';
+          $('titleModeBadge').classList.remove('hidden');
+        }
 
-        // Автоматски предавач од наслов / база
+        renderQuickTitleTags(meta.title);
+
         if (meta.suggestedSpeaker && !state.userEditedSpeaker && !$('ytSpeaker').value.trim()) {
-          const badgeText = meta.speakerSource === 'list' ? 'Препознаен од база' : 'Предлог од наслов';
+          const badgeText = meta.speakerSource === 'list' ? 'Од база' : 'Од наслов';
           applySuggestedSpeaker(meta.suggestedSpeaker, badgeText);
         }
 
-        // Автоматска тема од наслов / база (веднаш, пред AI да заврши)
         if (meta.suggestedTopic && !state.userEditedTopic && !$('ytTopic').value.trim()) {
-          const topicBadge = meta.topicSource === 'list' ? 'Препознаена од база' : 'Предлог од наслов';
+          const topicBadge = meta.topicSource === 'list' ? 'Од база' : 'Од наслов';
           applySuggestedTopic(meta.suggestedTopic, topicBadge);
         }
 
@@ -1049,7 +1594,7 @@
         const res = await apiCall({
           action: 'summarizeVideo',
           videoId: meta.videoId,
-          title: meta.title,
+          title: meta.fullTitle || meta.title,
           rawDescription: meta.rawDescription,
           durationMinutes: meta.durationMinutes,
           detectedTopic: meta.suggestedTopic || ''
@@ -1062,7 +1607,6 @@
           return;
         }
 
-        // 1. AI предлог за предавач
         if (res.suggestedSpeaker && !state.userEditedSpeaker) {
           const currentVal = $('ytSpeaker').value.trim();
           const aiName = res.suggestedSpeaker.trim();
@@ -1072,13 +1616,12 @@
           if (!currentVal || (aiIsInList && !currentIsInList)) {
             applySuggestedSpeaker(aiName, 'AI предлог');
           } else if (currentVal.toLowerCase() !== aiName.toLowerCase()) {
-            setBadge('speakerAutoHint', 'AI предлог: ' + aiName + ' (кликни)', () => {
+            setBadge('speakerAutoHint', 'AI: ' + aiName + ' (кликни)', () => {
               applySuggestedSpeaker(aiName, 'AI предлог');
             });
           }
         }
 
-        // 2. AI предлог за тема
         if (res.suggestedTopic) {
           const aiTopic = res.suggestedTopic.trim();
           const currentTopic = $('ytTopic').value.trim();
@@ -1091,7 +1634,6 @@
           }
         }
 
-        // 3. AI предлог за хаштагови
         if (Array.isArray(res.suggestedHashtags) && res.suggestedHashtags.length > 0) {
           if (!state.userEditedVideoTags && state.videoTags.length === 0) {
             state.videoTags = res.suggestedHashtags.slice();
@@ -1102,7 +1644,7 @@
             const lowerExisting = new Set(state.videoTags.map(t => t.toLowerCase()));
             const missing = res.suggestedHashtags.filter(t => !lowerExisting.has(t.toLowerCase()));
             if (missing.length > 0) {
-              setBadge('tagsAutoHint', 'AI: +' + missing.join(' ') + ' (кликни)', () => {
+              setBadge('tagsAutoHint', 'AI: +' + missing.join(' '), () => {
                 missing.forEach(t => {
                   if (!state.videoTags.some(x => x.toLowerCase() === t.toLowerCase())) {
                     state.videoTags.push(t);
@@ -1115,7 +1657,6 @@
           }
         }
 
-        // 4. AI резиме
         const style = res.source === 'youtube_desc' ? 'warn' : 'success';
         if (state.userEditedDesc && $('ytDesc').value.trim()) {
           state.pendingAiSummary = res.summary;
@@ -1152,17 +1693,17 @@
       }
     }
 
-    function hideAiStatus() {
-      $('aiStatus').className = 'ai-status';
-    }
+    function hideAiStatus() { $('aiStatus').className = 'ai-status'; }
 
     function resetVideoPreview() {
       state.lastFetchedId = null;
       state.currentVideo = null;
+      state.showingFullTitle = false;
       $('ytPreview').classList.remove('visible');
       $('ytTitleInput').value = '';
       $('titleQuickTags').innerHTML = '';
       $('titleQuickTags').classList.add('hidden');
+      $('titleModeBadge').classList.add('hidden');
       hideAlert('ytDuplicateAlert');
       hideAiStatus();
       clearBadge('speakerAutoHint');
@@ -1171,7 +1712,7 @@
       $('saveVideoBtn').disabled = false;
     }
 
-    /* ---------- ЗАЧУВУВАЊЕ ВИДЕО ---------- */
+    /* ---------- ЗАЧУВУВАЊЕ ВИДЕО И МУРЛИ ---------- */
     $('videoForm').addEventListener('submit', async e => {
       e.preventDefault();
       hideAlert('globalAlert');
@@ -1201,6 +1742,7 @@
         }
 
         if (res.lists) state.lists = res.lists;
+        if (res.archive) state.archive = res.archive;
         $('videoForm').reset();
         state.videoTags = [];
         state.userEditedDesc = false;
@@ -1212,7 +1754,9 @@
         state.tagsAutoFilled = false;
         resetVideoPreview();
         renderAllLists();
-        showAlert('globalAlert', 'Видеото е успешно зачувано во базата!', 'success');
+        updateArchiveCounts();
+        populateArchiveFilters();
+        showAlert('globalAlert', 'Видеото е успешно зачувано во архивата!', 'success');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } catch (err) {
         showAlert('globalAlert', 'Грешка при поврзување со серверот.', 'error');
@@ -1222,7 +1766,6 @@
       }
     });
 
-    /* ---------- ЗАЧУВУВАЊЕ МУРЛИ ---------- */
     $('murliForm').addEventListener('submit', async e => {
       e.preventDefault();
       hideAlert('globalAlert');
@@ -1249,10 +1792,13 @@
         }
 
         if (res.lists) state.lists = res.lists;
+        if (res.archive) state.archive = res.archive;
         $('murliForm').reset();
         state.murliTags = [];
         renderAllLists();
-        showAlert('globalAlert', 'Мурли линкот е успешно зачуван во базата!', 'success');
+        updateArchiveCounts();
+        populateArchiveFilters();
+        showAlert('globalAlert', 'Мурли линкот е успешно зачуван во архивата!', 'success');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } catch (err) {
         showAlert('globalAlert', 'Грешка при поврзување со серверот.', 'error');
@@ -1262,16 +1808,350 @@
       }
     });
 
+    /* ================= АРХИВА: ФИЛТРИ, СОРТИРАЊЕ, ПРИКАЗ ================= */
+    function updateArchiveCounts() {
+      const vLen = (state.archive.videos || []).length;
+      const mLen = (state.archive.murli || []).length;
+      $('videosCountBadge').textContent = vLen;
+      $('murliCountBadge').textContent = mLen;
+      $('archiveTotalBadge').textContent = vLen + mLen;
+    }
+
+    document.querySelectorAll('.sub-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.archiveType = btn.dataset.archiveType;
+        state.activeFilterTag = '';
+        $('filterSpeaker').value = '';
+        $('filterTopic').value = '';
+        $('filterStatus').value = '';
+        const isVideos = state.archiveType === 'videos';
+        $('filterSpeaker').classList.toggle('hidden', !isVideos);
+        $('filterStatus').classList.toggle('hidden', !isVideos);
+        populateArchiveFilters();
+        renderArchiveList();
+      });
+    });
+
+    $('refreshArchiveBtn').addEventListener('click', async () => {
+      const btn = $('refreshArchiveBtn');
+      btn.disabled = true;
+      btn.textContent = 'Се вчитува...';
+      try {
+        const res = await apiCall({ action: 'getArchive' });
+        if (res.ok) {
+          if (res.lists) state.lists = res.lists;
+          if (res.archive) state.archive = res.archive;
+          renderAllLists();
+          updateArchiveCounts();
+          populateArchiveFilters();
+          renderArchiveList();
+        }
+      } catch (_) {
+        showAlert('globalAlert', 'Неуспешно освежување на архивата.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '↻ Освежи';
+      }
+    });
+
+    ['archiveSearch', 'filterSpeaker', 'filterTopic', 'filterStatus', 'filterSort'].forEach(id => {
+      $(id).addEventListener('input', renderArchiveList);
+      $(id).addEventListener('change', renderArchiveList);
+    });
+
+    $('clearFiltersBtn').addEventListener('click', () => {
+      $('archiveSearch').value = '';
+      $('filterSpeaker').value = '';
+      $('filterTopic').value = '';
+      $('filterStatus').value = '';
+      state.activeFilterTag = '';
+      renderArchiveTagBar();
+      renderArchiveList();
+    });
+
+    function populateArchiveFilters() {
+      const items = state.archiveType === 'videos' ? state.archive.videos : state.archive.murli;
+      const curSpeaker = $('filterSpeaker').value;
+      const curTopic = $('filterTopic').value;
+
+      const speakers = uniqueAlpha(items.map(i => i.speaker).filter(Boolean));
+      const topics = uniqueAlpha(items.map(i => i.topic).filter(Boolean));
+
+      $('filterSpeaker').innerHTML = '<option value="">Сите предавачи</option>' +
+        speakers.map(s => `<option value="${escapeAttr(s)}">${escapeHtml(s)}</option>`).join('');
+      $('filterTopic').innerHTML = '<option value="">Сите теми</option>' +
+        topics.map(t => `<option value="${escapeAttr(t)}">${escapeHtml(t)}</option>`).join('');
+
+      if (speakers.includes(curSpeaker)) $('filterSpeaker').value = curSpeaker;
+      if (topics.includes(curTopic)) $('filterTopic').value = curTopic;
+
+      renderArchiveTagBar();
+    }
+
+    function renderArchiveTagBar() {
+      const items = state.archiveType === 'videos' ? state.archive.videos : state.archive.murli;
+      const tagMap = new Map();
+      items.forEach(it => {
+        (it.hashtags || []).forEach(tag => {
+          const key = tag.toLowerCase();
+          if (!tagMap.has(key)) tagMap.set(key, { label: tag, count: 0 });
+          tagMap.get(key).count++;
+        });
+      });
+
+      const bar = $('archiveTagBar');
+      if (tagMap.size === 0) {
+        bar.innerHTML = '';
+        bar.classList.add('hidden');
+        return;
+      }
+
+      const sortedTags = Array.from(tagMap.values()).sort((a, b) => b.count - a.count);
+      bar.innerHTML = '';
+      sortedTags.forEach(obj => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        const isActive = state.activeFilterTag.toLowerCase() === obj.label.toLowerCase();
+        btn.className = 'chip' + (isActive ? ' selected' : '');
+        btn.textContent = `${obj.label} (${obj.count})`;
+        btn.addEventListener('click', () => {
+          state.activeFilterTag = isActive ? '' : obj.label;
+          renderArchiveTagBar();
+          renderArchiveList();
+        });
+        bar.appendChild(btn);
+      });
+      bar.classList.remove('hidden');
+    }
+
+    function renderArchiveList() {
+      const isVideos = state.archiveType === 'videos';
+      const source = isVideos ? (state.archive.videos || []) : (state.archive.murli || []);
+      const query = $('archiveSearch').value.trim().toLowerCase();
+      const speaker = isVideos ? $('filterSpeaker').value : '';
+      const topic = $('filterTopic').value;
+      const status = isVideos ? $('filterStatus').value : '';
+      const sort = $('filterSort').value;
+      const activeTag = state.activeFilterTag.toLowerCase();
+
+      let filtered = source.filter(item => {
+        if (speaker && (item.speaker || '') !== speaker) return false;
+        if (topic && (item.topic || '') !== topic) return false;
+        if (status && (item.status || '') !== status) return false;
+        if (activeTag && !(item.hashtags || []).some(t => t.toLowerCase() === activeTag)) return false;
+        if (query) {
+          const hay = [
+            item.title, item.topic, item.speaker, item.description,
+            item.note, item.addedBy, (item.hashtags || []).join(' ')
+          ].join(' ').toLowerCase();
+          if (!hay.includes(query)) return false;
+        }
+        return true;
+      });
+
+      filtered = filtered.slice().sort((a, b) => {
+        if (sort === 'oldest') return (a.ts || 0) - (b.ts || 0);
+        if (sort === 'shortest') return (a.durationSec || 999999) - (b.durationSec || 999999);
+        if (sort === 'longest') return (b.durationSec || 0) - (a.durationSec || 0);
+        if (sort === 'title') return (a.title || '').localeCompare(b.title || '', 'mk');
+        return (b.ts || 0) - (a.ts || 0);
+      });
+
+      const hasFilters = Boolean(query || speaker || topic || status || activeTag);
+      $('clearFiltersBtn').classList.toggle('hidden', !hasFilters);
+      $('resultsCountText').textContent = `Прикажани ${filtered.length} од вкупно ${source.length} ${isVideos ? 'видеа' : 'мурли'}`;
+
+      const listEl = $('archiveList');
+      if (filtered.length === 0) {
+        listEl.innerHTML = `<div class="empty-state">${source.length === 0
+          ? 'Сè уште нема внесени записи во оваа категорија.'
+          : 'Нема пронајдено резултати за избраните филтри.'}</div>`;
+        return;
+      }
+
+      listEl.innerHTML = '';
+      filtered.forEach(item => {
+        listEl.appendChild(isVideos ? buildVideoCard(item) : buildMurliCard(item));
+      });
+    }
+
+    function getStatusClass(st) {
+      if (st === 'Преведено') return 'st-done';
+      if (st === 'Во тек') return 'st-progress';
+      return 'st-todo';
+    }
+
+    function buildVideoCard(v) {
+      const safeUrl = /^https?:\/\//i.test(v.url) ? v.url : '#';
+      const thumbUrl = v.videoId ? `[https://i.ytimg.com/vi/$](https://i.ytimg.com/vi/$){encodeURIComponent(v.videoId)}/mqdefault.jpg` : '';
+      const card = document.createElement('article');
+      card.className = 'item-card';
+
+      card.innerHTML = `
+        <div class="video-card-layout">
+          <a class="card-thumb-link" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener">
+            ${thumbUrl ? `<img src="${escapeAttr(thumbUrl)}" alt="" loading="lazy" />` : ''}
+            ${v.duration ? `<span class="duration-overlay">${escapeHtml(v.duration)}</span>` : ''}
+          </a>
+          <div class="card-body">
+            <div class="card-header-row">
+              <a class="card-title" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener">${escapeHtml(v.title || 'Без наслов')}</a>
+              <select class="status-select ${getStatusClass(v.status)}" aria-label="Статус на превод">
+                <option value="За превод" ${v.status === 'За превод' ? 'selected' : ''}>За превод</option>
+                <option value="Во тек" ${v.status === 'Во тек' ? 'selected' : ''}>Во тек</option>
+                <option value="Преведено" ${v.status === 'Преведено' ? 'selected' : ''}>Преведено</option>
+              </select>
+            </div>
+            <div class="meta-pills">
+              ${v.speaker ? `<button type="button" class="meta-pill js-filter-speaker">🎙 ${escapeHtml(v.speaker)}</button>` : ''}
+              ${v.topic ? `<button type="button" class="meta-pill js-filter-topic">📁 ${escapeHtml(v.topic)}</button>` : ''}
+            </div>
+            ${v.description ? `<p class="card-desc">${escapeHtml(v.description)}</p>` : ''}
+            ${v.note ? `<div class="card-note">📝 ${escapeHtml(v.note)}</div>` : ''}
+            <div class="card-tags"></div>
+            <div class="card-footer">
+              <span>${escapeHtml(v.date || '')}${v.addedBy ? ' · ' + escapeHtml(v.addedBy) : ''}</span>
+              <div class="card-actions">
+                <button type="button" class="mini-btn js-copy-link">Копирај линк</button>
+                <a class="mini-btn" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener">Отвори ↗</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Клик на хаштаг филтрира веднаш
+      const tagsBox = card.querySelector('.card-tags');
+      (v.hashtags || []).forEach(tag => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'card-tag';
+        b.textContent = tag;
+        b.addEventListener('click', () => {
+          state.activeFilterTag = state.activeFilterTag.toLowerCase() === tag.toLowerCase() ? '' : tag;
+          renderArchiveTagBar();
+          renderArchiveList();
+        });
+        tagsBox.appendChild(b);
+      });
+
+      const spBtn = card.querySelector('.js-filter-speaker');
+      if (spBtn) spBtn.addEventListener('click', () => {
+        $('filterSpeaker').value = v.speaker;
+        renderArchiveList();
+      });
+
+      const tpBtn = card.querySelector('.js-filter-topic');
+      if (tpBtn) tpBtn.addEventListener('click', () => {
+        $('filterTopic').value = v.topic;
+        renderArchiveList();
+      });
+
+      // Промена на статус во живо во Google Sheets
+      const statusSel = card.querySelector('.status-select');
+      statusSel.addEventListener('change', async () => {
+        const newStatus = statusSel.value;
+        const oldStatus = v.status;
+        statusSel.className = 'status-select ' + getStatusClass(newStatus);
+        statusSel.disabled = true;
+        try {
+          const res = await apiCall({ action: 'updateVideoStatus', videoId: v.videoId, status: newStatus });
+          if (res.ok) {
+            v.status = newStatus;
+          } else {
+            statusSel.value = oldStatus;
+            statusSel.className = 'status-select ' + getStatusClass(oldStatus);
+            showAlert('globalAlert', res.error || 'Грешка при промена на статус.', 'error');
+          }
+        } catch (_) {
+          statusSel.value = oldStatus;
+          statusSel.className = 'status-select ' + getStatusClass(oldStatus);
+        } finally {
+          statusSel.disabled = false;
+        }
+      });
+
+      bindCopyButton(card.querySelector('.js-copy-link'), v.url);
+      return card;
+    }
+
+    function buildMurliCard(m) {
+      const safeUrl = /^https?:\/\//i.test(m.url) ? m.url : '#';
+      const card = document.createElement('article');
+      card.className = 'item-card';
+
+      card.innerHTML = `
+        <div class="card-header-row">
+          <a class="card-title" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener">📜 ${escapeHtml(m.title || m.url)}</a>
+        </div>
+        <div class="meta-pills">
+          ${m.topic ? `<button type="button" class="meta-pill js-filter-topic">📁 ${escapeHtml(m.topic)}</button>` : ''}
+        </div>
+        ${m.note ? `<div class="card-note">${escapeHtml(m.note)}</div>` : ''}
+        <div class="card-tags"></div>
+        <div class="card-footer">
+          <span>${escapeHtml(m.date || '')}${m.addedBy ? ' · ' + escapeHtml(m.addedBy) : ''}</span>
+          <div class="card-actions">
+            <button type="button" class="mini-btn js-copy-link">Копирај линк</button>
+            <a class="mini-btn" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener">Отвори ↗</a>
+          </div>
+        </div>
+      `;
+
+      const tagsBox = card.querySelector('.card-tags');
+      (m.hashtags || []).forEach(tag => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'card-tag';
+        b.textContent = tag;
+        b.addEventListener('click', () => {
+          state.activeFilterTag = state.activeFilterTag.toLowerCase() === tag.toLowerCase() ? '' : tag;
+          renderArchiveTagBar();
+          renderArchiveList();
+        });
+        tagsBox.appendChild(b);
+      });
+
+      const tpBtn = card.querySelector('.js-filter-topic');
+      if (tpBtn) tpBtn.addEventListener('click', () => {
+        $('filterTopic').value = m.topic;
+        renderArchiveList();
+      });
+
+      bindCopyButton(card.querySelector('.js-copy-link'), m.url);
+      return card;
+    }
+
+    function bindCopyButton(btn, text) {
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+          const orig = btn.textContent;
+          btn.textContent = '✓ Копирано';
+          setTimeout(() => { btn.textContent = orig; }, 1400);
+        } catch (_) {}
+      });
+    }
+
     /* ---------- ПОМОШНИ ФУНКЦИИ ---------- */
+    function uniqueAlpha(arr) {
+      const map = new Map();
+      arr.forEach(item => {
+        const key = item.toLowerCase();
+        if (!map.has(key)) map.set(key, item);
+      });
+      return Array.from(map.values()).sort((a, b) => a.localeCompare(b, 'mk'));
+    }
+
     function showAlert(id, msg, type) {
       const el = $(id);
       el.textContent = msg;
       el.className = 'alert visible ' + type;
     }
 
-    function hideAlert(id) {
-      $(id).className = 'alert';
-    }
+    function hideAlert(id) { $(id).className = 'alert'; }
 
     function escapeHtml(str) {
       return String(str).replace(/[&<>"']/g, m => ({
@@ -1279,9 +2159,7 @@
       }[m]));
     }
 
-    function escapeAttr(str) {
-      return escapeHtml(str);
-    }
+    function escapeAttr(str) { return escapeHtml(str); }
 
     (function boot() {
       try {
