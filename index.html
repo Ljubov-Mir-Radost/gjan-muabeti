@@ -462,11 +462,11 @@
             Хаштагови
             <span class="label-right">
               <span id="tagsAutoHint" class="auto-badge hidden"></span>
-              <span class="hint">Кликни или напиши + Enter</span>
+              <span class="hint">Нов таг со Enter или запирка</span>
             </span>
           </label>
           <div id="ytSelectedTags" class="selected-tags-box"></div>
-          <input type="text" id="ytTagInput" placeholder="На пр. мир, медитација (Enter за додавање)" />
+          <input type="text" id="ytTagInput" placeholder="На пр. Mansa Sakash (Enter за #MansaSakash)" />
           <div id="videoTagChips" class="chips-wrap"></div>
         </div>
 
@@ -514,10 +514,10 @@
         <div class="field">
           <label for="murliTagInput">
             Хаштагови
-            <span class="hint">Кликни постоечки или напиши нов + Enter</span>
+            <span class="hint">Нов таг со Enter или запирка</span>
           </label>
           <div id="murliSelectedTags" class="selected-tags-box"></div>
-          <input type="text" id="murliTagInput" placeholder="На пр. јога, чистота (Enter за додавање)" />
+          <input type="text" id="murliTagInput" placeholder="На пр. Mansa Sakash (Enter за #MansaSakash)" />
           <div id="murliTagChips" class="chips-wrap"></div>
         </div>
 
@@ -533,7 +533,7 @@
 
   <script>
     // =========================================================================
-    // ЗАМЕНИ ГО ОВОЈ ЛИНК СО ТВОЈОТ WEB APP URL ОД GOOGLE APPS SCRIPT
+    // ВРАТИ ГО ТВОЈОТ WEB APP URL ОД GOOGLE APPS SCRIPT (завршува на /exec)
     // =========================================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwelW3qFkOtqY7NFFj8mgLHPk7u4jL0ttY-Dw5oc7Cdb-nbgSBDdIWGOoa3bwMwGyPb/exec';
 
@@ -744,9 +744,23 @@
       });
     }
 
+    /**
+     * Повеќе зборови во еден хаштаг се спојуваат без празно место („Mansa Sakash“ -> „#MansaSakash“)
+     */
     function normalizeTag(raw) {
-      const clean = String(raw || '').trim().replace(/^#+/, '').replace(/[^\w\u0400-\u04FF-]/g, '');
-      return clean ? '#' + clean : '';
+      const clean = String(raw || '')
+        .trim()
+        .replace(/^#+/, '')
+        .replace(/[^\w\u0400-\u04FF\s-]/g, '')
+        .trim();
+      if (!clean) return '';
+
+      const words = clean.split(/\s+/).filter(Boolean);
+      const joined = words.length > 1
+        ? words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('')
+        : words[0];
+
+      return '#' + joined;
     }
 
     function toggleTag(mode, rawTag) {
@@ -765,7 +779,8 @@
     }
 
     function addTagsFromInput(mode, inputEl) {
-      const parts = inputEl.value.split(/[\s,]+/).filter(Boolean);
+      // Одвојува САМО по запирка — празните места остануваат дел од истиот хаштаг
+      const parts = inputEl.value.split(',').map(s => s.trim()).filter(Boolean);
       if (parts.length && mode === 'video') {
         state.userEditedVideoTags = true;
         state.tagsAutoFilled = false;
@@ -880,9 +895,16 @@
         $('ytChannelText').textContent = meta.channelTitle || '';
         $('ytPreview').classList.add('visible');
 
+        // Автоматски предавач од наслов / база
         if (meta.suggestedSpeaker && !state.userEditedSpeaker && !$('ytSpeaker').value.trim()) {
           const badgeText = meta.speakerSource === 'list' ? 'Препознаен од база' : 'Предлог од наслов';
           applySuggestedSpeaker(meta.suggestedSpeaker, badgeText);
+        }
+
+        // Автоматска тема од наслов / база (веднаш, без чекање AI)
+        if (meta.suggestedTopic && !state.userEditedTopic && !$('ytTopic').value.trim()) {
+          const topicBadge = meta.topicSource === 'list' ? 'Препознаена од база' : 'Предлог од наслов';
+          applySuggestedTopic(meta.suggestedTopic, topicBadge);
         }
 
         if (meta.duplicate) {
@@ -907,7 +929,7 @@
 
     async function runBackgroundSummary(meta) {
       const targetId = meta.videoId;
-      setAiStatus('loading', 'AI подготвува резиме, тема и хаштагови во позадина...', true);
+      setAiStatus('loading', 'AI подготвува резиме и предлози во позадина...', true);
 
       try {
         const res = await apiCall({
@@ -915,7 +937,8 @@
           videoId: meta.videoId,
           title: meta.title,
           rawDescription: meta.rawDescription,
-          durationMinutes: meta.durationMinutes
+          durationMinutes: meta.durationMinutes,
+          detectedTopic: meta.suggestedTopic || ''
         });
 
         if (state.lastFetchedId !== targetId) return;
@@ -941,14 +964,14 @@
           }
         }
 
-        // 2. AI предлог за тема
+        // 2. AI предлог за тема (не ја пребришува темата од насловот, туку ја нуди како кликлив предлог)
         if (res.suggestedTopic) {
           const aiTopic = res.suggestedTopic.trim();
           const currentTopic = $('ytTopic').value.trim();
           if (!state.userEditedTopic && !currentTopic) {
             applySuggestedTopic(aiTopic, 'AI предлог');
           } else if (currentTopic.toLowerCase() !== aiTopic.toLowerCase()) {
-            setBadge('topicAutoHint', 'AI предлог: ' + aiTopic + ' (кликни)', () => {
+            setBadge('topicAutoHint', 'AI: ' + aiTopic + ' (кликни)', () => {
               applySuggestedTopic(aiTopic, 'AI предлог');
             });
           }
