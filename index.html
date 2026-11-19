@@ -50,6 +50,19 @@
     h1 {
       margin: 0 0 6px;
       font-size: 1.35rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .version-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      border-radius: 99px;
     }
 
     .subtitle {
@@ -192,7 +205,7 @@
       background: #f8fafc;
       border: 1px solid var(--border);
       border-radius: 10px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       align-items: center;
     }
 
@@ -233,6 +246,31 @@
       padding: 2px 8px;
       border-radius: 99px;
     }
+
+    .quick-extract-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .quick-extract-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .quick-chip {
+      border: 1px dashed #93c5fd;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 99px;
+      cursor: pointer;
+    }
+    .quick-chip:hover { background: #dbeafe; }
 
     .ai-status {
       display: none;
@@ -379,7 +417,7 @@
 
     <!-- ЕКРАН ЗА НАЈАВА -->
     <div id="authCard" class="card">
-      <h1>Архива за превод</h1>
+      <h1>Архива за превод <span class="version-tag">v2.2</span></h1>
       <p class="subtitle">Внеси го заедничкиот пристапен код и твоето име (се памтат во овој прелистувач).</p>
 
       <div id="authError" class="alert error"></div>
@@ -401,7 +439,7 @@
     <div id="appCard" class="card hidden">
       <div class="topbar">
         <div>
-          <h1>Додади во архива</h1>
+          <h1>Додади во архива <span class="version-tag">v2.2</span></h1>
           <div class="user-badge">Најавен/а како: <strong id="displayUser"></strong></div>
         </div>
         <button type="button" class="btn-link" id="logoutBtn">Одјави се</button>
@@ -419,7 +457,7 @@
         <div class="field">
           <label for="ytUrl">
             YouTube линк
-            <span class="hint">Податоците и AI предлозите се полнат автоматски</span>
+            <span class="hint">Насловот, траењето, предавачот и темата се полнат веднаш</span>
           </label>
           <input type="url" id="ytUrl" placeholder="[https://www.youtube.com/watch?v=](https://www.youtube.com/watch?v=)..." required />
         </div>
@@ -435,6 +473,15 @@
               <span id="ytChannelText"></span>
             </div>
           </div>
+        </div>
+
+        <div class="field">
+          <label for="ytTitleInput">
+            Наслов на видеото
+            <span class="hint">Се вчитува автоматски (можеш да го дотераш)</span>
+          </label>
+          <input type="text" id="ytTitleInput" placeholder="Насловот ќе се појави веднаш по внесување на линкот..." />
+          <div id="titleQuickTags" class="quick-extract-row hidden"></div>
         </div>
 
         <div class="field">
@@ -718,6 +765,71 @@
       renderQuickFillChips('videoTopicChips', state.lists.topics, 'ytTopic');
     }
 
+    /* ---------- БРЗО ИЗВЛЕКУВАЊЕ ТАГОВИ ОД НАСЛОВОТ (ВЕДНАШ) ---------- */
+    function renderQuickTitleTags(suggestedTopic, fullTitle) {
+      const box = $('titleQuickTags');
+      const source = (suggestedTopic || fullTitle || '').trim();
+      if (!source) {
+        box.innerHTML = '';
+        box.classList.add('hidden');
+        return;
+      }
+
+      const stop = new Set([
+        'of', 'the', 'in', 'on', 'to', 'for', 'and', 'or', 'by', 'with', 'from',
+        'about', 'how', 'what', 'why', 'your', 'our', 'this', 'that', 'method',
+        'power', 'secret', 'way', 'ways', 'class', 'talk', 'video', 'live',
+        'english', 'hindi', 'на', 'во', 'за', 'со', 'од', 'како', 'што', 'или'
+      ]);
+
+      const candidates = [];
+      const addCandidate = raw => {
+        const tag = normalizeTag(raw);
+        if (tag && tag.length >= 4 && !candidates.some(c => c.toLowerCase() === tag.toLowerCase())) {
+          candidates.push(tag);
+        }
+      };
+
+      // 1. Клучна фраза (пр. „Method of Mansa Sakash“ -> „#MansaSakash“)
+      const corePhrase = source
+        .replace(/^(?:method|power|art|secret|importance|way|ways|practice|role|value|meaning|science|key|keys)\s+of\s+/i, '')
+        .replace(/^how\s+to\s+/i, '')
+        .trim();
+
+      if (corePhrase && corePhrase.split(/\s+/).length <= 4) {
+        addCandidate(corePhrase);
+      }
+
+      // 2. Поединечни подолги зборови од темата/насловот
+      const words = corePhrase.split(/[\s,|:\-–—]+/).filter(w => w.length >= 4 && !stop.has(w.toLowerCase()));
+      words.forEach(w => addCandidate(w));
+
+      const top = candidates.slice(0, 5);
+      if (!top.length) {
+        box.innerHTML = '';
+        box.classList.add('hidden');
+        return;
+      }
+
+      box.innerHTML = '<span class="quick-extract-label">Брзо во хаштаг:</span>';
+      top.forEach(tag => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'quick-chip';
+        btn.textContent = '+ ' + tag;
+        btn.addEventListener('click', () => {
+          if (!state.videoTags.some(t => t.toLowerCase() === tag.toLowerCase())) {
+            state.videoTags.push(tag);
+            state.userEditedVideoTags = true;
+            state.tagsAutoFilled = false;
+            renderHashtagPicker('video');
+          }
+        });
+        box.appendChild(btn);
+      });
+      box.classList.remove('hidden');
+    }
+
     function renderHashtagPicker(mode) {
       const selectedArr = mode === 'video' ? state.videoTags : state.murliTags;
       const selectedBox = $(mode === 'video' ? 'ytSelectedTags' : 'murliSelectedTags');
@@ -744,9 +856,6 @@
       });
     }
 
-    /**
-     * Повеќе зборови во еден хаштаг се спојуваат без празно место („Mansa Sakash“ -> „#MansaSakash“)
-     */
     function normalizeTag(raw) {
       const clean = String(raw || '')
         .trim()
@@ -779,7 +888,6 @@
     }
 
     function addTagsFromInput(mode, inputEl) {
-      // Одвојува САМО по запирка — празните места остануваат дел од истиот хаштаг
       const parts = inputEl.value.split(',').map(s => s.trim()).filter(Boolean);
       if (parts.length && mode === 'video') {
         state.userEditedVideoTags = true;
@@ -849,6 +957,8 @@
       state.userEditedDesc = false;
       state.pendingAiSummary = null;
       $('ytDesc').value = '';
+      $('ytTitleInput').value = '';
+      $('titleQuickTags').classList.add('hidden');
 
       if (state.speakerAutoFilled) {
         $('ytSpeaker').value = '';
@@ -891,9 +1001,13 @@
         state.currentVideo = meta;
         $('ytThumb').src = meta.thumbnail || '';
         $('ytTitleText').textContent = meta.title;
+        $('ytTitleInput').value = meta.title || '';
         $('ytDurationBadge').textContent = meta.duration || '—';
         $('ytChannelText').textContent = meta.channelTitle || '';
         $('ytPreview').classList.add('visible');
+
+        // Брзи чипови за хаштаг веднаш извлечени од насловот
+        renderQuickTitleTags(meta.suggestedTopic, meta.title);
 
         // Автоматски предавач од наслов / база
         if (meta.suggestedSpeaker && !state.userEditedSpeaker && !$('ytSpeaker').value.trim()) {
@@ -901,7 +1015,7 @@
           applySuggestedSpeaker(meta.suggestedSpeaker, badgeText);
         }
 
-        // Автоматска тема од наслов / база (веднаш, без чекање AI)
+        // Автоматска тема од наслов / база (веднаш, пред AI да заврши)
         if (meta.suggestedTopic && !state.userEditedTopic && !$('ytTopic').value.trim()) {
           const topicBadge = meta.topicSource === 'list' ? 'Препознаена од база' : 'Предлог од наслов';
           applySuggestedTopic(meta.suggestedTopic, topicBadge);
@@ -964,7 +1078,7 @@
           }
         }
 
-        // 2. AI предлог за тема (не ја пребришува темата од насловот, туку ја нуди како кликлив предлог)
+        // 2. AI предлог за тема
         if (res.suggestedTopic) {
           const aiTopic = res.suggestedTopic.trim();
           const currentTopic = $('ytTopic').value.trim();
@@ -1046,6 +1160,9 @@
       state.lastFetchedId = null;
       state.currentVideo = null;
       $('ytPreview').classList.remove('visible');
+      $('ytTitleInput').value = '';
+      $('titleQuickTags').innerHTML = '';
+      $('titleQuickTags').classList.add('hidden');
       hideAlert('ytDuplicateAlert');
       hideAiStatus();
       clearBadge('speakerAutoHint');
@@ -1069,7 +1186,7 @@
           action: 'saveVideo',
           userName: state.userName,
           url: $('ytUrl').value.trim(),
-          title: state.currentVideo ? state.currentVideo.title : '',
+          title: $('ytTitleInput').value.trim() || (state.currentVideo ? state.currentVideo.title : ''),
           duration: state.currentVideo ? state.currentVideo.duration : '',
           description: $('ytDesc').value.trim(),
           speaker: $('ytSpeaker').value.trim(),
