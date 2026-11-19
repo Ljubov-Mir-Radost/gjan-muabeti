@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Архива за превод — Видеа и Мурли</title>
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-soft: #eff6ff;
+      --success: #15803d;
+      --success-bg: #f0fdf4;
+      --warn: #b45309;
+      --warn-bg: #fffbeb;
+      --danger: #b91c1c;
+      --danger-bg: #fef2f2;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 16px;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 12px auto 48px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 1.35rem;
+    }
+
+    .subtitle {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .user-badge {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .user-badge strong { color: var(--text); }
+
+    .btn-link {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 4px;
+    }
+    .btn-link:hover { color: var(--danger); }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 22px;
+      background: #e9eef5;
+      padding: 5px;
+      border-radius: 10px;
+    }
+
+    .tab-btn {
+      border: none;
+      background: transparent;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--card);
+      color: var(--primary);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .label-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .hint {
+      font-weight: 400;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .auto-badge {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--primary);
+      background: var(--primary-soft);
+      border: 1px solid #bfdbfe;
+      padding: 2px 8px;
+      border-radius: 99px;
+      cursor: default;
+    }
+
+    .auto-badge.clickable {
+      cursor: pointer;
+    }
+    .auto-badge.clickable:hover {
+      background: #dbeafe;
+    }
+
+    input[type="text"],
+    input[type="url"],
+    input[type="password"],
+    textarea {
+      width: 100%;
+      padding: 11px 13px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      font-size: 16px;
+      font-family: inherit;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 105px;
+    }
+
+    .yt-preview {
+      display: none;
+      gap: 14px;
+      padding: 12px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 18px;
+      align-items: center;
+    }
+
+    .yt-preview.visible { display: flex; }
+
+    .yt-preview img {
+      width: 128px;
+      height: 72px;
+      object-fit: cover;
+      border-radius: 7px;
+      flex-shrink: 0;
+      background: #e2e8f0;
+    }
+
+    .yt-meta { min-width: 0; flex: 1; }
+
+    .yt-title {
+      font-weight: 600;
+      font-size: 0.93rem;
+      margin-bottom: 4px;
+      word-break: break-word;
+    }
+
+    .yt-sub {
+      font-size: 0.83rem;
+      color: var(--muted);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .duration-pill {
+      background: #1e293b;
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+
+    .ai-status {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.82rem;
+      padding: 7px 11px;
+      border-radius: 8px;
+      margin-bottom: 7px;
+    }
+
+    .ai-status.visible { display: flex; }
+    .ai-status.loading { background: var(--primary-soft); color: var(--primary); }
+    .ai-status.success { background: var(--success-bg); color: var(--success); }
+    .ai-status.warn { background: var(--warn-bg); color: var(--warn); }
+
+    .ai-status-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid currentColor;
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .small-action-btn {
+      border: 1px solid currentColor;
+      background: transparent;
+      color: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .chips-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .chip {
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      color: var(--text);
+      font-size: 0.82rem;
+      padding: 4px 10px;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: 0.12s;
+      user-select: none;
+    }
+
+    .chip:hover { border-color: var(--primary); }
+
+    .chip.selected {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .selected-tags-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .active-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      border: 1px solid #bfdbfe;
+      font-size: 0.84rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 99px;
+    }
+
+    .active-tag button {
+      border: none;
+      background: none;
+      color: var(--primary);
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0;
+      font-size: 0.95rem;
+      line-height: 1;
+    }
+
+    .alert {
+      display: none;
+      padding: 12px 14px;
+      border-radius: 9px;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+    .alert.visible { display: block; }
+    .alert.error { background: var(--danger-bg); color: var(--danger); border: 1px solid #fecaca; }
+    .alert.success { background: var(--success-bg); color: var(--success); border: 1px solid #bbf7d0; }
+
+    .btn-primary {
+      width: 100%;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 13px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 520px) {
+      .card { padding: 18px; }
+      .yt-preview { flex-direction: column; align-items: flex-start; }
+      .yt-preview img { width: 100%; height: auto; aspect-ratio: 16/9; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- ЕКРАН ЗА НАЈАВА -->
+    <div id="authCard" class="card">
+      <h1>Архива за превод</h1>
+      <p class="subtitle">Внеси го заедничкиот пристапен код и твоето име (се памтат во овој прелистувач).</p>
+
+      <div id="authError" class="alert error"></div>
+
+      <form id="authForm">
+        <div class="field">
+          <label for="inputName">Твое име</label>
+          <input type="text" id="inputName" placeholder="На пр. Ана" required />
+        </div>
+        <div class="field">
+          <label for="inputCode">Пристапен код</label>
+          <input type="password" id="inputCode" placeholder="Внеси код..." required />
+        </div>
+        <button type="submit" id="authBtn" class="btn-primary">Влези</button>
+      </form>
+    </div>
+
+    <!-- ГЛАВНА АПЛИКАЦИЈА -->
+    <div id="appCard" class="card hidden">
+      <div class="topbar">
+        <div>
+          <h1>Додади во архива</h1>
+          <div class="user-badge">Најавен/а како: <strong id="displayUser"></strong></div>
+        </div>
+        <button type="button" class="btn-link" id="logoutBtn">Одјави се</button>
+      </div>
+
+      <div class="tabs">
+        <button type="button" class="tab-btn active" data-tab="video">YouTube Видео</button>
+        <button type="button" class="tab-btn" data-tab="murli">Мурли</button>
+      </div>
+
+      <div id="globalAlert" class="alert"></div>
+
+      <!-- ФОРМА 1: YOUTUBE ВИДЕО -->
+      <form id="videoForm">
+        <div class="field">
+          <label for="ytUrl">
+            YouTube линк
+            <span class="hint">Податоците и AI предлозите се полнат автоматски</span>
+          </label>
+          <input type="url" id="ytUrl" placeholder="[https://www.youtube.com/watch?v=](https://www.youtube.com/watch?v=)..." required />
+        </div>
+
+        <div id="ytDuplicateAlert" class="alert error"></div>
+
+        <div id="ytPreview" class="yt-preview">
+          <img id="ytThumb" src="" alt="Преглед на видео" />
+          <div class="yt-meta">
+            <div id="ytTitleText" class="yt-title"></div>
+            <div class="yt-sub">
+              <span id="ytDurationBadge" class="duration-pill"></span>
+              <span id="ytChannelText"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="ytSpeaker">
+            Предавач
+            <span id="speakerAutoHint" class="auto-badge hidden"></span>
+          </label>
+          <input type="text" id="ytSpeaker" list="speakersDatalist" placeholder="Избери подолу или внеси нов..." required />
+          <datalist id="speakersDatalist"></datalist>
+          <div id="speakerChips" class="chips-wrap"></div>
+        </div>
+
+        <div class="field">
+          <label for="ytTopic">
+            Тема
+            <span id="topicAutoHint" class="auto-badge hidden"></span>
+          </label>
+          <input type="text" id="ytTopic" list="topicsDatalist" placeholder="Избери подолу или внеси нова..." required />
+          <datalist id="topicsDatalist"></datalist>
+          <div id="videoTopicChips" class="chips-wrap"></div>
+        </div>
+
+        <div class="field">
+          <label for="ytTagInput">
+            Хаштагови
+            <span class="label-right">
+              <span id="tagsAutoHint" class="auto-badge hidden"></span>
+              <span class="hint">Кликни или напиши + Enter</span>
+            </span>
+          </label>
+          <div id="ytSelectedTags" class="selected-tags-box"></div>
+          <input type="text" id="ytTagInput" placeholder="На пр. мир, медитација (Enter за додавање)" />
+          <div id="videoTagChips" class="chips-wrap"></div>
+        </div>
+
+        <div class="field">
+          <label for="ytDesc">
+            Опис / Резиме
+            <span class="hint">Можеш слободно да го уредиш</span>
+          </label>
+          <div id="aiStatus" class="ai-status">
+            <div class="ai-status-left">
+              <div id="aiSpinner" class="spinner hidden"></div>
+              <span id="aiStatusText"></span>
+            </div>
+            <button type="button" id="aiActionBtn" class="small-action-btn hidden"></button>
+          </div>
+          <textarea id="ytDesc" placeholder="Овде автоматски ќе се појави краткото AI резиме..."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="ytNote">Забелешка <span class="hint">(опционално)</span></label>
+          <input type="text" id="ytNote" placeholder="На пр. приоритет, интересен дел од 12:30..." />
+        </div>
+
+        <button type="submit" id="saveVideoBtn" class="btn-primary">Зачувај видео</button>
+      </form>
+
+      <!-- ФОРМА 2: МУРЛИ -->
+      <form id="murliForm" class="hidden">
+        <div class="field">
+          <label for="murliUrl">Линк до Мурли</label>
+          <input type="url" id="murliUrl" placeholder="https://..." required />
+        </div>
+
+        <div class="field">
+          <label for="murliTitle">Наслов / Датум на Мурли</label>
+          <input type="text" id="murliTitle" placeholder="На пр. Сакар Мурли — 15.11.2026" required />
+        </div>
+
+        <div class="field">
+          <label for="murliTopic">Тема</label>
+          <input type="text" id="murliTopic" list="topicsDatalist" placeholder="Избери подолу или внеси нова..." required />
+          <div id="murliTopicChips" class="chips-wrap"></div>
+        </div>
+
+        <div class="field">
+          <label for="murliTagInput">
+            Хаштагови
+            <span class="hint">Кликни постоечки или напиши нов + Enter</span>
+          </label>
+          <div id="murliSelectedTags" class="selected-tags-box"></div>
+          <input type="text" id="murliTagInput" placeholder="На пр. јога, чистота (Enter за додавање)" />
+          <div id="murliTagChips" class="chips-wrap"></div>
+        </div>
+
+        <div class="field">
+          <label for="murliNote">Забелешка <span class="hint">(опционално)</span></label>
+          <textarea id="murliNote" style="min-height: 75px;" placeholder="Кратка белешка или поента..."></textarea>
+        </div>
+
+        <button type="submit" id="saveMurliBtn" class="btn-primary">Зачувај Мурли</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // ЗАМЕНИ ГО ОВОЈ ЛИНК СО ТВОЈОТ WEB APP URL ОД GOOGLE APPS SCRIPT
+    // =========================================================================
+    const API_URL = 'AKfycbwelW3qFkOtqY7NFFj8mgLHPk7u4jL0ttY-Dw5oc7Cdb-nbgSBDdIWGOoa3bwMwGyPb';
+
+    const STORAGE_KEY = 'archive_auth_v1';
+
+    const state = {
+      accessCode: '',
+      userName: '',
+      lists: { topics: [], speakers: [], hashtags: [] },
+      videoTags: [],
+      murliTags: [],
+      currentVideo: null,
+      lastFetchedId: null,
+      userEditedDesc: false,
+      userEditedSpeaker: false,
+      speakerAutoFilled: false,
+      userEditedTopic: false,
+      topicAutoFilled: false,
+      userEditedVideoTags: false,
+      tagsAutoFilled: false,
+      pendingAiSummary: null
+    };
+
+    const $ = id => document.getElementById(id);
+
+    /* ---------- API ПОВИК ---------- */
+    async function apiCall(payload) {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ ...payload, accessCode: state.accessCode })
+      });
+      if (!response.ok) throw new Error('Мрежна грешка (' + response.status + ')');
+      return await response.json();
+    }
+
+    /* ---------- НАЈАВА И ИНИЦИЈАЛИЗАЦИЈА ---------- */
+    async function tryLogin(name, code, silent = false) {
+      state.userName = name.trim();
+      state.accessCode = code.trim();
+      const btn = $('authBtn');
+      if (!silent) {
+        btn.disabled = true;
+        btn.textContent = 'Проверка...';
+        hideAlert('authError');
+      }
+
+      try {
+        const res = await apiCall({ action: 'init' });
+        if (!res.ok) {
+          if (res.authError) localStorage.removeItem(STORAGE_KEY);
+          showAlert('authError', res.error || 'Неуспешна најава.', 'error');
+          return;
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ name: state.userName, code: state.accessCode }));
+        state.lists = res.lists || { topics: [], speakers: [], hashtags: [] };
+        $('displayUser').textContent = state.userName;
+        $('authCard').classList.add('hidden');
+        $('appCard').classList.remove('hidden');
+        renderAllLists();
+      } catch (err) {
+        showAlert('authError', 'Не може да се поврзе со серверот. Провери дали API_URL е точен.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Влези';
+      }
+    }
+
+    $('authForm').addEventListener('submit', e => {
+      e.preventDefault();
+      tryLogin($('inputName').value, $('inputCode').value);
+    });
+
+    $('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem(STORAGE_KEY);
+      state.accessCode = '';
+      $('appCard').classList.add('hidden');
+      $('authCard').classList.remove('hidden');
+      $('inputCode').value = '';
+    });
+
+    /* ---------- ТАБОВИ ---------- */
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const tab = btn.dataset.tab;
+        $('videoForm').classList.toggle('hidden', tab !== 'video');
+        $('murliForm').classList.toggle('hidden', tab !== 'murli');
+        hideAlert('globalAlert');
+      });
+    });
+
+    /* ---------- БЕЏОВИ ЗА АВТОМАТСКИ ПРЕДЛОЗИ ---------- */
+    function setBadge(id, text, clickHandler) {
+      const badge = $(id);
+      badge.textContent = text;
+      badge.classList.remove('hidden', 'clickable');
+      badge.onclick = null;
+      if (clickHandler) {
+        badge.classList.add('clickable');
+        badge.onclick = clickHandler;
+      }
+    }
+
+    function clearBadge(id) {
+      const badge = $(id);
+      badge.textContent = '';
+      badge.className = 'auto-badge hidden';
+      badge.onclick = null;
+    }
+
+    /* ---------- ПРИКАЗ НА ЛИСТИ И ЧИПОВИ ---------- */
+    function renderAllLists() {
+      $('speakersDatalist').innerHTML = state.lists.speakers.map(s => `<option value="${escapeAttr(s)}">`).join('');
+      $('topicsDatalist').innerHTML = state.lists.topics.map(t => `<option value="${escapeAttr(t)}">`).join('');
+
+      renderQuickFillChips('speakerChips', state.lists.speakers, 'ytSpeaker');
+      renderQuickFillChips('videoTopicChips', state.lists.topics, 'ytTopic');
+      renderQuickFillChips('murliTopicChips', state.lists.topics, 'murliTopic');
+
+      renderHashtagPicker('video');
+      renderHashtagPicker('murli');
+    }
+
+    function renderQuickFillChips(containerId, items, inputId) {
+      const box = $(containerId);
+      const input = $(inputId);
+      box.innerHTML = '';
+      items.forEach(item => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'chip' + (input.value.trim().toLowerCase() === item.toLowerCase() ? ' selected' : '');
+        btn.textContent = item;
+        btn.addEventListener('click', () => {
+          input.value = item;
+          if (inputId === 'ytSpeaker') {
+            state.userEditedSpeaker = true;
+            state.speakerAutoFilled = false;
+            clearBadge('speakerAutoHint');
+          }
+          if (inputId === 'ytTopic') {
+            state.userEditedTopic = true;
+            state.topicAutoFilled = false;
+            clearBadge('topicAutoHint');
+          }
+          renderQuickFillChips(containerId, items, inputId);
+        });
+        box.appendChild(btn);
+      });
+    }
+
+    $('ytSpeaker').addEventListener('input', () => {
+      state.userEditedSpeaker = true;
+      state.speakerAutoFilled = false;
+      clearBadge('speakerAutoHint');
+      renderQuickFillChips('speakerChips', state.lists.speakers, 'ytSpeaker');
+    });
+
+    $('ytTopic').addEventListener('input', () => {
+      state.userEditedTopic = true;
+      state.topicAutoFilled = false;
+      clearBadge('topicAutoHint');
+      renderQuickFillChips('videoTopicChips', state.lists.topics, 'ytTopic');
+    });
+
+    $('murliTopic').addEventListener('input', () => {
+      renderQuickFillChips('murliTopicChips', state.lists.topics, 'murliTopic');
+    });
+
+    function applySuggestedSpeaker(name, labelText) {
+      $('ytSpeaker').value = name;
+      state.speakerAutoFilled = true;
+      setBadge('speakerAutoHint', labelText);
+      renderQuickFillChips('speakerChips', state.lists.speakers, 'ytSpeaker');
+    }
+
+    function applySuggestedTopic(name, labelText) {
+      $('ytTopic').value = name;
+      state.topicAutoFilled = true;
+      setBadge('topicAutoHint', labelText);
+      renderQuickFillChips('videoTopicChips', state.lists.topics, 'ytTopic');
+    }
+
+    function renderHashtagPicker(mode) {
+      const selectedArr = mode === 'video' ? state.videoTags : state.murliTags;
+      const selectedBox = $(mode === 'video' ? 'ytSelectedTags' : 'murliSelectedTags');
+      const chipsBox = $(mode === 'video' ? 'videoTagChips' : 'murliTagChips');
+
+      selectedBox.innerHTML = '';
+      selectedArr.forEach(tag => {
+        const span = document.createElement('span');
+        span.className = 'active-tag';
+        span.innerHTML = `${escapeHtml(tag)} <button type="button" aria-label="Отстрани">&times;</button>`;
+        span.querySelector('button').addEventListener('click', () => toggleTag(mode, tag));
+        selectedBox.appendChild(span);
+      });
+
+      chipsBox.innerHTML = '';
+      const lowerSelected = new Set(selectedArr.map(t => t.toLowerCase()));
+      state.lists.hashtags.forEach(tag => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'chip' + (lowerSelected.has(tag.toLowerCase()) ? ' selected' : '');
+        btn.textContent = tag;
+        btn.addEventListener('click', () => toggleTag(mode, tag));
+        chipsBox.appendChild(btn);
+      });
+    }
+
+    function normalizeTag(raw) {
+      const clean = String(raw || '').trim().replace(/^#+/, '').replace(/[^\w\u0400-\u04FF-]/g, '');
+      return clean ? '#' + clean : '';
+    }
+
+    function toggleTag(mode, rawTag) {
+      const tag = normalizeTag(rawTag);
+      if (!tag) return;
+      if (mode === 'video') {
+        state.userEditedVideoTags = true;
+        state.tagsAutoFilled = false;
+        clearBadge('tagsAutoHint');
+      }
+      const arr = mode === 'video' ? state.videoTags : state.murliTags;
+      const idx = arr.findIndex(t => t.toLowerCase() === tag.toLowerCase());
+      if (idx >= 0) arr.splice(idx, 1);
+      else arr.push(tag);
+      renderHashtagPicker(mode);
+    }
+
+    function addTagsFromInput(mode, inputEl) {
+      const parts = inputEl.value.split(/[\s,]+/).filter(Boolean);
+      if (parts.length && mode === 'video') {
+        state.userEditedVideoTags = true;
+        state.tagsAutoFilled = false;
+        clearBadge('tagsAutoHint');
+      }
+      const arr = mode === 'video' ? state.videoTags : state.murliTags;
+      parts.forEach(p => {
+        const tag = normalizeTag(p);
+        if (tag && !arr.some(t => t.toLowerCase() === tag.toLowerCase())) {
+          arr.push(tag);
+        }
+      });
+      inputEl.value = '';
+      renderHashtagPicker(mode);
+    }
+
+    function bindTagInput(inputId, mode) {
+      const el = $(inputId);
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ',') {
+          e.preventDefault();
+          addTagsFromInput(mode, el);
+        }
+      });
+      el.addEventListener('blur', () => {
+        if (el.value.trim()) addTagsFromInput(mode, el);
+      });
+    }
+    bindTagInput('ytTagInput', 'video');
+    bindTagInput('murliTagInput', 'murli');
+
+    /* ---------- YOUTUBE ЛИНК + AI ПРЕДЛОЗИ ВО ПОЗАДИНА ---------- */
+    function extractYouTubeId(url) {
+      const match = String(url || '').trim().match(
+        /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+      );
+      return match ? match[1] : null;
+    }
+
+    let urlTimer = null;
+    $('ytUrl').addEventListener('input', () => {
+      clearTimeout(urlTimer);
+      urlTimer = setTimeout(handleYouTubeInput, 450);
+    });
+    $('ytUrl').addEventListener('paste', () => {
+      clearTimeout(urlTimer);
+      urlTimer = setTimeout(handleYouTubeInput, 100);
+    });
+
+    $('ytDesc').addEventListener('input', () => {
+      state.userEditedDesc = true;
+    });
+
+    async function handleYouTubeInput() {
+      const url = $('ytUrl').value.trim();
+      const videoId = extractYouTubeId(url);
+
+      if (!videoId) {
+        resetVideoPreview();
+        return;
+      }
+      if (videoId === state.lastFetchedId) return;
+
+      state.lastFetchedId = videoId;
+      state.currentVideo = null;
+      state.userEditedDesc = false;
+      state.pendingAiSummary = null;
+      $('ytDesc').value = '';
+
+      if (state.speakerAutoFilled) {
+        $('ytSpeaker').value = '';
+        state.speakerAutoFilled = false;
+        state.userEditedSpeaker = false;
+        clearBadge('speakerAutoHint');
+        renderQuickFillChips('speakerChips', state.lists.speakers, 'ytSpeaker');
+      }
+      if (state.topicAutoFilled) {
+        $('ytTopic').value = '';
+        state.topicAutoFilled = false;
+        state.userEditedTopic = false;
+        clearBadge('topicAutoHint');
+        renderQuickFillChips('videoTopicChips', state.lists.topics, 'ytTopic');
+      }
+      if (state.tagsAutoFilled) {
+        state.videoTags = [];
+        state.tagsAutoFilled = false;
+        state.userEditedVideoTags = false;
+        clearBadge('tagsAutoHint');
+        renderHashtagPicker('video');
+      }
+
+      hideAlert('ytDuplicateAlert');
+      hideAlert('globalAlert');
+      $('saveVideoBtn').disabled = true;
+
+      setAiStatus('loading', 'Вчитувам податоци од YouTube...', true);
+
+      try {
+        const meta = await apiCall({ action: 'fetchVideoMeta', url });
+        if (state.lastFetchedId !== videoId) return;
+
+        if (!meta.ok) {
+          resetVideoPreview();
+          showAlert('ytDuplicateAlert', meta.error || 'Грешка при читање на видеото.', 'error');
+          return;
+        }
+
+        state.currentVideo = meta;
+        $('ytThumb').src = meta.thumbnail || '';
+        $('ytTitleText').textContent = meta.title;
+        $('ytDurationBadge').textContent = meta.duration || '—';
+        $('ytChannelText').textContent = meta.channelTitle || '';
+        $('ytPreview').classList.add('visible');
+
+        if (meta.suggestedSpeaker && !state.userEditedSpeaker && !$('ytSpeaker').value.trim()) {
+          const badgeText = meta.speakerSource === 'list' ? 'Препознаен од база' : 'Предлог од наслов';
+          applySuggestedSpeaker(meta.suggestedSpeaker, badgeText);
+        }
+
+        if (meta.duplicate) {
+          showAlert(
+            'ytDuplicateAlert',
+            `Ова видео веќе е внесено во базата (од ${meta.duplicate.addedBy || 'член'}, датум: ${meta.duplicate.date}).`,
+            'error'
+          );
+          hideAiStatus();
+          $('saveVideoBtn').disabled = true;
+          return;
+        }
+
+        $('saveVideoBtn').disabled = false;
+        runBackgroundSummary(meta);
+      } catch (err) {
+        if (state.lastFetchedId !== videoId) return;
+        setAiStatus('warn', 'Грешка при поврзување со YouTube. Можеш да пробаш повторно.', false);
+        $('saveVideoBtn').disabled = false;
+      }
+    }
+
+    async function runBackgroundSummary(meta) {
+      const targetId = meta.videoId;
+      setAiStatus('loading', 'AI подготвува резиме, тема и хаштагови во позадина...', true);
+
+      try {
+        const res = await apiCall({
+          action: 'summarizeVideo',
+          videoId: meta.videoId,
+          title: meta.title,
+          rawDescription: meta.rawDescription,
+          durationMinutes: meta.durationMinutes
+        });
+
+        if (state.lastFetchedId !== targetId) return;
+
+        if (!res.ok) {
+          setAiStatus('warn', 'AI анализата не успеа — можеш да внесеш рачно.', false, 'Повтори', () => runBackgroundSummary(meta));
+          return;
+        }
+
+        // 1. AI предлог за предавач
+        if (res.suggestedSpeaker && !state.userEditedSpeaker) {
+          const currentVal = $('ytSpeaker').value.trim();
+          const aiName = res.suggestedSpeaker.trim();
+          const aiIsInList = state.lists.speakers.some(s => s.toLowerCase() === aiName.toLowerCase());
+          const currentIsInList = state.lists.speakers.some(s => s.toLowerCase() === currentVal.toLowerCase());
+
+          if (!currentVal || (aiIsInList && !currentIsInList)) {
+            applySuggestedSpeaker(aiName, 'AI предлог');
+          } else if (currentVal.toLowerCase() !== aiName.toLowerCase()) {
+            setBadge('speakerAutoHint', 'AI предлог: ' + aiName + ' (кликни)', () => {
+              applySuggestedSpeaker(aiName, 'AI предлог');
+            });
+          }
+        }
+
+        // 2. AI предлог за тема
+        if (res.suggestedTopic) {
+          const aiTopic = res.suggestedTopic.trim();
+          const currentTopic = $('ytTopic').value.trim();
+          if (!state.userEditedTopic && !currentTopic) {
+            applySuggestedTopic(aiTopic, 'AI предлог');
+          } else if (currentTopic.toLowerCase() !== aiTopic.toLowerCase()) {
+            setBadge('topicAutoHint', 'AI предлог: ' + aiTopic + ' (кликни)', () => {
+              applySuggestedTopic(aiTopic, 'AI предлог');
+            });
+          }
+        }
+
+        // 3. AI предлог за хаштагови
+        if (Array.isArray(res.suggestedHashtags) && res.suggestedHashtags.length > 0) {
+          if (!state.userEditedVideoTags && state.videoTags.length === 0) {
+            state.videoTags = res.suggestedHashtags.slice();
+            state.tagsAutoFilled = true;
+            setBadge('tagsAutoHint', 'AI предлог');
+            renderHashtagPicker('video');
+          } else {
+            const lowerExisting = new Set(state.videoTags.map(t => t.toLowerCase()));
+            const missing = res.suggestedHashtags.filter(t => !lowerExisting.has(t.toLowerCase()));
+            if (missing.length > 0) {
+              setBadge('tagsAutoHint', 'AI: +' + missing.join(' ') + ' (кликни)', () => {
+                missing.forEach(t => {
+                  if (!state.videoTags.some(x => x.toLowerCase() === t.toLowerCase())) {
+                    state.videoTags.push(t);
+                  }
+                });
+                renderHashtagPicker('video');
+                clearBadge('tagsAutoHint');
+              });
+            }
+          }
+        }
+
+        // 4. AI резиме
+        const style = res.source === 'youtube_desc' ? 'warn' : 'success';
+        if (state.userEditedDesc && $('ytDesc').value.trim()) {
+          state.pendingAiSummary = res.summary;
+          setAiStatus(style, res.statusText + ' (готово)', false, 'Вметни текст', () => {
+            $('ytDesc').value = state.pendingAiSummary || '';
+            setAiStatus(style, res.statusText, false);
+          });
+        } else {
+          $('ytDesc').value = res.summary || '';
+          setAiStatus(style, res.statusText, false, 'Повтори AI', () => {
+            state.userEditedDesc = false;
+            runBackgroundSummary(meta);
+          });
+        }
+      } catch (err) {
+        if (state.lastFetchedId !== targetId) return;
+        setAiStatus('warn', 'Неуспешно AI поврзување — внеси опис рачно.', false, 'Повтори', () => runBackgroundSummary(meta));
+      }
+    }
+
+    function setAiStatus(type, text, showSpinner, actionLabel, actionFn) {
+      const box = $('aiStatus');
+      box.className = 'ai-status visible ' + type;
+      $('aiSpinner').classList.toggle('hidden', !showSpinner);
+      $('aiStatusText').textContent = text;
+      const btn = $('aiActionBtn');
+      if (actionLabel && actionFn) {
+        btn.textContent = actionLabel;
+        btn.classList.remove('hidden');
+        btn.onclick = actionFn;
+      } else {
+        btn.classList.add('hidden');
+        btn.onclick = null;
+      }
+    }
+
+    function hideAiStatus() {
+      $('aiStatus').className = 'ai-status';
+    }
+
+    function resetVideoPreview() {
+      state.lastFetchedId = null;
+      state.currentVideo = null;
+      $('ytPreview').classList.remove('visible');
+      hideAlert('ytDuplicateAlert');
+      hideAiStatus();
+      clearBadge('speakerAutoHint');
+      clearBadge('topicAutoHint');
+      clearBadge('tagsAutoHint');
+      $('saveVideoBtn').disabled = false;
+    }
+
+    /* ---------- ЗАЧУВУВАЊЕ ВИДЕО ---------- */
+    $('videoForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      hideAlert('globalAlert');
+      if ($('ytTagInput').value.trim()) addTagsFromInput('video', $('ytTagInput'));
+
+      const btn = $('saveVideoBtn');
+      btn.disabled = true;
+      btn.textContent = 'Се зачувува...';
+
+      try {
+        const res = await apiCall({
+          action: 'saveVideo',
+          userName: state.userName,
+          url: $('ytUrl').value.trim(),
+          title: state.currentVideo ? state.currentVideo.title : '',
+          duration: state.currentVideo ? state.currentVideo.duration : '',
+          description: $('ytDesc').value.trim(),
+          speaker: $('ytSpeaker').value.trim(),
+          topic: $('ytTopic').value.trim(),
+          hashtags: state.videoTags,
+          note: $('ytNote').value.trim()
+        });
+
+        if (!res.ok) {
+          showAlert('globalAlert', res.error || 'Грешка при зачувување.', 'error');
+          return;
+        }
+
+        if (res.lists) state.lists = res.lists;
+        $('videoForm').reset();
+        state.videoTags = [];
+        state.userEditedDesc = false;
+        state.userEditedSpeaker = false;
+        state.speakerAutoFilled = false;
+        state.userEditedTopic = false;
+        state.topicAutoFilled = false;
+        state.userEditedVideoTags = false;
+        state.tagsAutoFilled = false;
+        resetVideoPreview();
+        renderAllLists();
+        showAlert('globalAlert', 'Видеото е успешно зачувано во базата!', 'success');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (err) {
+        showAlert('globalAlert', 'Грешка при поврзување со серверот.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Зачувај видео';
+      }
+    });
+
+    /* ---------- ЗАЧУВУВАЊЕ МУРЛИ ---------- */
+    $('murliForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      hideAlert('globalAlert');
+      if ($('murliTagInput').value.trim()) addTagsFromInput('murli', $('murliTagInput'));
+
+      const btn = $('saveMurliBtn');
+      btn.disabled = true;
+      btn.textContent = 'Се зачувува...';
+
+      try {
+        const res = await apiCall({
+          action: 'saveMurli',
+          userName: state.userName,
+          url: $('murliUrl').value.trim(),
+          title: $('murliTitle').value.trim(),
+          topic: $('murliTopic').value.trim(),
+          hashtags: state.murliTags,
+          note: $('murliNote').value.trim()
+        });
+
+        if (!res.ok) {
+          showAlert('globalAlert', res.error || 'Грешка при зачувување.', 'error');
+          return;
+        }
+
+        if (res.lists) state.lists = res.lists;
+        $('murliForm').reset();
+        state.murliTags = [];
+        renderAllLists();
+        showAlert('globalAlert', 'Мурли линкот е успешно зачуван во базата!', 'success');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (err) {
+        showAlert('globalAlert', 'Грешка при поврзување со серверот.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Зачувај Мурли';
+      }
+    });
+
+    /* ---------- ПОМОШНИ ФУНКЦИИ ---------- */
+    function showAlert(id, msg, type) {
+      const el = $(id);
+      el.textContent = msg;
+      el.className = 'alert visible ' + type;
+    }
+
+    function hideAlert(id) {
+      $(id).className = 'alert';
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[m]));
+    }
+
+    function escapeAttr(str) {
+      return escapeHtml(str);
+    }
+
+    (function boot() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+        if (saved && saved.name && saved.code) {
+          $('inputName').value = saved.name;
+          $('inputCode').value = saved.code;
+          tryLogin(saved.name, saved.code, true);
+        }
+      } catch (_) {}
+    })();
+  </script>
+</body>
+</html>
