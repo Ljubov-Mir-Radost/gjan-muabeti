@@ -320,6 +320,11 @@
       border-radius: 8px;
       overflow: hidden;
       background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 1.25rem;
     }
     .yt-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
@@ -333,14 +338,22 @@
       font-weight: 700;
       padding: 2px 6px;
       border-radius: 5px;
+      z-index: 2;
     }
 
     .yt-meta { min-width: 0; flex: 1; }
     .yt-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 4px; word-break: break-word; color: var(--text); }
     .yt-orig-caption { font-size: 0.78rem; color: var(--muted); word-break: break-word; }
 
-    .quick-extract-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 8px; }
-    .quick-extract-label { font-size: 0.77rem; color: var(--muted); }
+    .quick-extract-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .quick-extract-label { font-size: 0.77rem; color: var(--muted); font-weight: 600; }
+
     .quick-chip {
       border: 1px dashed var(--primary-border);
       background: var(--primary-soft);
@@ -350,8 +363,23 @@
       padding: 3px 9px;
       border-radius: 99px;
       cursor: pointer;
+      transition: 0.12s;
     }
     .quick-chip:hover { filter: brightness(1.08); }
+    .quick-chip.selected {
+      border-style: solid;
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .ai-tags-box {
+      margin-top: 9px;
+      padding: 8px 10px;
+      border-radius: 9px;
+      background: var(--surface);
+      border: 1px dashed var(--primary-border);
+    }
 
     .ai-status {
       display: none;
@@ -575,7 +603,12 @@
       overflow: hidden;
       flex-shrink: 0;
       background: var(--border);
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 1.6rem;
     }
     .card-thumb-link img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.2s; }
     .card-thumb-link:hover img { transform: scale(1.03); }
@@ -716,7 +749,7 @@
           <div class="brand">
             <div class="brand-icon">✦</div>
             <div>
-              <h1>Гјан База <span class="version-tag">v3.2</span></h1>
+              <h1>Гјан База <span class="version-tag">v3.3</span></h1>
               <div class="user-badge">Предлози за превод и Архива</div>
             </div>
           </div>
@@ -745,7 +778,7 @@
         <div class="brand">
           <div class="brand-icon">✦</div>
           <div>
-            <h1>Гјан База <span class="version-tag">v3.2</span></h1>
+            <h1>Гјан База <span class="version-tag">v3.3</span></h1>
             <div class="user-badge">Најавен/а како: <strong id="displayUser"></strong></div>
           </div>
         </div>
@@ -791,7 +824,7 @@
 
           <div id="ytPreview" class="yt-preview">
             <div class="yt-thumb-wrap">
-              <img id="ytThumb" src="" alt="Преглед" />
+              <img id="ytThumb" src="" alt="" referrerpolicy="no-referrer" />
               <span id="ytDurationBadge" class="duration-overlay"></span>
             </div>
             <div class="yt-meta">
@@ -844,13 +877,11 @@
           <div class="field">
             <label for="ytTagInput">
               Хаштагови
-              <span class="label-right">
-                <span id="tagsAutoHint" class="auto-badge hidden"></span>
-                <span class="hint">Enter или запирка за нов таг</span>
-              </span>
+              <span class="hint">Избери од предлозите подолу или напиши нов + Enter</span>
             </label>
             <div id="ytSelectedTags" class="selected-tags-box"></div>
-            <input type="text" id="ytTagInput" placeholder="На пр. Mansa Sakash (Enter за #MansaSakash)" />
+            <input type="text" id="ytTagInput" placeholder="На пр. Mansa Sakash (Enter или запирка за #MansaSakash)" />
+            <div id="aiTagSuggestions" class="quick-extract-row ai-tags-box hidden"></div>
             <div id="videoTagChips" class="chips-wrap"></div>
           </div>
 
@@ -987,9 +1018,9 @@
     // =========================================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwelW3qFkOtqY7NFFj8mgLHPk7u4jL0ttY-Dw5oc7Cdb-nbgSBDdIWGOoa3bwMwGyPb/exec';
 
-    // Разделени стрингови за никогаш да не се претворат во Markdown линкови при копирање
     const YT_WATCH_BASE = 'https:/' + '/[www.youtube.com/watch?v=](https://www.youtube.com/watch?v=)';
-    const YT_THUMB_BASE = 'https:/' + '/[i.ytimg.com/vi/](https://i.ytimg.com/vi/)';
+    const YT_IMG_PRIMARY = 'https:/' + '/[i.ytimg.com/vi/](https://i.ytimg.com/vi/)';
+    const YT_IMG_BACKUP = 'https:/' + '/[img.youtube.com/vi/](https://img.youtube.com/vi/)';
 
     const STORAGE_KEY = 'archive_auth_v1';
     const THEME_KEY = 'archive_theme_v1';
@@ -1003,6 +1034,7 @@
       archiveType: 'videos',
       activeFilterTag: '',
       videoTags: [],
+      aiSuggestedTags: [],
       murliTags: [],
       currentVideo: null,
       showingFullTitle: false,
@@ -1012,8 +1044,6 @@
       speakerAutoFilled: false,
       userEditedTopic: false,
       topicAutoFilled: false,
-      userEditedVideoTags: false,
-      tagsAutoFilled: false,
       pendingAiSummary: null,
       editingVideo: null,
       editingMurli: null,
@@ -1027,8 +1057,49 @@
       return String(raw).trim().replace(/\[([^\]]*)\]\(([^)]*)\)/g, '$2').trim();
     }
 
-    function getThumbUrl(videoId) {
-      return videoId ? (YT_THUMB_BASE + encodeURIComponent(videoId) + '/mqdefault.jpg') : '';
+    /**
+     * Вчитува YouTube сликичка со автоматски fallback низ повеќе формати и домени.
+     * Приоритет има точниот URL зачуван од YouTube Data API.
+     */
+    function loadThumbWithFallback(imgEl, savedUrl, videoId) {
+      const candidates = [];
+      const addCand = u => {
+        const clean = sanitizeUrl(u);
+        if (clean && /^https?:\/\//i.test(clean) && !candidates.includes(clean)) {
+          candidates.push(clean);
+        }
+      };
+
+      addCand(savedUrl);
+      if (videoId) {
+        const enc = encodeURIComponent(videoId);
+        addCand(YT_IMG_PRIMARY + enc + '/mqdefault.jpg');
+        addCand(YT_IMG_PRIMARY + enc + '/hqdefault.jpg');
+        addCand(YT_IMG_BACKUP + enc + '/mqdefault.jpg');
+        addCand(YT_IMG_BACKUP + enc + '/hqdefault.jpg');
+        addCand(YT_IMG_PRIMARY + enc + '/0.jpg');
+      }
+
+      imgEl.referrerPolicy = 'no-referrer';
+      imgEl.style.display = '';
+
+      if (!candidates.length) {
+        imgEl.style.display = 'none';
+        imgEl.removeAttribute('src');
+        return;
+      }
+
+      let idx = 0;
+      imgEl.onerror = () => {
+        idx++;
+        if (idx < candidates.length) {
+          imgEl.src = candidates[idx];
+        } else {
+          imgEl.onerror = null;
+          imgEl.style.display = 'none';
+        }
+      };
+      imgEl.src = candidates[0];
     }
 
     /* ---------- НОЌНА / СВЕТЛА ТЕМА ---------- */
@@ -1308,20 +1379,40 @@
         return;
       }
 
-      box.innerHTML = '<span class="quick-extract-label">Брзо во хаштаг:</span>';
+      const lowerSelected = new Set(state.videoTags.map(t => t.toLowerCase()));
+      box.innerHTML = '<span class="quick-extract-label">Од насловот:</span>';
       top.forEach(tag => {
+        const isAdded = lowerSelected.has(tag.toLowerCase());
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'quick-chip';
-        btn.textContent = '+ ' + tag;
-        btn.addEventListener('click', () => {
-          if (!state.videoTags.some(t => t.toLowerCase() === tag.toLowerCase())) {
-            state.videoTags.push(tag);
-            state.userEditedVideoTags = true;
-            state.tagsAutoFilled = false;
-            renderHashtagPicker('video');
-          }
-        });
+        btn.className = 'quick-chip' + (isAdded ? ' selected' : '');
+        btn.textContent = (isAdded ? '✓ ' : '+ ') + tag;
+        btn.addEventListener('click', () => toggleTag('video', tag));
+        box.appendChild(btn);
+      });
+      box.classList.remove('hidden');
+    }
+
+    /**
+     * AI предлози за хаштагови — едиторот сам кликнува кои да влезат во базата
+     */
+    function renderAiTagSuggestions() {
+      const box = $('aiTagSuggestions');
+      if (!state.aiSuggestedTags || state.aiSuggestedTags.length === 0) {
+        box.innerHTML = '';
+        box.classList.add('hidden');
+        return;
+      }
+
+      const lowerSelected = new Set(state.videoTags.map(t => t.toLowerCase()));
+      box.innerHTML = '<span class="quick-extract-label">✨ AI предлози (кликни за избор):</span>';
+      state.aiSuggestedTags.forEach(tag => {
+        const isAdded = lowerSelected.has(tag.toLowerCase());
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'quick-chip' + (isAdded ? ' selected' : '');
+        btn.textContent = (isAdded ? '✓ ' : '+ ') + tag;
+        btn.addEventListener('click', () => toggleTag('video', tag));
         box.appendChild(btn);
       });
       box.classList.remove('hidden');
@@ -1351,6 +1442,13 @@
         btn.addEventListener('click', () => toggleTag(mode, tag));
         chipsBox.appendChild(btn);
       });
+
+      if (mode === 'video') {
+        renderAiTagSuggestions();
+        if (state.currentVideo) {
+          renderQuickTitleTags($('ytTitleInput').value.trim() || state.currentVideo.title);
+        }
+      }
     }
 
     function normalizeTag(raw) {
@@ -1370,11 +1468,6 @@
     function toggleTag(mode, rawTag) {
       const tag = normalizeTag(rawTag);
       if (!tag) return;
-      if (mode === 'video') {
-        state.userEditedVideoTags = true;
-        state.tagsAutoFilled = false;
-        clearBadge('tagsAutoHint');
-      }
       const arr = mode === 'video' ? state.videoTags : state.murliTags;
       const idx = arr.findIndex(t => t.toLowerCase() === tag.toLowerCase());
       if (idx >= 0) arr.splice(idx, 1);
@@ -1384,11 +1477,6 @@
 
     function addTagsFromInput(mode, inputEl) {
       const parts = inputEl.value.split(',').map(s => s.trim()).filter(Boolean);
-      if (parts.length && mode === 'video') {
-        state.userEditedVideoTags = true;
-        state.tagsAutoFilled = false;
-        clearBadge('tagsAutoHint');
-      }
       const arr = mode === 'video' ? state.videoTags : state.murliTags;
       parts.forEach(p => {
         const tag = normalizeTag(p);
@@ -1428,7 +1516,7 @@
         title: v.title,
         fullTitle: v.title,
         duration: v.duration,
-        thumbnail: getThumbUrl(cleanId)
+        thumbnail: v.thumbnail || ''
       };
       state.showingFullTitle = false;
       state.userEditedDesc = true;
@@ -1436,15 +1524,13 @@
       state.speakerAutoFilled = false;
       state.userEditedTopic = true;
       state.topicAutoFilled = false;
-      state.userEditedVideoTags = true;
-      state.tagsAutoFilled = false;
+      state.aiSuggestedTags = [];
 
       $('videoEditLabel').textContent = 'Уредуваш видео: ' + (v.title || cleanId);
       $('videoEditBanner').classList.remove('hidden');
       $('ytStatusField').classList.remove('hidden');
       $('saveVideoBtn').textContent = 'Зачувај измени';
 
-      // Полето останува целосно отклучено за да можеш да го менуваш/бришеш/лепиш линкот
       $('ytUrl').value = cleanUrl;
       $('ytTitleInput').value = v.title || '';
       $('ytSpeaker').value = v.speaker || '';
@@ -1454,18 +1540,16 @@
       $('ytNote').value = v.note || '';
       state.videoTags = (v.hashtags || []).slice();
 
-      $('ytThumb').src = state.currentVideo.thumbnail;
+      loadThumbWithFallback($('ytThumb'), v.thumbnail, cleanId);
       $('ytDurationBadge').textContent = v.duration || '—';
       $('ytChannelText').textContent = 'Режим на измена';
-      $('ytFullTitleText').textContent = 'Кликни „Повторно YouTube + AI“ горе ако сакаш одново да се повлечат насловот, темата, хаштаговите и резимето.';
+      $('ytFullTitleText').textContent = 'Кликни „Повторно YouTube + AI“ горе за одново да се повлечат насловот, сликичката, предлозите и резимето.';
       $('ytPreview').classList.add('visible');
       $('titleModeBadge').classList.add('hidden');
       hideAlert('ytDuplicateAlert');
       hideAiStatus();
       clearBadge('speakerAutoHint');
       clearBadge('topicAutoHint');
-      clearBadge('tagsAutoHint');
-      renderQuickTitleTags(v.title);
       renderAllLists();
 
       hideAlert('globalAlert');
@@ -1480,13 +1564,12 @@
       $('saveVideoBtn').textContent = 'Зачувај во Предлози';
       $('videoForm').reset();
       state.videoTags = [];
+      state.aiSuggestedTags = [];
       state.userEditedDesc = false;
       state.userEditedSpeaker = false;
       state.speakerAutoFilled = false;
       state.userEditedTopic = false;
       state.topicAutoFilled = false;
-      state.userEditedVideoTags = false;
-      state.tagsAutoFilled = false;
       resetVideoPreview();
       renderAllLists();
     }
@@ -1520,13 +1603,11 @@
       state.userEditedDesc = false;
       state.userEditedSpeaker = false;
       state.userEditedTopic = false;
-      state.userEditedVideoTags = false;
-      state.videoTags = [];
+      state.aiSuggestedTags = [];
       $('ytDesc').value = '';
-      renderHashtagPicker('video');
+      renderAiTagSuggestions();
       clearBadge('speakerAutoHint');
       clearBadge('topicAutoHint');
-      clearBadge('tagsAutoHint');
 
       setAiStatus('loading', 'Повторно вчитувам податоци од YouTube...', true);
 
@@ -1555,7 +1636,7 @@
         state.lastFetchedId = meta.videoId;
         state.currentVideo = meta;
         state.showingFullTitle = false;
-        $('ytThumb').src = meta.thumbnail || getThumbUrl(meta.videoId);
+        loadThumbWithFallback($('ytThumb'), meta.thumbnail, meta.videoId);
         $('ytDurationBadge').textContent = meta.duration || '—';
         $('ytChannelText').textContent = meta.channelTitle || 'YouTube';
         $('ytFullTitleText').textContent = meta.fullTitle || meta.title;
@@ -1670,10 +1751,12 @@
       state.showingFullTitle = false;
       state.userEditedDesc = false;
       state.pendingAiSummary = null;
+      state.aiSuggestedTags = [];
       $('ytDesc').value = '';
       $('ytTitleInput').value = '';
       $('titleQuickTags').classList.add('hidden');
       $('titleModeBadge').classList.add('hidden');
+      renderAiTagSuggestions();
 
       if (state.speakerAutoFilled) {
         $('ytSpeaker').value = '';
@@ -1688,13 +1771,6 @@
         state.userEditedTopic = false;
         clearBadge('topicAutoHint');
         renderQuickFillChips('videoTopicChips', state.lists.topics, 'ytTopic');
-      }
-      if (state.tagsAutoFilled) {
-        state.videoTags = [];
-        state.tagsAutoFilled = false;
-        state.userEditedVideoTags = false;
-        clearBadge('tagsAutoHint');
-        renderHashtagPicker('video');
       }
 
       hideAlert('ytDuplicateAlert');
@@ -1714,7 +1790,7 @@
         }
 
         state.currentVideo = meta;
-        $('ytThumb').src = meta.thumbnail || getThumbUrl(meta.videoId);
+        loadThumbWithFallback($('ytThumb'), meta.thumbnail, meta.videoId);
         $('ytDurationBadge').textContent = meta.duration || '—';
         $('ytChannelText').textContent = meta.channelTitle || 'YouTube';
         $('ytFullTitleText').textContent = meta.fullTitle || meta.title;
@@ -1804,27 +1880,10 @@
           }
         }
 
+        // AI хаштаговите НИКОГАШ не се внесуваат автоматски — само се прикажуваат за избор
         if (Array.isArray(res.suggestedHashtags) && res.suggestedHashtags.length > 0) {
-          if (!state.userEditedVideoTags && state.videoTags.length === 0) {
-            state.videoTags = res.suggestedHashtags.slice();
-            state.tagsAutoFilled = true;
-            setBadge('tagsAutoHint', 'AI предлог');
-            renderHashtagPicker('video');
-          } else {
-            const lowerExisting = new Set(state.videoTags.map(t => t.toLowerCase()));
-            const missing = res.suggestedHashtags.filter(t => !lowerExisting.has(t.toLowerCase()));
-            if (missing.length > 0) {
-              setBadge('tagsAutoHint', 'AI: +' + missing.join(' '), () => {
-                missing.forEach(t => {
-                  if (!state.videoTags.some(x => x.toLowerCase() === t.toLowerCase())) {
-                    state.videoTags.push(t);
-                  }
-                });
-                renderHashtagPicker('video');
-                clearBadge('tagsAutoHint');
-              });
-            }
-          }
+          state.aiSuggestedTags = res.suggestedHashtags.slice();
+          renderAiTagSuggestions();
         }
 
         const style = res.source === 'youtube_desc' ? 'warn' : 'success';
@@ -1869,16 +1928,17 @@
       state.lastFetchedId = null;
       state.currentVideo = null;
       state.showingFullTitle = false;
+      state.aiSuggestedTags = [];
       $('ytPreview').classList.remove('visible');
       $('ytTitleInput').value = '';
       $('titleQuickTags').innerHTML = '';
       $('titleQuickTags').classList.add('hidden');
       $('titleModeBadge').classList.add('hidden');
+      renderAiTagSuggestions();
       hideAlert('ytDuplicateAlert');
       hideAiStatus();
       clearBadge('speakerAutoHint');
       clearBadge('topicAutoHint');
-      clearBadge('tagsAutoHint');
       $('saveVideoBtn').disabled = false;
     }
 
@@ -1895,6 +1955,9 @@
 
       try {
         const cleanUrlInput = sanitizeUrl($('ytUrl').value);
+        const thumbUrl = (state.currentVideo && state.currentVideo.thumbnail) ||
+                         (state.editingVideo && state.editingVideo.thumbnail) || '';
+
         const payload = isEdit
           ? {
               action: 'updateVideo',
@@ -1908,7 +1971,8 @@
               topic: $('ytTopic').value.trim(),
               hashtags: state.videoTags,
               status: $('ytStatus').value,
-              note: $('ytNote').value.trim()
+              note: $('ytNote').value.trim(),
+              thumbnail: thumbUrl
             }
           : {
               action: 'saveVideo',
@@ -1920,7 +1984,8 @@
               speaker: $('ytSpeaker').value.trim(),
               topic: $('ytTopic').value.trim(),
               hashtags: state.videoTags,
-              note: $('ytNote').value.trim()
+              note: $('ytNote').value.trim(),
+              thumbnail: thumbUrl
             };
 
         const res = await apiCall(payload);
@@ -2219,14 +2284,13 @@
     function buildVideoCard(v) {
       const cleanUrl = v.videoId ? (YT_WATCH_BASE + v.videoId) : sanitizeUrl(v.url);
       const safeUrl = /^https?:\/\//i.test(cleanUrl) ? cleanUrl : '#';
-      const thumbUrl = getThumbUrl(v.videoId);
       const card = document.createElement('article');
       card.className = 'item-card';
 
       card.innerHTML = `
         <div class="video-card-layout">
           <a class="card-thumb-link" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener">
-            ${thumbUrl ? `<img src="${escapeAttr(thumbUrl)}" alt="" loading="lazy" />` : ''}
+            <img class="js-card-thumb" alt="" loading="lazy" referrerpolicy="no-referrer" />
             ${v.duration ? `<span class="duration-overlay">${escapeHtml(v.duration)}</span>` : ''}
           </a>
           <div class="card-body">
@@ -2257,6 +2321,8 @@
           </div>
         </div>
       `;
+
+      loadThumbWithFallback(card.querySelector('.js-card-thumb'), v.thumbnail, v.videoId);
 
       const tagsBox = card.querySelector('.card-tags');
       (v.hashtags || []).forEach(tag => {
