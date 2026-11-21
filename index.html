@@ -266,6 +266,48 @@
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .field { margin-bottom: 18px; }
 
+    .url-input-row {
+      display: flex;
+      gap: 8px;
+      align-items: stretch;
+    }
+    .url-input-row input { flex: 1; min-width: 0; }
+
+    .fetch-btn {
+      border: 1px solid var(--primary-border);
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 0 16px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: 0.15s;
+    }
+    .fetch-btn:hover:not(:disabled) {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+    .fetch-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .playlist-switch-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      background: var(--info-bg);
+      border: 1px solid var(--info-border);
+      color: var(--info);
+      font-size: 0.83rem;
+      font-weight: 600;
+    }
+
     label {
       display: flex;
       justify-content: space-between;
@@ -354,7 +396,20 @@
       bottom: 5px;
       background: rgba(15, 23, 42, 0.88);
       color: #fff;
-      font-size: 0.72rem;
+      font-size: 0.71rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 5px;
+      z-index: 2;
+    }
+
+    .playlist-corner-badge {
+      position: absolute;
+      left: 5px;
+      top: 5px;
+      background: rgba(79, 70, 229, 0.92);
+      color: #fff;
+      font-size: 0.69rem;
       font-weight: 700;
       padding: 2px 6px;
       border-radius: 5px;
@@ -769,7 +824,7 @@
           <div class="brand">
             <div class="brand-icon"><img src="logo.png" alt="Гјан База" /></div>
             <div>
-              <h1>Гјан База <span class="version-tag">v3.4</span></h1>
+              <h1>Гјан База <span class="version-tag">v3.5.1</span></h1>
               <div class="user-badge">Предлози за превод и Архива</div>
             </div>
           </div>
@@ -798,7 +853,7 @@
         <div class="brand">
           <div class="brand-icon"><img src="logo.png" alt="Гјан База" /></div>
           <div>
-            <h1>Гјан База <span class="version-tag">v3.4</span></h1>
+            <h1>Гјан База <span class="version-tag">v3.5.1</span></h1>
             <div class="user-badge">Најавен/а како: <strong id="displayUser"></strong></div>
           </div>
         </div>
@@ -821,7 +876,7 @@
 
       <div id="globalAlert" class="alert"></div>
 
-      <!-- ТАБ 1: ДОДАДИ / ИЗМЕНИ YOUTUBE ВИДЕО -->
+      <!-- ТАБ 1: ДОДАДИ / ИЗМЕНИ YOUTUBE ВИДЕО ИЛИ ПЛЕЈЛИСТА -->
       <div id="videoTab" class="form-wrap">
         <div id="videoEditBanner" class="edit-banner hidden">
           <span id="videoEditLabel">Режим на измена</span>
@@ -834,10 +889,17 @@
         <form id="videoForm">
           <div class="field">
             <label for="ytUrl">
-              YouTube линк
-              <span class="hint">Насловот, траењето, предавачот и темата се полнат веднаш</span>
+              YouTube линк (видео или плејлиста)
+              <span class="hint">Поддржува видеа и цели плејлисти (playlist?list=...)</span>
             </label>
-            <input type="text" id="ytUrl" inputmode="url" placeholder="Залепи YouTube линк (watch, youtu.be, live, shorts)..." required />
+            <div class="url-input-row">
+              <input type="text" id="ytUrl" inputmode="url" placeholder="Залепи YouTube видео или плејлиста..." required />
+              <button type="button" id="fetchYtBtn" class="fetch-btn">Вчитај</button>
+            </div>
+            <div id="playlistSwitchBar" class="playlist-switch-bar hidden">
+              <span>📋 Овој линк е дел од плејлиста. Сакаш да ја додадеш целата листа?</span>
+              <button type="button" id="switchToPlaylistBtn" class="banner-btn primary">Вчитај цела плејлиста</button>
+            </div>
           </div>
 
           <div id="ytDuplicateAlert" class="alert error"></div>
@@ -845,6 +907,7 @@
           <div id="ytPreview" class="yt-preview">
             <div class="yt-thumb-wrap">
               <img id="ytThumb" src="" alt="" referrerpolicy="no-referrer" />
+              <span id="ytPlaylistBadge" class="playlist-corner-badge hidden">📋 Плејлиста</span>
               <span id="ytDurationBadge" class="duration-overlay"></span>
             </div>
             <div class="yt-meta">
@@ -855,7 +918,7 @@
 
           <div class="field">
             <label for="ytTitleInput">
-              Наслов на видеото (исчистен)
+              Наслов (исчистен)
               <span id="titleModeBadge" class="auto-badge clickable hidden">Користи цел наслов</span>
             </label>
             <input type="text" id="ytTitleInput" placeholder="Англискиот чист наслов ќе се појави тука..." required />
@@ -922,7 +985,7 @@
 
           <div class="field">
             <label for="ytNote">Забелешка <span class="hint">(опционално)</span></label>
-            <input type="text" id="ytNote" placeholder="На пр. приоритет, интересен дел од 12:30..." />
+            <input type="text" id="ytNote" placeholder="На пр. приоритет, 7 дела, интересен дел..." />
           </div>
 
           <button type="submit" id="saveVideoBtn" class="btn-primary">Зачувај во Предлози</button>
@@ -1038,9 +1101,10 @@
     // =========================================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwelW3qFkOtqY7NFFj8mgLHPk7u4jL0ttY-Dw5oc7Cdb-nbgSBDdIWGOoa3bwMwGyPb/exec';
 
-    const YT_WATCH_BASE = 'https:/' + '/www.youtube.com/watch?v=';
-    const YT_IMG_PRIMARY = 'https:/' + '/i.ytimg.com/vi/';
-    const YT_IMG_BACKUP = 'https:/' + '/img.youtube.com/vi/';
+    const YT_WATCH_BASE = 'https:/' + '/[www.youtube.com/watch?v=](https://www.youtube.com/watch?v=)';
+    const YT_PLAYLIST_BASE = 'https:/' + '/[www.youtube.com/playlist?list=](https://www.youtube.com/playlist?list=)';
+    const YT_IMG_PRIMARY = 'https:/' + '/[i.ytimg.com/vi/](https://i.ytimg.com/vi/)';
+    const YT_IMG_BACKUP = 'https:/' + '/[img.youtube.com/vi/](https://img.youtube.com/vi/)';
 
     const STORAGE_KEY = 'archive_auth_v1';
     const THEME_KEY = 'archive_theme_v1';
@@ -1059,6 +1123,7 @@
       currentVideo: null,
       showingFullTitle: false,
       lastFetchedId: null,
+      detectedListInVideoUrl: '',
       userEditedDesc: false,
       userEditedSpeaker: false,
       speakerAutoFilled: false,
@@ -1077,7 +1142,47 @@
       return String(raw).trim().replace(/\[([^\]]*)\]\(([^)]*)\)/g, '$2').trim();
     }
 
-    function loadThumbWithFallback(imgEl, savedUrl, videoId) {
+    function isPlaylistId(id, url) {
+      const cleanId = String(id || '').trim();
+      if (cleanId.length > 11) return true;
+      if (url && /youtube\.com\/playlist/i.test(String(url))) return true;
+      return false;
+    }
+
+    function buildCanonicalUrl(id, fallbackUrl) {
+      const cleanId = String(id || '').trim();
+      if (!cleanId) return sanitizeUrl(fallbackUrl || '');
+      return isPlaylistId(cleanId, fallbackUrl)
+        ? (YT_PLAYLIST_BASE + cleanId)
+        : (YT_WATCH_BASE + cleanId);
+    }
+
+    function extractYouTubeTarget(url, forcePlaylist = false) {
+      const cleaned = sanitizeUrl(url);
+      if (!cleaned) return null;
+
+      const listMatch = cleaned.match(/[?&]list=([a-zA-Z0-9_-]{10,})/);
+      const listId = listMatch && !/^RD/i.test(listMatch[1]) ? listMatch[1] : null;
+
+      const vidMatch = cleaned.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+      const videoId = vidMatch ? vidMatch[1] : null;
+
+      if (forcePlaylist && listId) {
+        return { type: 'playlist', id: listId, playlistId: listId, videoId: videoId };
+      }
+      if (/youtube\.com\/playlist/i.test(cleaned) && listId) {
+        return { type: 'playlist', id: listId, playlistId: listId, videoId: null };
+      }
+      if (videoId) {
+        return { type: 'video', id: videoId, playlistId: listId, videoId: videoId };
+      }
+      if (listId) {
+        return { type: 'playlist', id: listId, playlistId: listId, videoId: null };
+      }
+      return null;
+    }
+
+    function loadThumbWithFallback(imgEl, savedUrl, itemId, isPl) {
       const candidates = [];
       const addCand = u => {
         const clean = sanitizeUrl(u);
@@ -1087,8 +1192,9 @@
       };
 
       addCand(savedUrl);
-      if (videoId) {
-        const enc = encodeURIComponent(videoId);
+      const playlistMode = Boolean(isPl) || isPlaylistId(itemId);
+      if (itemId && !playlistMode) {
+        const enc = encodeURIComponent(itemId);
         addCand(YT_IMG_PRIMARY + enc + '/mqdefault.jpg');
         addCand(YT_IMG_PRIMARY + enc + '/hqdefault.jpg');
         addCand(YT_IMG_BACKUP + enc + '/mqdefault.jpg');
@@ -1151,6 +1257,9 @@
       $(formId).addEventListener('keydown', e => {
         if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
           e.preventDefault();
+          if (e.target.id === 'ytUrl') {
+            handleYouTubeInput(false, true);
+          }
         }
       });
     });
@@ -1516,16 +1625,20 @@
     bindTagInput('ytTagInput', 'video');
     bindTagInput('murliTagInput', 'murli');
 
-    /* ---------- РЕЖИМ НА ИЗМЕНА (ВИДЕО И МУРЛИ) ---------- */
+    /* ---------- РЕЖИМ НА ИЗМЕНА (ВИДЕО / ПЛЕЈЛИСТА / МУРЛИ) ---------- */
     function startEditVideo(v) {
-      const cleanId = v.videoId || extractYouTubeId(v.url) || '';
-      const cleanUrl = cleanId ? (YT_WATCH_BASE + cleanId) : sanitizeUrl(v.url);
+      const parsed = extractYouTubeTarget(v.url, Boolean(v.isPlaylist));
+      const cleanId = v.videoId || (parsed ? parsed.id : '');
+      const isPl = Boolean(v.isPlaylist) || isPlaylistId(cleanId, v.url);
+      const cleanUrl = buildCanonicalUrl(cleanId, v.url);
 
-      state.editingVideo = { ...v, videoId: cleanId, url: cleanUrl };
+      state.editingVideo = { ...v, videoId: cleanId, isPlaylist: isPl, url: cleanUrl };
       state.returnAfterEdit = state.libraryView;
-      state.lastFetchedId = cleanId;
+      state.lastFetchedId = (isPl ? 'playlist:' : 'video:') + cleanId;
       state.currentVideo = {
+        isPlaylist: isPl,
         videoId: cleanId,
+        canonicalUrl: cleanUrl,
         title: v.title,
         fullTitle: v.title,
         duration: v.duration,
@@ -1539,10 +1652,11 @@
       state.topicAutoFilled = false;
       state.aiSuggestedTags = [];
 
-      $('videoEditLabel').textContent = 'Уредуваш видео: ' + (v.title || cleanId);
+      $('videoEditLabel').textContent = (isPl ? 'Уредуваш плејлиста: ' : 'Уредуваш видео: ') + (v.title || cleanId);
       $('videoEditBanner').classList.remove('hidden');
       $('ytStatusField').classList.remove('hidden');
       $('saveVideoBtn').textContent = 'Зачувај измени';
+      $('saveVideoBtn').disabled = false;
 
       $('ytUrl').value = cleanUrl;
       $('ytTitleInput').value = v.title || '';
@@ -1553,11 +1667,13 @@
       $('ytNote').value = v.note || '';
       state.videoTags = (v.hashtags || []).slice();
 
-      loadThumbWithFallback($('ytThumb'), v.thumbnail, cleanId);
+      loadThumbWithFallback($('ytThumb'), v.thumbnail, cleanId, isPl);
+      $('ytPlaylistBadge').classList.toggle('hidden', !isPl);
       $('ytDurationBadge').textContent = v.duration || '—';
-      $('ytChannelText').textContent = 'Режим на измена';
-      $('ytFullTitleText').textContent = 'Кликни „Повторно YouTube + AI“ горе за одново да се повлечат насловот, сликичката, предлозите и резимето.';
+      $('ytChannelText').textContent = isPl ? 'Режим на измена (Плејлиста)' : 'Режим на измена';
+      $('ytFullTitleText').textContent = 'Кликни „Повторно YouTube + AI“ горе за одново да се повлечат насловот, траењето, сликичката и резимето.';
       $('ytPreview').classList.add('visible');
+      $('playlistSwitchBar').classList.add('hidden');
       $('titleModeBadge').classList.add('hidden');
       hideAlert('ytDuplicateAlert');
       hideAiStatus();
@@ -1593,92 +1709,9 @@
       switchMainTab(targetTab);
     });
 
-    $('rerunAiEditBtn').addEventListener('click', async () => {
+    $('rerunAiEditBtn').addEventListener('click', () => {
       if (!state.editingVideo) return;
-      const btn = $('rerunAiEditBtn');
-      const rawUrl = $('ytUrl').value.trim();
-      const targetId = extractYouTubeId(rawUrl) || (!rawUrl ? state.editingVideo.videoId : null);
-
-      if (!targetId) {
-        setAiStatus('warn', 'Невалиден YouTube линк. Залепи валиден линк и пробај повторно.', false);
-        return;
-      }
-
-      const cleanUrl = YT_WATCH_BASE + targetId;
-      $('ytUrl').value = cleanUrl;
-      state.lastFetchedId = targetId;
-
-      btn.disabled = true;
-      btn.textContent = 'Се анализира...';
-      hideAlert('globalAlert');
-      hideAlert('ytDuplicateAlert');
-
-      state.userEditedDesc = false;
-      state.userEditedSpeaker = false;
-      state.userEditedTopic = false;
-      state.aiSuggestedTags = [];
-      $('ytDesc').value = '';
-      renderAiTagSuggestions();
-      clearBadge('speakerAutoHint');
-      clearBadge('topicAutoHint');
-
-      setAiStatus('loading', 'Повторно вчитувам податоци од YouTube...', true);
-
-      try {
-        const meta = await apiCall({
-          action: 'fetchVideoMeta',
-          url: cleanUrl,
-          ignoreVideoId: state.editingVideo.videoId
-        });
-
-        if (!meta.ok) {
-          setAiStatus('warn', meta.error || 'Грешка при повторно читање од YouTube.', false);
-          return;
-        }
-
-        if (meta.duplicate) {
-          showAlert(
-            'ytDuplicateAlert',
-            `Овој нов линк веќе постои во базата (додаден од ${meta.duplicate.addedBy || 'член'}, датум: ${meta.duplicate.date}).`,
-            'error'
-          );
-          hideAiStatus();
-          return;
-        }
-
-        state.lastFetchedId = meta.videoId;
-        state.currentVideo = meta;
-        state.showingFullTitle = false;
-        loadThumbWithFallback($('ytThumb'), meta.thumbnail, meta.videoId);
-        $('ytDurationBadge').textContent = meta.duration || '—';
-        $('ytChannelText').textContent = meta.channelTitle || 'YouTube';
-        $('ytFullTitleText').textContent = meta.fullTitle || meta.title;
-        $('ytTitleInput').value = meta.title || '';
-        $('ytPreview').classList.add('visible');
-
-        if (meta.fullTitle && meta.fullTitle !== meta.title) {
-          $('titleModeBadge').textContent = 'Користи цел наслов';
-          $('titleModeBadge').classList.remove('hidden');
-        }
-
-        renderQuickTitleTags(meta.title);
-
-        if (meta.suggestedSpeaker) {
-          applySuggestedSpeaker(meta.suggestedSpeaker, meta.speakerSource === 'list' ? 'Од база' : 'Од наслов');
-        }
-        if (meta.suggestedTopic) {
-          applySuggestedTopic(meta.suggestedTopic, meta.topicSource === 'list' ? 'Од база' : 'Од наслов');
-        } else {
-          $('ytTopic').value = '';
-        }
-
-        await runBackgroundSummary(meta);
-      } catch (err) {
-        setAiStatus('warn', 'Грешка при повторна анализа.', false);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = '↻ Повторно YouTube + AI';
-      }
+      handleYouTubeInput(false, true);
     });
 
     function startEditMurli(m) {
@@ -1714,26 +1747,29 @@
       switchMainTab('proposals');
     });
 
-    /* ---------- YOUTUBE ЛИНК + AI ВО ПОЗАДИНА (НОВ ВНЕС) ---------- */
-    function extractYouTubeId(url) {
-      const cleaned = sanitizeUrl(url);
-      const match = cleaned.match(
-        /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
-      );
-      return match ? match[1] : null;
-    }
-
+    /* ---------- YOUTUBE ВИДЕО / ПЛЕЈЛИСТА + AI ВО ПОЗАДИНА ---------- */
     let urlTimer = null;
     $('ytUrl').addEventListener('input', () => {
       if (state.editingVideo) return;
       clearTimeout(urlTimer);
-      urlTimer = setTimeout(handleYouTubeInput, 450);
+      urlTimer = setTimeout(() => handleYouTubeInput(false, false), 450);
     });
     $('ytUrl').addEventListener('paste', () => {
       if (state.editingVideo) return;
       clearTimeout(urlTimer);
-      urlTimer = setTimeout(handleYouTubeInput, 100);
+      urlTimer = setTimeout(() => handleYouTubeInput(false, false), 120);
     });
+
+    $('fetchYtBtn').addEventListener('click', () => {
+      handleYouTubeInput(false, true);
+    });
+
+    $('switchToPlaylistBtn').addEventListener('click', () => {
+      if (!state.detectedListInVideoUrl) return;
+      $('ytUrl').value = YT_PLAYLIST_BASE + state.detectedListInVideoUrl;
+      handleYouTubeInput(true, true);
+    });
+
     $('ytDesc').addEventListener('input', () => {
       state.userEditedDesc = true;
     });
@@ -1749,61 +1785,117 @@
         : 'Користи цел наслов';
     });
 
-    async function handleYouTubeInput() {
-      const url = sanitizeUrl($('ytUrl').value);
-      const videoId = extractYouTubeId(url);
-
-      if (!videoId) {
-        resetVideoPreview();
+    async function handleYouTubeInput(forcePlaylist = false, manualTrigger = false) {
+      const rawUrl = sanitizeUrl($('ytUrl').value);
+      if (!rawUrl) {
+        if (!state.editingVideo) resetVideoPreview();
         return;
       }
-      if (videoId === state.lastFetchedId) return;
 
-      state.lastFetchedId = videoId;
-      state.currentVideo = null;
-      state.showingFullTitle = false;
-      state.userEditedDesc = false;
-      state.pendingAiSummary = null;
-      state.aiSuggestedTags = [];
-      $('ytDesc').value = '';
-      $('ytTitleInput').value = '';
-      $('titleQuickTags').classList.add('hidden');
-      $('titleModeBadge').classList.add('hidden');
-      renderAiTagSuggestions();
-
-      if (state.speakerAutoFilled) {
-        $('ytSpeaker').value = '';
-        state.speakerAutoFilled = false;
-        state.userEditedSpeaker = false;
-        clearBadge('speakerAutoHint');
-        renderQuickFillChips('speakerChips', state.lists.speakers, 'ytSpeaker');
+      const target = extractYouTubeTarget(rawUrl, forcePlaylist);
+      if (!target) {
+        if (!state.editingVideo) resetVideoPreview();
+        if (manualTrigger || rawUrl.length > 15) {
+          showAlert('ytDuplicateAlert', 'Линкот не е препознаен како YouTube видео или плејлиста. Провери го линкот и кликни „Вчитај“.', 'error');
+        }
+        return;
       }
-      if (state.topicAutoFilled) {
-        $('ytTopic').value = '';
-        state.topicAutoFilled = false;
+
+      const fetchKey = target.type + ':' + target.id;
+      if (!manualTrigger && fetchKey === state.lastFetchedId) return;
+
+      const isEditMode = Boolean(state.editingVideo);
+      state.lastFetchedId = fetchKey;
+
+      // Во режим на нов внес ги чистиме полињата веднаш; при „Измени“ чекаме успешен одговор за да не се изгуби текстот при грешка
+      if (!isEditMode) {
+        state.currentVideo = null;
+        state.showingFullTitle = false;
+        state.userEditedDesc = false;
+        state.pendingAiSummary = null;
+        state.aiSuggestedTags = [];
+        state.detectedListInVideoUrl = '';
+        $('ytDesc').value = '';
+        $('ytTitleInput').value = '';
+        $('titleQuickTags').classList.add('hidden');
+        $('playlistSwitchBar').classList.add('hidden');
+        $('titleModeBadge').classList.add('hidden');
+        renderAiTagSuggestions();
+
+        state.userEditedSpeaker = false;
+        state.speakerAutoFilled = false;
         state.userEditedTopic = false;
+        state.topicAutoFilled = false;
+        $('ytSpeaker').value = '';
+        $('ytTopic').value = '';
+        clearBadge('speakerAutoHint');
         clearBadge('topicAutoHint');
+        renderQuickFillChips('speakerChips', state.lists.speakers, 'ytSpeaker');
         renderQuickFillChips('videoTopicChips', state.lists.topics, 'ytTopic');
       }
 
       hideAlert('ytDuplicateAlert');
       hideAlert('globalAlert');
       $('saveVideoBtn').disabled = true;
+      $('fetchYtBtn').disabled = true;
+      $('fetchYtBtn').textContent = '...';
+      if (isEditMode) {
+        $('rerunAiEditBtn').disabled = true;
+        $('rerunAiEditBtn').textContent = 'Се анализира...';
+      }
 
-      setAiStatus('loading', 'Вчитувам податоци од YouTube...', true);
+      let blockSaveForDuplicate = false;
+      const loadMsg = target.type === 'playlist'
+        ? 'Вчитувам плејлиста и вкупно траење од YouTube...'
+        : 'Вчитувам податоци од YouTube...';
+      setAiStatus('loading', loadMsg, true);
 
       try {
-        const meta = await apiCall({ action: 'fetchVideoMeta', url });
-        if (state.lastFetchedId !== videoId) return;
+        const meta = await apiCall({
+          action: 'fetchVideoMeta',
+          url: rawUrl,
+          forcePlaylist: forcePlaylist,
+          ignoreVideoId: isEditMode ? state.editingVideo.videoId : ''
+        });
+
+        if (state.lastFetchedId !== fetchKey) return;
 
         if (!meta.ok) {
-          resetVideoPreview();
-          showAlert('ytDuplicateAlert', meta.error || 'Грешка при читање на видеото.', 'error');
+          if (!isEditMode) resetVideoPreview();
+          showAlert('ytDuplicateAlert', meta.error || 'Грешка при читање од YouTube.', 'error');
+          hideAiStatus();
           return;
         }
 
         state.currentVideo = meta;
-        loadThumbWithFallback($('ytThumb'), meta.thumbnail, meta.videoId);
+        state.showingFullTitle = false;
+        state.pendingAiSummary = null;
+        state.aiSuggestedTags = [];
+        state.detectedListInVideoUrl = '';
+
+        if (isEditMode) {
+          state.userEditedDesc = false;
+          state.userEditedSpeaker = false;
+          state.userEditedTopic = false;
+          $('ytDesc').value = '';
+          renderAiTagSuggestions();
+          clearBadge('speakerAutoHint');
+          clearBadge('topicAutoHint');
+        }
+
+        if (meta.isPlaylist && meta.canonicalUrl) {
+          $('ytUrl').value = meta.canonicalUrl;
+        }
+
+        if (!meta.isPlaylist && meta.playlistId) {
+          state.detectedListInVideoUrl = meta.playlistId;
+          $('playlistSwitchBar').classList.remove('hidden');
+        } else {
+          $('playlistSwitchBar').classList.add('hidden');
+        }
+
+        loadThumbWithFallback($('ytThumb'), meta.thumbnail, meta.videoId, meta.isPlaylist);
+        $('ytPlaylistBadge').classList.toggle('hidden', !meta.isPlaylist);
         $('ytDurationBadge').textContent = meta.duration || '—';
         $('ytChannelText').textContent = meta.channelTitle || 'YouTube';
         $('ytFullTitleText').textContent = meta.fullTitle || meta.title;
@@ -1813,56 +1905,72 @@
         if (meta.fullTitle && meta.fullTitle !== meta.title) {
           $('titleModeBadge').textContent = 'Користи цел наслов';
           $('titleModeBadge').classList.remove('hidden');
+        } else {
+          $('titleModeBadge').classList.add('hidden');
         }
 
         renderQuickTitleTags(meta.title);
 
-        if (meta.suggestedSpeaker && !state.userEditedSpeaker && !$('ytSpeaker').value.trim()) {
+        if (meta.suggestedSpeaker && (!state.userEditedSpeaker || manualTrigger)) {
           applySuggestedSpeaker(meta.suggestedSpeaker, meta.speakerSource === 'list' ? 'Од база' : 'Од наслов');
         }
 
-        if (meta.suggestedTopic && !state.userEditedTopic && !$('ytTopic').value.trim()) {
+        if (meta.suggestedTopic && (!state.userEditedTopic || manualTrigger)) {
           applySuggestedTopic(meta.suggestedTopic, meta.topicSource === 'list' ? 'Од база' : 'Од наслов');
         }
 
         if (meta.duplicate) {
+          blockSaveForDuplicate = true;
           showAlert(
             'ytDuplicateAlert',
-            `Ова видео веќе е внесено во базата (од ${meta.duplicate.addedBy || 'член'}, датум: ${meta.duplicate.date}).`,
+            `Ова видео/плејлиста веќе е внесено во базата (од ${meta.duplicate.addedBy || 'член'}, датум: ${meta.duplicate.date}).`,
             'error'
           );
           hideAiStatus();
-          $('saveVideoBtn').disabled = true;
           return;
         }
 
         $('saveVideoBtn').disabled = false;
-        runBackgroundSummary(meta);
+        await runBackgroundSummary(meta, fetchKey);
       } catch (err) {
-        if (state.lastFetchedId !== videoId) return;
-        setAiStatus('warn', 'Грешка при поврзување со YouTube. Можеш да пробаш повторно.', false);
-        $('saveVideoBtn').disabled = false;
+        if (state.lastFetchedId !== fetchKey) return;
+        setAiStatus('warn', 'Грешка при поврзување со YouTube. Кликни „Вчитај“ за повторен обид.', false);
+      } finally {
+        $('fetchYtBtn').disabled = false;
+        $('fetchYtBtn').textContent = 'Вчитај';
+        if (state.editingVideo) {
+          $('rerunAiEditBtn').disabled = false;
+          $('rerunAiEditBtn').textContent = '↻ Повторно YouTube + AI';
+        }
+        $('saveVideoBtn').disabled = blockSaveForDuplicate;
       }
     }
 
-    async function runBackgroundSummary(meta) {
-      const targetId = meta.videoId;
-      setAiStatus('loading', 'AI подготвува резиме и предлози во позадина...', true);
+    async function runBackgroundSummary(meta, fetchKey) {
+      const targetKey = fetchKey || ((meta.isPlaylist ? 'playlist:' : 'video:') + meta.videoId);
+      setAiStatus(
+        'loading',
+        meta.isPlaylist
+          ? 'AI подготвува резиме за целата плејлиста во позадина...'
+          : 'AI подготвува резиме и предлози во позадина...',
+        true
+      );
 
       try {
         const res = await apiCall({
           action: 'summarizeVideo',
           videoId: meta.videoId,
+          isPlaylist: Boolean(meta.isPlaylist),
           title: meta.fullTitle || meta.title,
           rawDescription: meta.rawDescription,
           durationMinutes: meta.durationMinutes,
           detectedTopic: meta.suggestedTopic || ''
         });
 
-        if (state.lastFetchedId !== targetId) return;
+        if (state.lastFetchedId !== targetKey) return;
 
         if (!res.ok) {
-          setAiStatus('warn', 'AI анализата не успеа — можеш да внесеш рачно.', false, 'Повтори', () => runBackgroundSummary(meta));
+          setAiStatus('warn', 'AI анализата не успеа — можеш да внесеш рачно.', false, 'Повтори', () => runBackgroundSummary(meta, targetKey));
           return;
         }
 
@@ -1909,12 +2017,12 @@
           $('ytDesc').value = res.summary || '';
           setAiStatus(style, res.statusText, false, 'Повтори AI', () => {
             state.userEditedDesc = false;
-            runBackgroundSummary(meta);
+            runBackgroundSummary(meta, targetKey);
           });
         }
       } catch (err) {
-        if (state.lastFetchedId !== targetId) return;
-        setAiStatus('warn', 'Неуспешно AI поврзување — внеси опис рачно.', false, 'Повтори', () => runBackgroundSummary(meta));
+        if (state.lastFetchedId !== targetKey) return;
+        setAiStatus('warn', 'Неуспешно AI поврзување — внеси опис рачно.', false, 'Повтори', () => runBackgroundSummary(meta, targetKey));
       }
     }
 
@@ -1941,7 +2049,10 @@
       state.currentVideo = null;
       state.showingFullTitle = false;
       state.aiSuggestedTags = [];
+      state.detectedListInVideoUrl = '';
       $('ytPreview').classList.remove('visible');
+      $('ytPlaylistBadge').classList.add('hidden');
+      $('playlistSwitchBar').classList.add('hidden');
       $('ytTitleInput').value = '';
       $('titleQuickTags').innerHTML = '';
       $('titleQuickTags').classList.add('hidden');
@@ -1954,7 +2065,7 @@
       $('saveVideoBtn').disabled = false;
     }
 
-    /* ---------- ЗАЧУВУВАЊЕ / ИЗМЕНА ВИДЕО ---------- */
+    /* ---------- ЗАЧУВУВАЊЕ / ИЗМЕНА ВИДЕО ИЛИ ПЛЕЈЛИСТА ---------- */
     $('videoForm').addEventListener('submit', async e => {
       e.preventDefault();
       hideAlert('globalAlert');
@@ -1967,6 +2078,8 @@
 
       try {
         const cleanUrlInput = sanitizeUrl($('ytUrl').value);
+        const parsedInput = extractYouTubeTarget(cleanUrlInput, false);
+        const isPl = Boolean(parsedInput && parsedInput.type === 'playlist');
         const thumbUrl = (state.currentVideo && state.currentVideo.thumbnail) ||
                          (state.editingVideo && state.editingVideo.thumbnail) || '';
 
@@ -1976,6 +2089,7 @@
               originalVideoId: state.editingVideo.videoId,
               rowNumber: state.editingVideo.rowNumber,
               url: cleanUrlInput,
+              isPlaylist: isPl,
               title: $('ytTitleInput').value.trim(),
               duration: state.currentVideo ? state.currentVideo.duration : state.editingVideo.duration,
               description: $('ytDesc').value.trim(),
@@ -1990,6 +2104,7 @@
               action: 'saveVideo',
               userName: state.userName,
               url: cleanUrlInput,
+              isPlaylist: isPl,
               title: $('ytTitleInput').value.trim() || (state.currentVideo ? state.currentVideo.title : ''),
               duration: state.currentVideo ? state.currentVideo.duration : '',
               description: $('ytDesc').value.trim(),
@@ -2014,12 +2129,12 @@
           exitEditVideo();
           updateArchiveCounts();
           switchMainTab(targetTab);
-          showAlert('globalAlert', 'Измените за видеото се успешно зачувани!', 'success');
+          showAlert('globalAlert', 'Измените се успешно зачувани!', 'success');
         } else {
           exitEditVideo();
           updateArchiveCounts();
           populateArchiveFilters();
-          showAlert('globalAlert', 'Видеото е успешно додадено во Предлози!', 'success');
+          showAlert('globalAlert', isPl ? 'Плејлистата е успешно додадена во Предлози!' : 'Видеото е успешно додадено во Предлози!', 'success');
         }
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } catch (err) {
@@ -2294,7 +2409,8 @@
     }
 
     function buildVideoCard(v) {
-      const cleanUrl = v.videoId ? (YT_WATCH_BASE + v.videoId) : sanitizeUrl(v.url);
+      const isPl = Boolean(v.isPlaylist) || isPlaylistId(v.videoId, v.url);
+      const cleanUrl = buildCanonicalUrl(v.videoId, v.url);
       const safeUrl = /^https?:\/\//i.test(cleanUrl) ? cleanUrl : '#';
       const card = document.createElement('article');
       card.className = 'item-card';
@@ -2303,6 +2419,7 @@
         <div class="video-card-layout">
           <a class="card-thumb-link" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener">
             <img class="js-card-thumb" alt="" loading="lazy" referrerpolicy="no-referrer" />
+            ${isPl ? '<span class="playlist-corner-badge">📋 Плејлиста</span>' : ''}
             ${v.duration ? `<span class="duration-overlay">${escapeHtml(v.duration)}</span>` : ''}
           </a>
           <div class="card-body">
@@ -2334,7 +2451,7 @@
         </div>
       `;
 
-      loadThumbWithFallback(card.querySelector('.js-card-thumb'), v.thumbnail, v.videoId);
+      loadThumbWithFallback(card.querySelector('.js-card-thumb'), v.thumbnail, v.videoId, isPl);
 
       const tagsBox = card.querySelector('.card-tags');
       (v.hashtags || []).forEach(tag => {
@@ -2382,8 +2499,8 @@
               showAlert(
                 'globalAlert',
                 newStatus === 'Реализирано'
-                  ? 'Видеото е означено како реализирано и преместено во Архива.'
-                  : 'Видеото е вратено во Предлози.',
+                  ? 'Записот е означен како реализиран и преместен во Архива.'
+                  : 'Записот е вратен во Предлози.',
                 'success'
               );
             }
