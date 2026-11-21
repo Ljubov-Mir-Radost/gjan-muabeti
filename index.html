@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Гјан База — Предлози и Архива</title>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="apple-touch-icon" href="logo.png" />
   <style>
     :root {
       color-scheme: light;
@@ -115,17 +117,35 @@
     .brand { display: flex; align-items: center; gap: 12px; }
 
     .brand-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #4f46e5, #7c3aed);
-      color: #fff;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #1e1b4b 0%, #090e1a 100%);
+      border: 1px solid rgba(129, 140, 248, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.15rem;
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+      overflow: hidden;
       flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.16);
+    }
+
+    [data-theme="dark"] .brand-icon {
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    .brand-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      mix-blend-mode: screen;
+      transform: scale(1.65);
+      -webkit-mask-image: radial-gradient(circle, #000 50%, transparent 98%);
+      mask-image: radial-gradient(circle, #000 50%, transparent 98%);
     }
 
     h1 {
@@ -747,9 +767,9 @@
       <div class="card">
         <div class="topbar" style="margin-bottom: 18px;">
           <div class="brand">
-            <div class="brand-icon">✦</div>
+            <div class="brand-icon"><img src="logo.png" alt="Гјан База" /></div>
             <div>
-              <h1>Гјан База <span class="version-tag">v3.3</span></h1>
+              <h1>Гјан База <span class="version-tag">v3.4</span></h1>
               <div class="user-badge">Предлози за превод и Архива</div>
             </div>
           </div>
@@ -776,9 +796,9 @@
     <div id="appCard" class="card hidden">
       <div class="topbar">
         <div class="brand">
-          <div class="brand-icon">✦</div>
+          <div class="brand-icon"><img src="logo.png" alt="Гјан База" /></div>
           <div>
-            <h1>Гјан База <span class="version-tag">v3.3</span></h1>
+            <h1>Гјан База <span class="version-tag">v3.4</span></h1>
             <div class="user-badge">Најавен/а како: <strong id="displayUser"></strong></div>
           </div>
         </div>
@@ -1018,9 +1038,9 @@
     // =========================================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwelW3qFkOtqY7NFFj8mgLHPk7u4jL0ttY-Dw5oc7Cdb-nbgSBDdIWGOoa3bwMwGyPb/exec';
 
-    const YT_WATCH_BASE = 'https:/' + '/[www.youtube.com/watch?v=](https://www.youtube.com/watch?v=)';
-    const YT_IMG_PRIMARY = 'https:/' + '/[i.ytimg.com/vi/](https://i.ytimg.com/vi/)';
-    const YT_IMG_BACKUP = 'https:/' + '/[img.youtube.com/vi/](https://img.youtube.com/vi/)';
+    const YT_WATCH_BASE = 'https:/' + '/www.youtube.com/watch?v=';
+    const YT_IMG_PRIMARY = 'https:/' + '/i.ytimg.com/vi/';
+    const YT_IMG_BACKUP = 'https:/' + '/img.youtube.com/vi/';
 
     const STORAGE_KEY = 'archive_auth_v1';
     const THEME_KEY = 'archive_theme_v1';
@@ -1057,10 +1077,6 @@
       return String(raw).trim().replace(/\[([^\]]*)\]\(([^)]*)\)/g, '$2').trim();
     }
 
-    /**
-     * Вчитува YouTube сликичка со автоматски fallback низ повеќе формати и домени.
-     * Приоритет има точниот URL зачуван од YouTube Data API.
-     */
     function loadThumbWithFallback(imgEl, savedUrl, videoId) {
       const candidates = [];
       const addCand = u => {
@@ -1393,9 +1409,6 @@
       box.classList.remove('hidden');
     }
 
-    /**
-     * AI предлози за хаштагови — едиторот сам кликнува кои да влезат во базата
-     */
     function renderAiTagSuggestions() {
       const box = $('aiTagSuggestions');
       if (!state.aiSuggestedTags || state.aiSuggestedTags.length === 0) {
@@ -1880,7 +1893,6 @@
           }
         }
 
-        // AI хаштаговите НИКОГАШ не се внесуваат автоматски — само се прикажуваат за избор
         if (Array.isArray(res.suggestedHashtags) && res.suggestedHashtags.length > 0) {
           state.aiSuggestedTags = res.suggestedHashtags.slice();
           renderAiTagSuggestions();
