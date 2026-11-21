@@ -172,7 +172,6 @@
     .icon-btn:hover { background: var(--surface-hover); border-color: var(--border-strong); color: var(--text); }
     .icon-btn.danger:hover { color: var(--danger); border-color: var(--danger-border); background: var(--danger-bg); }
 
-    /* Главни табови (4) */
     .tabs {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -211,7 +210,6 @@
       color: var(--primary);
     }
 
-    /* Банер за режим на измена */
     .edit-banner {
       display: flex;
       justify-content: space-between;
@@ -228,11 +226,7 @@
       font-weight: 600;
     }
 
-    .edit-banner-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+    .edit-banner-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
     .banner-btn {
       border: 1px solid currentColor;
@@ -245,13 +239,9 @@
       cursor: pointer;
     }
     .banner-btn:hover { filter: brightness(1.06); }
-    .banner-btn.primary {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: #fff;
-    }
+    .banner-btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .banner-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    /* Форми */
     .form-wrap { max-width: 740px; margin: 0 auto; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .field { margin-bottom: 18px; }
@@ -300,8 +290,6 @@
       background: var(--surface);
       transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
     }
-
-    input[readonly] { opacity: 0.75; cursor: not-allowed; }
 
     input:focus, select:focus, textarea:focus {
       outline: none;
@@ -474,7 +462,6 @@
     .btn-primary:active:not(:disabled) { transform: scale(0.995); }
     .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; box-shadow: none; }
 
-    /* ================= ПРЕДЛОЗИ И АРХИВА ================= */
     .archive-head {
       display: flex;
       justify-content: space-between;
@@ -729,7 +716,7 @@
           <div class="brand">
             <div class="brand-icon">✦</div>
             <div>
-              <h1>Гјан База <span class="version-tag">v3.1</span></h1>
+              <h1>Гјан База <span class="version-tag">v3.2</span></h1>
               <div class="user-badge">Предлози за превод и Архива</div>
             </div>
           </div>
@@ -758,7 +745,7 @@
         <div class="brand">
           <div class="brand-icon">✦</div>
           <div>
-            <h1>Гјан База <span class="version-tag">v3.1</span></h1>
+            <h1>Гјан База <span class="version-tag">v3.2</span></h1>
             <div class="user-badge">Најавен/а како: <strong id="displayUser"></strong></div>
           </div>
         </div>
@@ -786,7 +773,7 @@
         <div id="videoEditBanner" class="edit-banner hidden">
           <span id="videoEditLabel">Режим на измена</span>
           <div class="edit-banner-actions">
-            <button type="button" id="rerunAiEditBtn" class="banner-btn primary">↻ Поново YouTube + AI</button>
+            <button type="button" id="rerunAiEditBtn" class="banner-btn primary">↻ Повторно YouTube + AI</button>
             <button type="button" id="cancelVideoEditBtn" class="banner-btn">Откажи</button>
           </div>
         </div>
@@ -797,7 +784,7 @@
               YouTube линк
               <span class="hint">Насловот, траењето, предавачот и темата се полнат веднаш</span>
             </label>
-            <input type="url" id="ytUrl" placeholder="[https://www.youtube.com/watch?v=](https://www.youtube.com/watch?v=)..." required />
+            <input type="text" id="ytUrl" inputmode="url" placeholder="Залепи YouTube линк (watch, youtu.be, live, shorts)..." required />
           </div>
 
           <div id="ytDuplicateAlert" class="alert error"></div>
@@ -903,7 +890,7 @@
         <form id="murliForm">
           <div class="field">
             <label for="murliUrl">Линк до Мурли</label>
-            <input type="url" id="murliUrl" placeholder="https://..." required />
+            <input type="text" id="murliUrl" inputmode="url" placeholder="Залепи линк до Мурли..." required />
           </div>
 
           <div class="grid-2">
@@ -1000,6 +987,10 @@
     // =========================================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwelW3qFkOtqY7NFFj8mgLHPk7u4jL0ttY-Dw5oc7Cdb-nbgSBDdIWGOoa3bwMwGyPb/exec';
 
+    // Разделени стрингови за никогаш да не се претворат во Markdown линкови при копирање
+    const YT_WATCH_BASE = 'https:/' + '/[www.youtube.com/watch?v=](https://www.youtube.com/watch?v=)';
+    const YT_THUMB_BASE = 'https:/' + '/[i.ytimg.com/vi/](https://i.ytimg.com/vi/)';
+
     const STORAGE_KEY = 'archive_auth_v1';
     const THEME_KEY = 'archive_theme_v1';
 
@@ -1008,8 +999,8 @@
       userName: '',
       lists: { topics: [], speakers: [], hashtags: [] },
       archive: { videos: [], murli: [] },
-      libraryView: 'proposals', // 'proposals' | 'archive'
-      archiveType: 'videos',    // 'videos' | 'murli' (само во Предлози)
+      libraryView: 'proposals',
+      archiveType: 'videos',
       activeFilterTag: '',
       videoTags: [],
       murliTags: [],
@@ -1030,6 +1021,15 @@
     };
 
     const $ = id => document.getElementById(id);
+
+    function sanitizeUrl(raw) {
+      if (!raw) return '';
+      return String(raw).trim().replace(/\[([^\]]*)\]\(([^)]*)\)/g, '$2').trim();
+    }
+
+    function getThumbUrl(videoId) {
+      return videoId ? (YT_THUMB_BASE + encodeURIComponent(videoId) + '/mqdefault.jpg') : '';
+    }
 
     /* ---------- НОЌНА / СВЕТЛА ТЕМА ---------- */
     function applyTheme(theme) {
@@ -1070,7 +1070,8 @@
 
     /* ---------- API ПОВИК ---------- */
     async function apiCall(payload) {
-      const response = await fetch(API_URL, {
+      const cleanApiUrl = sanitizeUrl(API_URL);
+      const response = await fetch(cleanApiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ ...payload, accessCode: state.accessCode })
@@ -1416,15 +1417,18 @@
 
     /* ---------- РЕЖИМ НА ИЗМЕНА (ВИДЕО И МУРЛИ) ---------- */
     function startEditVideo(v) {
-      state.editingVideo = v;
+      const cleanId = v.videoId || extractYouTubeId(v.url) || '';
+      const cleanUrl = cleanId ? (YT_WATCH_BASE + cleanId) : sanitizeUrl(v.url);
+
+      state.editingVideo = { ...v, videoId: cleanId, url: cleanUrl };
       state.returnAfterEdit = state.libraryView;
-      state.lastFetchedId = v.videoId;
+      state.lastFetchedId = cleanId;
       state.currentVideo = {
-        videoId: v.videoId,
+        videoId: cleanId,
         title: v.title,
         fullTitle: v.title,
         duration: v.duration,
-        thumbnail: v.videoId ? `[https://i.ytimg.com/vi/$](https://i.ytimg.com/vi/$){encodeURIComponent(v.videoId)}/mqdefault.jpg` : ''
+        thumbnail: getThumbUrl(cleanId)
       };
       state.showingFullTitle = false;
       state.userEditedDesc = true;
@@ -1435,13 +1439,13 @@
       state.userEditedVideoTags = true;
       state.tagsAutoFilled = false;
 
-      $('videoEditLabel').textContent = 'Уредуваш видео: ' + (v.title || v.videoId);
+      $('videoEditLabel').textContent = 'Уредуваш видео: ' + (v.title || cleanId);
       $('videoEditBanner').classList.remove('hidden');
       $('ytStatusField').classList.remove('hidden');
       $('saveVideoBtn').textContent = 'Зачувај измени';
 
-      $('ytUrl').value = v.url || ('[https://www.youtube.com/watch?v=](https://www.youtube.com/watch?v=)' + v.videoId);
-      $('ytUrl').readOnly = true;
+      // Полето останува целосно отклучено за да можеш да го менуваш/бришеш/лепиш линкот
+      $('ytUrl').value = cleanUrl;
       $('ytTitleInput').value = v.title || '';
       $('ytSpeaker').value = v.speaker || '';
       $('ytTopic').value = v.topic || '';
@@ -1453,7 +1457,7 @@
       $('ytThumb').src = state.currentVideo.thumbnail;
       $('ytDurationBadge').textContent = v.duration || '—';
       $('ytChannelText').textContent = 'Режим на измена';
-      $('ytFullTitleText').textContent = 'Кликни „Поново YouTube + AI“ горе ако сакаш одново да се повлечат насловот, темата, хаштаговите и резимето.';
+      $('ytFullTitleText').textContent = 'Кликни „Повторно YouTube + AI“ горе ако сакаш одново да се повлечат насловот, темата, хаштаговите и резимето.';
       $('ytPreview').classList.add('visible');
       $('titleModeBadge').classList.add('hidden');
       hideAlert('ytDuplicateAlert');
@@ -1473,7 +1477,6 @@
       state.editingVideo = null;
       $('videoEditBanner').classList.add('hidden');
       $('ytStatusField').classList.add('hidden');
-      $('ytUrl').readOnly = false;
       $('saveVideoBtn').textContent = 'Зачувај во Предлози';
       $('videoForm').reset();
       state.videoTags = [];
@@ -1497,15 +1500,23 @@
     $('rerunAiEditBtn').addEventListener('click', async () => {
       if (!state.editingVideo) return;
       const btn = $('rerunAiEditBtn');
-      const url = $('ytUrl').value.trim();
-      const videoId = state.editingVideo.videoId;
+      const rawUrl = $('ytUrl').value.trim();
+      const targetId = extractYouTubeId(rawUrl) || (!rawUrl ? state.editingVideo.videoId : null);
+
+      if (!targetId) {
+        setAiStatus('warn', 'Невалиден YouTube линк. Залепи валиден линк и пробај повторно.', false);
+        return;
+      }
+
+      const cleanUrl = YT_WATCH_BASE + targetId;
+      $('ytUrl').value = cleanUrl;
+      state.lastFetchedId = targetId;
 
       btn.disabled = true;
       btn.textContent = 'Се анализира...';
       hideAlert('globalAlert');
       hideAlert('ytDuplicateAlert');
 
-      // Ресетирај полињата за да се наполнат свежо од YouTube + AI
       state.userEditedDesc = false;
       state.userEditedSpeaker = false;
       state.userEditedTopic = false;
@@ -1522,8 +1533,8 @@
       try {
         const meta = await apiCall({
           action: 'fetchVideoMeta',
-          url: url,
-          ignoreVideoId: videoId
+          url: cleanUrl,
+          ignoreVideoId: state.editingVideo.videoId
         });
 
         if (!meta.ok) {
@@ -1531,9 +1542,20 @@
           return;
         }
 
+        if (meta.duplicate) {
+          showAlert(
+            'ytDuplicateAlert',
+            `Овој нов линк веќе постои во базата (додаден од ${meta.duplicate.addedBy || 'член'}, датум: ${meta.duplicate.date}).`,
+            'error'
+          );
+          hideAiStatus();
+          return;
+        }
+
+        state.lastFetchedId = meta.videoId;
         state.currentVideo = meta;
         state.showingFullTitle = false;
-        $('ytThumb').src = meta.thumbnail || '';
+        $('ytThumb').src = meta.thumbnail || getThumbUrl(meta.videoId);
         $('ytDurationBadge').textContent = meta.duration || '—';
         $('ytChannelText').textContent = meta.channelTitle || 'YouTube';
         $('ytFullTitleText').textContent = meta.fullTitle || meta.title;
@@ -1561,7 +1583,7 @@
         setAiStatus('warn', 'Грешка при повторна анализа.', false);
       } finally {
         btn.disabled = false;
-        btn.textContent = '↻ Поново YouTube + AI';
+        btn.textContent = '↻ Повторно YouTube + AI';
       }
     });
 
@@ -1571,7 +1593,7 @@
       $('murliEditBanner').classList.remove('hidden');
       $('saveMurliBtn').textContent = 'Зачувај измени';
 
-      $('murliUrl').value = m.url || '';
+      $('murliUrl').value = sanitizeUrl(m.url);
       $('murliTitle').value = m.title || '';
       $('murliTopic').value = m.topic || '';
       $('murliNote').value = m.note || '';
@@ -1600,7 +1622,8 @@
 
     /* ---------- YOUTUBE ЛИНК + AI ВО ПОЗАДИНА (НОВ ВНЕС) ---------- */
     function extractYouTubeId(url) {
-      const match = String(url || '').trim().match(
+      const cleaned = sanitizeUrl(url);
+      const match = cleaned.match(
         /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
       );
       return match ? match[1] : null;
@@ -1633,7 +1656,7 @@
     });
 
     async function handleYouTubeInput() {
-      const url = $('ytUrl').value.trim();
+      const url = sanitizeUrl($('ytUrl').value);
       const videoId = extractYouTubeId(url);
 
       if (!videoId) {
@@ -1691,7 +1714,7 @@
         }
 
         state.currentVideo = meta;
-        $('ytThumb').src = meta.thumbnail || '';
+        $('ytThumb').src = meta.thumbnail || getThumbUrl(meta.videoId);
         $('ytDurationBadge').textContent = meta.duration || '—';
         $('ytChannelText').textContent = meta.channelTitle || 'YouTube';
         $('ytFullTitleText').textContent = meta.fullTitle || meta.title;
@@ -1871,11 +1894,13 @@
       btn.textContent = isEdit ? 'Се зачувуваат измените...' : 'Се зачувува...';
 
       try {
+        const cleanUrlInput = sanitizeUrl($('ytUrl').value);
         const payload = isEdit
           ? {
               action: 'updateVideo',
               originalVideoId: state.editingVideo.videoId,
               rowNumber: state.editingVideo.rowNumber,
+              url: cleanUrlInput,
               title: $('ytTitleInput').value.trim(),
               duration: state.currentVideo ? state.currentVideo.duration : state.editingVideo.duration,
               description: $('ytDesc').value.trim(),
@@ -1888,7 +1913,7 @@
           : {
               action: 'saveVideo',
               userName: state.userName,
-              url: $('ytUrl').value.trim(),
+              url: cleanUrlInput,
               title: $('ytTitleInput').value.trim() || (state.currentVideo ? state.currentVideo.title : ''),
               duration: state.currentVideo ? state.currentVideo.duration : '',
               description: $('ytDesc').value.trim(),
@@ -1945,7 +1970,7 @@
               action: 'updateMurli',
               originalUrl: state.editingMurli.url,
               rowNumber: state.editingMurli.rowNumber,
-              url: $('murliUrl').value.trim(),
+              url: sanitizeUrl($('murliUrl').value),
               title: $('murliTitle').value.trim(),
               topic: $('murliTopic').value.trim(),
               hashtags: state.murliTags,
@@ -1954,7 +1979,7 @@
           : {
               action: 'saveMurli',
               userName: state.userName,
-              url: $('murliUrl').value.trim(),
+              url: sanitizeUrl($('murliUrl').value),
               title: $('murliTitle').value.trim(),
               topic: $('murliTopic').value.trim(),
               hashtags: state.murliTags,
@@ -2192,8 +2217,9 @@
     }
 
     function buildVideoCard(v) {
-      const safeUrl = /^https?:\/\//i.test(v.url) ? v.url : '#';
-      const thumbUrl = v.videoId ? `[https://i.ytimg.com/vi/$](https://i.ytimg.com/vi/$){encodeURIComponent(v.videoId)}/mqdefault.jpg` : '';
+      const cleanUrl = v.videoId ? (YT_WATCH_BASE + v.videoId) : sanitizeUrl(v.url);
+      const safeUrl = /^https?:\/\//i.test(cleanUrl) ? cleanUrl : '#';
+      const thumbUrl = getThumbUrl(v.videoId);
       const card = document.createElement('article');
       card.className = 'item-card';
 
@@ -2296,18 +2322,19 @@
         }
       });
 
-      bindCopyButton(card.querySelector('.js-copy-link'), v.url);
+      bindCopyButton(card.querySelector('.js-copy-link'), cleanUrl);
       return card;
     }
 
     function buildMurliCard(m) {
-      const safeUrl = /^https?:\/\//i.test(m.url) ? m.url : '#';
+      const cleanUrl = sanitizeUrl(m.url);
+      const safeUrl = /^https?:\/\//i.test(cleanUrl) ? cleanUrl : '#';
       const card = document.createElement('article');
       card.className = 'item-card';
 
       card.innerHTML = `
         <div class="card-header-row">
-          <a class="card-title" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener">📜 ${escapeHtml(m.title || m.url)}</a>
+          <a class="card-title" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener">📜 ${escapeHtml(m.title || cleanUrl)}</a>
         </div>
         <div class="meta-pills">
           ${m.topic ? `<button type="button" class="meta-pill js-filter-topic">📁 ${escapeHtml(m.topic)}</button>` : ''}
@@ -2345,7 +2372,7 @@
       });
 
       card.querySelector('.js-edit-murli').addEventListener('click', () => startEditMurli(m));
-      bindCopyButton(card.querySelector('.js-copy-link'), m.url);
+      bindCopyButton(card.querySelector('.js-copy-link'), cleanUrl);
       return card;
     }
 
