@@ -773,7 +773,6 @@
     }
     .card-tag:hover { filter: brightness(1.08); }
 
-    /* Тимски прегледи / гласање на картичка */
     .review-bar {
       display: flex;
       flex-direction: column;
@@ -913,7 +912,7 @@
           <div class="brand">
             <div class="brand-icon"><img src="logo.png" alt="Гјан База" /></div>
             <div>
-              <h1>Гјан База <span class="version-tag">v3.6</span></h1>
+              <h1>Гјан База <span class="version-tag">v3.7</span></h1>
               <div class="user-badge">Предлози за превод и Архива</div>
             </div>
           </div>
@@ -942,7 +941,7 @@
         <div class="brand">
           <div class="brand-icon"><img src="logo.png" alt="Гјан База" /></div>
           <div>
-            <h1>Гјан База <span class="version-tag">v3.6</span></h1>
+            <h1>Гјан База <span class="version-tag">v3.7</span></h1>
             <div class="user-badge">Најавен/а како: <strong id="displayUser"></strong></div>
           </div>
         </div>
@@ -1020,6 +1019,7 @@
               <span id="titleMkAutoHint" class="auto-badge hidden"></span>
             </label>
             <input type="text" id="ytTitleMkInput" placeholder="Автоматски превод на македонски..." />
+            <div id="titleMkQuickTags" class="quick-extract-row hidden"></div>
           </div>
 
           <div class="grid-2">
@@ -1216,6 +1216,7 @@
       archiveType: 'videos',
       activeFilterTag: '',
       videoTags: [],
+      fetchedTitleMkTags: [],
       aiSuggestedTags: [],
       murliTags: [],
       currentVideo: null,
@@ -1527,9 +1528,14 @@
       });
     }
 
+    $('ytTitleInput').addEventListener('input', () => {
+      renderQuickTitleTags($('ytTitleInput').value.trim());
+    });
+
     $('ytTitleMkInput').addEventListener('input', () => {
       state.userEditedTitleMk = true;
       clearBadge('titleMkAutoHint');
+      renderQuickTitleMkTags();
     });
 
     $('ytSpeaker').addEventListener('input', () => {
@@ -1564,53 +1570,80 @@
       renderQuickFillChips('videoTopicChips', state.lists.topics, 'ytTopic');
     }
 
-    function renderQuickTitleTags(cleanTitle) {
-      const box = $('titleQuickTags');
-      const source = (cleanTitle || '').trim();
-      if (!source) {
-        box.innerHTML = '';
-        box.classList.add('hidden');
-        return;
-      }
+    /* ---------- БРЗИ ХАШТАГОВИ ОД НАСЛОВОТ (EN + МК) ---------- */
+    function extractQuickTagsFromText(sourceText, isMacedonian) {
+      const source = (sourceText || '').trim();
+      if (!source) return [];
 
-      const stop = new Set([
-        'of', 'the', 'in', 'on', 'to', 'for', 'and', 'or', 'by', 'with', 'from',
-        'about', 'how', 'what', 'why', 'your', 'our', 'this', 'that', 'method',
-        'power', 'secret', 'way', 'ways', 'class', 'talk', 'video', 'live',
-        'english', 'hindi', 'на', 'во', 'за', 'со', 'од', 'како', 'што', 'или'
-      ]);
+      const stop = isMacedonian
+        ? new Set([
+            'на', 'во', 'за', 'со', 'од', 'до', 'по', 'при', 'без', 'над', 'под', 'пред', 'зад',
+            'низ', 'кон', 'кај', 'меѓу', 'околу', 'преку', 'според', 'заради', 'поради',
+            'или', 'ама', 'туку', 'ниту', 'дека', 'ако', 'кога', 'додека',
+            'како', 'што', 'кој', 'која', 'кое', 'кои', 'чиј', 'чија', 'чие', 'чии',
+            'сме', 'сте', 'беше', 'беа', 'биде', 'бидат', 'ова', 'овој', 'оваа', 'овие',
+            'тоа', 'тој', 'таа', 'тие', 'она', 'оној', 'мој', 'моја', 'мое', 'твој',
+            'твоја', 'твое', 'наш', 'наша', 'наше', 'ваш', 'ваша', 'ваше', 'свој',
+            'своја', 'свое', 'сите', 'секој', 'секоја', 'секое', 'многу', 'малку', 'само',
+            'метод', 'методот', 'метода', 'начин', 'начини', 'начинот', 'серија',
+            'серијал', 'дел', 'дела', 'видео', 'предавање', 'разговор'
+          ])
+        : new Set([
+            'of', 'the', 'in', 'on', 'to', 'for', 'and', 'or', 'by', 'with', 'from',
+            'about', 'how', 'what', 'why', 'when', 'your', 'our', 'this', 'that',
+            'are', 'was', 'were', 'been', 'being', 'have', 'has', 'had', 'not', 'but',
+            'can', 'will', 'all', 'you', 'who', 'into', 'out', 'over', 'more', 'its',
+            'method', 'power', 'secret', 'way', 'ways', 'class', 'talk', 'video', 'live',
+            'series', 'episode', 'part', 'english', 'hindi'
+          ]);
+
+      const corePhrase = isMacedonian
+        ? source
+            .replace(/^(?:метод(?:от|а)?|начин(?:от)?|тајна(?:та)?|моќ(?:та)?|уметност(?:а)?|улога(?:та)?|значење(?:то)?|важност(?:а)?)\s+на\s+/i, '')
+            .replace(/^како\s+да\s+/i, '')
+            .trim()
+        : source
+            .replace(/^(?:the\s+)?(?:method|power|art|secret|importance|way|ways|practice|role|value|meaning|science|key|keys)\s+of\s+/i, '')
+            .replace(/^how\s+to\s+/i, '')
+            .trim();
 
       const candidates = [];
       const addCandidate = raw => {
         const tag = normalizeTag(raw);
-        if (tag && tag.length >= 4 && !candidates.some(c => c.toLowerCase() === tag.toLowerCase())) {
+        if (tag && tag.length >= 3 && !candidates.some(c => c.toLowerCase() === tag.toLowerCase())) {
           candidates.push(tag);
         }
       };
 
-      const corePhrase = source
-        .replace(/^(?:method|power|art|secret|importance|way|ways|practice|role|value|meaning|science|key|keys)\s+of\s+/i, '')
-        .replace(/^how\s+to\s+/i, '')
-        .trim();
+      const phraseWords = corePhrase.split(/\s+/).filter(Boolean);
+      const connectorRe = isMacedonian
+        ? /^(?:и|или|на|во|за|со|од|до|по|како|што|да|се)$/i
+        : /^(?:and|or|but|for|with|from|the|in|on|of|to)$/i;
+      const hasConnector = phraseWords.some(w => connectorRe.test(w));
 
-      if (corePhrase && corePhrase.split(/\s+/).length <= 4) {
+      if (phraseWords.length >= 2 && phraseWords.length <= 3 && !hasConnector) {
         addCandidate(corePhrase);
       }
 
-      corePhrase.split(/[\s,|:\-–—]+/)
-        .filter(w => w.length >= 4 && !stop.has(w.toLowerCase()))
+      corePhrase
+        .split(/[\s,|:\-–—!?()"']+/)
+        .filter(w => w.length >= 3 && !stop.has(w.toLowerCase()))
         .forEach(w => addCandidate(w));
 
-      const top = candidates.slice(0, 5);
-      if (!top.length) {
+      return candidates.slice(0, 5);
+    }
+
+    function renderQuickChipRow(boxId, labelText, tags) {
+      const box = $(boxId);
+      if (!tags || tags.length === 0) {
         box.innerHTML = '';
         box.classList.add('hidden');
         return;
       }
 
       const lowerSelected = new Set(state.videoTags.map(t => t.toLowerCase()));
-      box.innerHTML = '<span class="quick-extract-label">Од насловот:</span>';
-      top.forEach(tag => {
+      box.innerHTML = `<span class="quick-extract-label">${escapeHtml(labelText)}</span>`;
+      tags.forEach(tag => {
         const isAdded = lowerSelected.has(tag.toLowerCase());
         const btn = document.createElement('button');
         btn.type = 'button';
@@ -1620,6 +1653,25 @@
         box.appendChild(btn);
       });
       box.classList.remove('hidden');
+    }
+
+    function renderQuickTitleTags(cleanTitle) {
+      const tags = extractQuickTagsFromText(cleanTitle, false);
+      renderQuickChipRow('titleQuickTags', 'Од насловот (EN):', tags);
+    }
+
+    function renderQuickTitleMkTags() {
+      const mkText = $('ytTitleMkInput').value.trim();
+      const enText = $('ytTitleInput').value.trim();
+      let tags = [];
+
+      if (!state.userEditedTitleMk && state.fetchedTitleMkTags && state.fetchedTitleMkTags.length > 0) {
+        tags = state.fetchedTitleMkTags.slice();
+      } else if (mkText && mkText.toLowerCase() !== enText.toLowerCase()) {
+        tags = extractQuickTagsFromText(mkText, true);
+      }
+
+      renderQuickChipRow('titleMkQuickTags', 'Од насловот (МК):', tags);
     }
 
     function renderAiTagSuggestions() {
@@ -1671,9 +1723,8 @@
 
       if (mode === 'video') {
         renderAiTagSuggestions();
-        if (state.currentVideo) {
-          renderQuickTitleTags($('ytTitleInput').value.trim() || state.currentVideo.title);
-        }
+        renderQuickTitleTags($('ytTitleInput').value.trim());
+        renderQuickTitleMkTags();
       }
     }
 
@@ -1756,6 +1807,7 @@
       state.speakerAutoFilled = false;
       state.userEditedTopic = true;
       state.topicAutoFilled = false;
+      state.fetchedTitleMkTags = [];
       state.aiSuggestedTags = [];
 
       $('videoEditLabel').textContent = (isPl ? 'Уредуваш плејлиста: ' : 'Уредуваш видео: ') + (v.titleMk || v.title || cleanId);
@@ -1801,6 +1853,7 @@
       $('saveVideoBtn').textContent = 'Зачувај во Предлози';
       $('videoForm').reset();
       state.videoTags = [];
+      state.fetchedTitleMkTags = [];
       state.aiSuggestedTags = [];
       state.userEditedDesc = false;
       state.userEditedTitleMk = false;
@@ -1892,6 +1945,7 @@
       $('titleModeBadge').textContent = state.showingFullTitle
         ? 'Врати исчистен наслов'
         : 'Користи цел наслов';
+      renderQuickTitleTags($('ytTitleInput').value.trim());
     });
 
     async function handleYouTubeInput(forcePlaylist = false, manualTrigger = false) {
@@ -1922,12 +1976,14 @@
         state.userEditedDesc = false;
         state.userEditedTitleMk = false;
         state.pendingAiSummary = null;
+        state.fetchedTitleMkTags = [];
         state.aiSuggestedTags = [];
         state.detectedListInVideoUrl = '';
         $('ytDesc').value = '';
         $('ytTitleInput').value = '';
         $('ytTitleMkInput').value = '';
         $('titleQuickTags').classList.add('hidden');
+        $('titleMkQuickTags').classList.add('hidden');
         $('playlistSwitchBar').classList.add('hidden');
         $('titleModeBadge').classList.add('hidden');
         renderAiTagSuggestions();
@@ -1981,6 +2037,7 @@
         state.currentVideo = meta;
         state.showingFullTitle = false;
         state.pendingAiSummary = null;
+        state.fetchedTitleMkTags = Array.isArray(meta.titleMkTags) ? meta.titleMkTags.slice() : [];
         state.aiSuggestedTags = [];
         state.detectedListInVideoUrl = '';
 
@@ -2028,6 +2085,7 @@
         }
 
         renderQuickTitleTags(meta.title);
+        renderQuickTitleMkTags();
 
         if (meta.suggestedSpeaker && (!state.userEditedSpeaker || manualTrigger)) {
           applySuggestedSpeaker(meta.suggestedSpeaker, meta.speakerSource === 'list' ? 'Од база' : 'Од наслов');
@@ -2092,17 +2150,18 @@
           return;
         }
 
-        // AI предлог за поприроден македонски наслов
         if (res.suggestedTitleMk) {
           const aiMk = res.suggestedTitleMk.trim();
           const curMk = $('ytTitleMkInput').value.trim();
           if (!state.userEditedTitleMk && !curMk) {
             $('ytTitleMkInput').value = aiMk;
             setBadge('titleMkAutoHint', 'AI превод');
+            renderQuickTitleMkTags();
           } else if (curMk.toLowerCase() !== aiMk.toLowerCase()) {
             setBadge('titleMkAutoHint', '✨ AI: ' + aiMk + ' (кликни)', () => {
               $('ytTitleMkInput').value = aiMk;
               setBadge('titleMkAutoHint', 'AI превод');
+              renderQuickTitleMkTags();
             });
           }
         }
@@ -2181,6 +2240,7 @@
       state.lastFetchedId = null;
       state.currentVideo = null;
       state.showingFullTitle = false;
+      state.fetchedTitleMkTags = [];
       state.aiSuggestedTags = [];
       state.detectedListInVideoUrl = '';
       $('ytPreview').classList.remove('visible');
@@ -2190,6 +2250,8 @@
       $('ytTitleMkInput').value = '';
       $('titleQuickTags').innerHTML = '';
       $('titleQuickTags').classList.add('hidden');
+      $('titleMkQuickTags').innerHTML = '';
+      $('titleMkQuickTags').classList.add('hidden');
       $('titleModeBadge').classList.add('hidden');
       renderAiTagSuggestions();
       hideAlert('ytDuplicateAlert');
