@@ -698,15 +698,25 @@
       margin-bottom: 8px;
     }
 
+    .card-title-wrap { min-width: 0; flex: 1; }
+
     .card-title {
-      font-size: 1.02rem;
+      font-size: 1.03rem;
       font-weight: 700;
       color: var(--text);
       text-decoration: none;
       line-height: 1.35;
       word-break: break-word;
+      display: block;
     }
     .card-title:hover { color: var(--primary); }
+
+    .card-subtitle-en {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 2px;
+      word-break: break-word;
+    }
 
     .status-select {
       width: auto;
@@ -762,6 +772,85 @@
       cursor: pointer;
     }
     .card-tag:hover { filter: brightness(1.08); }
+
+    /* Тимски прегледи / гласање на картичка */
+    .review-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      padding: 9px 11px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+    }
+
+    .review-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .review-label {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-right: 2px;
+    }
+
+    .vote-btn {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-soft);
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: 0.14s ease;
+    }
+    .vote-btn:hover:not(:disabled) { border-color: var(--border-strong); color: var(--text); }
+    .vote-btn:disabled { opacity: 0.6; cursor: wait; }
+
+    .vote-btn.active-watched {
+      background: var(--info-bg);
+      color: var(--info);
+      border-color: var(--info-border);
+    }
+    .vote-btn.active-yes {
+      background: var(--success-bg);
+      color: var(--success);
+      border-color: var(--success-border);
+    }
+    .vote-btn.active-no {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border-color: var(--danger-border);
+    }
+
+    .review-voters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    .voter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+    }
+    .voter-pill.v-yes { background: var(--success-bg); color: var(--success); border-color: var(--success-border); }
+    .voter-pill.v-no { background: var(--danger-bg); color: var(--danger); border-color: var(--danger-border); }
+    .voter-pill.v-watched { background: var(--info-bg); color: var(--info); border-color: var(--info-border); }
 
     .card-footer {
       display: flex;
@@ -824,7 +913,7 @@
           <div class="brand">
             <div class="brand-icon"><img src="logo.png" alt="Гјан База" /></div>
             <div>
-              <h1>Гјан База <span class="version-tag">v3.5.1</span></h1>
+              <h1>Гјан База <span class="version-tag">v3.6</span></h1>
               <div class="user-badge">Предлози за превод и Архива</div>
             </div>
           </div>
@@ -853,7 +942,7 @@
         <div class="brand">
           <div class="brand-icon"><img src="logo.png" alt="Гјан База" /></div>
           <div>
-            <h1>Гјан База <span class="version-tag">v3.5.1</span></h1>
+            <h1>Гјан База <span class="version-tag">v3.6</span></h1>
             <div class="user-badge">Најавен/а како: <strong id="displayUser"></strong></div>
           </div>
         </div>
@@ -918,11 +1007,19 @@
 
           <div class="field">
             <label for="ytTitleInput">
-              Наслов (исчистен)
+              Наслов (англиски / оригинален)
               <span id="titleModeBadge" class="auto-badge clickable hidden">Користи цел наслов</span>
             </label>
             <input type="text" id="ytTitleInput" placeholder="Англискиот чист наслов ќе се појави тука..." required />
             <div id="titleQuickTags" class="quick-extract-row hidden"></div>
+          </div>
+
+          <div class="field">
+            <label for="ytTitleMkInput">
+              Наслов на македонски
+              <span id="titleMkAutoHint" class="auto-badge hidden"></span>
+            </label>
+            <input type="text" id="ytTitleMkInput" placeholder="Автоматски превод на македонски..." />
           </div>
 
           <div class="grid-2">
@@ -1058,7 +1155,7 @@
 
         <div class="filters-panel">
           <div class="search-row">
-            <input type="search" id="archiveSearch" placeholder="🔍 Пребарувај по наслов, тема, предавач, опис, забелешка или #хаштаг..." />
+            <input type="search" id="archiveSearch" placeholder="🔍 Пребарувај по наслов (МК/EN), тема, предавач, опис, забелешка или #хаштаг..." />
           </div>
           <div class="filters-grid">
             <select id="filterSpeaker">
@@ -1075,6 +1172,7 @@
             </select>
             <select id="filterSort">
               <option value="newest">Најнови прво</option>
+              <option value="votes">Најмногу „Да“ предлози</option>
               <option value="oldest">Најстари прво</option>
               <option value="shortest">Најкратки прво</option>
               <option value="longest">Најдолги прво</option>
@@ -1125,6 +1223,7 @@
       lastFetchedId: null,
       detectedListInVideoUrl: '',
       userEditedDesc: false,
+      userEditedTitleMk: false,
       userEditedSpeaker: false,
       speakerAutoFilled: false,
       userEditedTopic: false,
@@ -1428,6 +1527,11 @@
       });
     }
 
+    $('ytTitleMkInput').addEventListener('input', () => {
+      state.userEditedTitleMk = true;
+      clearBadge('titleMkAutoHint');
+    });
+
     $('ytSpeaker').addEventListener('input', () => {
       state.userEditedSpeaker = true;
       state.speakerAutoFilled = false;
@@ -1640,19 +1744,21 @@
         videoId: cleanId,
         canonicalUrl: cleanUrl,
         title: v.title,
+        titleMk: v.titleMk || '',
         fullTitle: v.title,
         duration: v.duration,
         thumbnail: v.thumbnail || ''
       };
       state.showingFullTitle = false;
       state.userEditedDesc = true;
+      state.userEditedTitleMk = Boolean(v.titleMk);
       state.userEditedSpeaker = true;
       state.speakerAutoFilled = false;
       state.userEditedTopic = true;
       state.topicAutoFilled = false;
       state.aiSuggestedTags = [];
 
-      $('videoEditLabel').textContent = (isPl ? 'Уредуваш плејлиста: ' : 'Уредуваш видео: ') + (v.title || cleanId);
+      $('videoEditLabel').textContent = (isPl ? 'Уредуваш плејлиста: ' : 'Уредуваш видео: ') + (v.titleMk || v.title || cleanId);
       $('videoEditBanner').classList.remove('hidden');
       $('ytStatusField').classList.remove('hidden');
       $('saveVideoBtn').textContent = 'Зачувај измени';
@@ -1660,6 +1766,7 @@
 
       $('ytUrl').value = cleanUrl;
       $('ytTitleInput').value = v.title || '';
+      $('ytTitleMkInput').value = v.titleMk || '';
       $('ytSpeaker').value = v.speaker || '';
       $('ytTopic').value = v.topic || '';
       $('ytStatus').value = v.status || 'За превод';
@@ -1671,12 +1778,13 @@
       $('ytPlaylistBadge').classList.toggle('hidden', !isPl);
       $('ytDurationBadge').textContent = v.duration || '—';
       $('ytChannelText').textContent = isPl ? 'Режим на измена (Плејлиста)' : 'Режим на измена';
-      $('ytFullTitleText').textContent = 'Кликни „Повторно YouTube + AI“ горе за одново да се повлечат насловот, траењето, сликичката и резимето.';
+      $('ytFullTitleText').textContent = 'Кликни „Повторно YouTube + AI“ горе за одново да се повлечат насловот (EN + МК), траењето, сликичката и резимето.';
       $('ytPreview').classList.add('visible');
       $('playlistSwitchBar').classList.add('hidden');
       $('titleModeBadge').classList.add('hidden');
       hideAlert('ytDuplicateAlert');
       hideAiStatus();
+      clearBadge('titleMkAutoHint');
       clearBadge('speakerAutoHint');
       clearBadge('topicAutoHint');
       renderAllLists();
@@ -1695,6 +1803,7 @@
       state.videoTags = [];
       state.aiSuggestedTags = [];
       state.userEditedDesc = false;
+      state.userEditedTitleMk = false;
       state.userEditedSpeaker = false;
       state.speakerAutoFilled = false;
       state.userEditedTopic = false;
@@ -1807,16 +1916,17 @@
       const isEditMode = Boolean(state.editingVideo);
       state.lastFetchedId = fetchKey;
 
-      // Во режим на нов внес ги чистиме полињата веднаш; при „Измени“ чекаме успешен одговор за да не се изгуби текстот при грешка
       if (!isEditMode) {
         state.currentVideo = null;
         state.showingFullTitle = false;
         state.userEditedDesc = false;
+        state.userEditedTitleMk = false;
         state.pendingAiSummary = null;
         state.aiSuggestedTags = [];
         state.detectedListInVideoUrl = '';
         $('ytDesc').value = '';
         $('ytTitleInput').value = '';
+        $('ytTitleMkInput').value = '';
         $('titleQuickTags').classList.add('hidden');
         $('playlistSwitchBar').classList.add('hidden');
         $('titleModeBadge').classList.add('hidden');
@@ -1828,6 +1938,7 @@
         state.topicAutoFilled = false;
         $('ytSpeaker').value = '';
         $('ytTopic').value = '';
+        clearBadge('titleMkAutoHint');
         clearBadge('speakerAutoHint');
         clearBadge('topicAutoHint');
         renderQuickFillChips('speakerChips', state.lists.speakers, 'ytSpeaker');
@@ -1875,10 +1986,12 @@
 
         if (isEditMode) {
           state.userEditedDesc = false;
+          state.userEditedTitleMk = false;
           state.userEditedSpeaker = false;
           state.userEditedTopic = false;
           $('ytDesc').value = '';
           renderAiTagSuggestions();
+          clearBadge('titleMkAutoHint');
           clearBadge('speakerAutoHint');
           clearBadge('topicAutoHint');
         }
@@ -1901,6 +2014,11 @@
         $('ytFullTitleText').textContent = meta.fullTitle || meta.title;
         $('ytTitleInput').value = meta.title || '';
         $('ytPreview').classList.add('visible');
+
+        if (meta.titleMk && (!state.userEditedTitleMk || manualTrigger)) {
+          $('ytTitleMkInput').value = meta.titleMk;
+          setBadge('titleMkAutoHint', 'Авто-превод');
+        }
 
         if (meta.fullTitle && meta.fullTitle !== meta.title) {
           $('titleModeBadge').textContent = 'Користи цел наслов';
@@ -1972,6 +2090,21 @@
         if (!res.ok) {
           setAiStatus('warn', 'AI анализата не успеа — можеш да внесеш рачно.', false, 'Повтори', () => runBackgroundSummary(meta, targetKey));
           return;
+        }
+
+        // AI предлог за поприроден македонски наслов
+        if (res.suggestedTitleMk) {
+          const aiMk = res.suggestedTitleMk.trim();
+          const curMk = $('ytTitleMkInput').value.trim();
+          if (!state.userEditedTitleMk && !curMk) {
+            $('ytTitleMkInput').value = aiMk;
+            setBadge('titleMkAutoHint', 'AI превод');
+          } else if (curMk.toLowerCase() !== aiMk.toLowerCase()) {
+            setBadge('titleMkAutoHint', '✨ AI: ' + aiMk + ' (кликни)', () => {
+              $('ytTitleMkInput').value = aiMk;
+              setBadge('titleMkAutoHint', 'AI превод');
+            });
+          }
         }
 
         if (res.suggestedSpeaker && !state.userEditedSpeaker) {
@@ -2054,12 +2187,14 @@
       $('ytPlaylistBadge').classList.add('hidden');
       $('playlistSwitchBar').classList.add('hidden');
       $('ytTitleInput').value = '';
+      $('ytTitleMkInput').value = '';
       $('titleQuickTags').innerHTML = '';
       $('titleQuickTags').classList.add('hidden');
       $('titleModeBadge').classList.add('hidden');
       renderAiTagSuggestions();
       hideAlert('ytDuplicateAlert');
       hideAiStatus();
+      clearBadge('titleMkAutoHint');
       clearBadge('speakerAutoHint');
       clearBadge('topicAutoHint');
       $('saveVideoBtn').disabled = false;
@@ -2091,6 +2226,7 @@
               url: cleanUrlInput,
               isPlaylist: isPl,
               title: $('ytTitleInput').value.trim(),
+              titleMk: $('ytTitleMkInput').value.trim(),
               duration: state.currentVideo ? state.currentVideo.duration : state.editingVideo.duration,
               description: $('ytDesc').value.trim(),
               speaker: $('ytSpeaker').value.trim(),
@@ -2106,6 +2242,7 @@
               url: cleanUrlInput,
               isPlaylist: isPl,
               title: $('ytTitleInput').value.trim() || (state.currentVideo ? state.currentVideo.title : ''),
+              titleMk: $('ytTitleMkInput').value.trim(),
               duration: state.currentVideo ? state.currentVideo.duration : '',
               description: $('ytDesc').value.trim(),
               speaker: $('ytSpeaker').value.trim(),
@@ -2345,6 +2482,10 @@
       bar.classList.remove('hidden');
     }
 
+    function countYesVotes(item) {
+      return (item.reviews || []).filter(r => r.vote === 'yes').length;
+    }
+
     function renderArchiveList() {
       const isArchive = state.libraryView === 'archive';
       const isVideos = isArchive || state.archiveType === 'videos';
@@ -2363,8 +2504,9 @@
         if (activeTag && !(item.hashtags || []).some(t => t.toLowerCase() === activeTag)) return false;
         if (query) {
           const hay = [
-            item.title, item.topic, item.speaker, item.description,
-            item.note, item.addedBy, (item.hashtags || []).join(' ')
+            item.title, item.titleMk, item.topic, item.speaker, item.description,
+            item.note, item.addedBy, (item.hashtags || []).join(' '),
+            (item.reviews || []).map(r => r.user).join(' ')
           ].join(' ').toLowerCase();
           if (!hay.includes(query)) return false;
         }
@@ -2372,10 +2514,11 @@
       });
 
       filtered = filtered.slice().sort((a, b) => {
+        if (sort === 'votes') return (countYesVotes(b) - countYesVotes(a)) || ((b.ts || 0) - (a.ts || 0));
         if (sort === 'oldest') return (a.ts || 0) - (b.ts || 0);
         if (sort === 'shortest') return (a.durationSec || 999999) - (b.durationSec || 999999);
         if (sort === 'longest') return (b.durationSec || 0) - (a.durationSec || 0);
-        if (sort === 'title') return (a.title || '').localeCompare(b.title || '', 'mk');
+        if (sort === 'title') return (a.titleMk || a.title || '').localeCompare(b.titleMk || b.title || '', 'mk');
         return (b.ts || 0) - (a.ts || 0);
       });
 
@@ -2408,10 +2551,74 @@
       return 'st-todo';
     }
 
+    function renderReviewBar(barEl, v) {
+      const reviews = Array.isArray(v.reviews) ? v.reviews : [];
+      const meKey = (state.userName || '').trim().toLowerCase();
+      const myEntry = reviews.find(r => r.user.toLowerCase() === meKey);
+      const myVote = myEntry ? myEntry.vote : '';
+
+      barEl.innerHTML = `
+        <div class="review-controls">
+          <span class="review-label">Твој став:</span>
+          <button type="button" class="vote-btn ${myVote === 'watched' ? 'active-watched' : ''}" data-vote="watched">👁 Изгледано</button>
+          <button type="button" class="vote-btn ${myVote === 'yes' ? 'active-yes' : ''}" data-vote="yes">👍 Да се работи</button>
+          <button type="button" class="vote-btn ${myVote === 'no' ? 'active-no' : ''}" data-vote="no">👎 Не</button>
+        </div>
+        <div class="review-voters"></div>
+      `;
+
+      const votersBox = barEl.querySelector('.review-voters');
+      if (reviews.length === 0) {
+        votersBox.textContent = 'Сè уште никој не го прегледал.';
+      } else {
+        const order = { yes: 0, watched: 1, no: 2 };
+        const sorted = reviews.slice().sort((a, b) => (order[a.vote] ?? 3) - (order[b.vote] ?? 3));
+        sorted.forEach(r => {
+          const span = document.createElement('span');
+          const cls = r.vote === 'yes' ? 'v-yes' : (r.vote === 'no' ? 'v-no' : 'v-watched');
+          const icon = r.vote === 'yes' ? '👍' : (r.vote === 'no' ? '👎' : '👁');
+          const txt = r.vote === 'yes' ? 'Да' : (r.vote === 'no' ? 'Не' : 'Изгледано');
+          span.className = 'voter-pill ' + cls;
+          span.textContent = `${icon} ${r.user} (${txt})`;
+          votersBox.appendChild(span);
+        });
+      }
+
+      const btns = barEl.querySelectorAll('.vote-btn');
+      btns.forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const clickedVote = btn.dataset.vote;
+          const nextVote = (myVote === clickedVote) ? '' : clickedVote;
+          btns.forEach(b => { b.disabled = true; });
+          try {
+            const res = await apiCall({
+              action: 'voteVideo',
+              videoId: v.videoId,
+              userName: state.userName,
+              vote: nextVote
+            });
+            if (res.ok) {
+              v.reviews = res.reviews || [];
+              renderReviewBar(barEl, v);
+            } else {
+              showAlert('globalAlert', res.error || 'Грешка при зачувување на гласот.', 'error');
+              btns.forEach(b => { b.disabled = false; });
+            }
+          } catch (_) {
+            showAlert('globalAlert', 'Мрежна грешка при зачувување на гласот.', 'error');
+            btns.forEach(b => { b.disabled = false; });
+          }
+        });
+      });
+    }
+
     function buildVideoCard(v) {
       const isPl = Boolean(v.isPlaylist) || isPlaylistId(v.videoId, v.url);
       const cleanUrl = buildCanonicalUrl(v.videoId, v.url);
       const safeUrl = /^https?:\/\//i.test(cleanUrl) ? cleanUrl : '#';
+      const primaryTitle = v.titleMk || v.title || 'Без наслов';
+      const showEnSub = v.titleMk && v.title && v.titleMk.toLowerCase() !== v.title.toLowerCase();
+
       const card = document.createElement('article');
       card.className = 'item-card';
 
@@ -2424,7 +2631,10 @@
           </a>
           <div class="card-body">
             <div class="card-header-row">
-              <a class="card-title" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener">${escapeHtml(v.title || 'Без наслов')}</a>
+              <div class="card-title-wrap">
+                <a class="card-title" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener">${escapeHtml(primaryTitle)}</a>
+                ${showEnSub ? `<div class="card-subtitle-en">${escapeHtml(v.title)}</div>` : ''}
+              </div>
               <select class="status-select ${getStatusClass(v.status)}" aria-label="Статус">
                 <option value="За превод" ${v.status === 'За превод' ? 'selected' : ''}>За превод</option>
                 <option value="Во тек" ${v.status === 'Во тек' ? 'selected' : ''}>Во тек</option>
@@ -2439,6 +2649,7 @@
             ${v.description ? `<p class="card-desc">${escapeHtml(v.description)}</p>` : ''}
             ${v.note ? `<div class="card-note">📝 ${escapeHtml(v.note)}</div>` : ''}
             <div class="card-tags"></div>
+            <div class="review-bar js-review-bar"></div>
             <div class="card-footer">
               <span>${escapeHtml(v.date || '')}${v.addedBy ? ' · ' + escapeHtml(v.addedBy) : ''}</span>
               <div class="card-actions">
@@ -2452,6 +2663,7 @@
       `;
 
       loadThumbWithFallback(card.querySelector('.js-card-thumb'), v.thumbnail, v.videoId, isPl);
+      renderReviewBar(card.querySelector('.js-review-bar'), v);
 
       const tagsBox = card.querySelector('.card-tags');
       (v.hashtags || []).forEach(tag => {
