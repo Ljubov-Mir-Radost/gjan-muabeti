@@ -513,6 +513,7 @@
     .chip.selected { background: var(--primary); border-color: var(--primary); color: #fff; }
 
     .selected-tags-box { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+    .selected-tags-box:empty { display: none; }
     .active-tag {
       display: inline-flex;
       align-items: center;
@@ -572,6 +573,44 @@
       gap: 12px;
       margin-bottom: 16px;
       flex-wrap: wrap;
+    }
+
+    .archive-head-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .compact-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 7px;
+      height: 38px;
+      padding: 0 12px;
+      margin-bottom: 0;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-soft);
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      transition: 0.15s ease;
+    }
+    .compact-toggle:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-strong);
+      color: var(--text);
+    }
+    .compact-toggle input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      accent-color: var(--primary);
+      cursor: pointer;
     }
 
     .archive-info-pill {
@@ -733,6 +772,7 @@
     .status-select.st-done { background: var(--success-bg); color: var(--success); border-color: var(--success-border); }
 
     .meta-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 9px; }
+    .meta-pills:empty { display: none; }
     .meta-pill {
       display: inline-flex;
       align-items: center;
@@ -761,6 +801,7 @@
     }
 
     .card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+    .card-tags:empty { display: none; }
     .card-tag {
       border: 1px solid var(--primary-border);
       background: var(--primary-soft);
@@ -888,6 +929,47 @@
       font-size: 0.92rem;
     }
 
+    /* Компактен преглед */
+    .js-toggle-details { display: none; }
+    .archive-list.compact-mode .js-toggle-details { display: inline-block; }
+
+    .archive-list.compact-mode { gap: 9px; }
+    .archive-list.compact-mode .item-card {
+      padding: 11px 13px;
+      border-radius: 12px;
+    }
+    .archive-list.compact-mode .video-card-layout {
+      gap: 12px;
+      align-items: center;
+    }
+    .archive-list.compact-mode .card-thumb-link {
+      width: 138px;
+      border-radius: 8px;
+    }
+    .archive-list.compact-mode .card-header-row { margin-bottom: 5px; }
+    .archive-list.compact-mode .card-title { font-size: 0.95rem; line-height: 1.3; }
+    .archive-list.compact-mode .card-subtitle-en { font-size: 0.75rem; margin-top: 1px; }
+    .archive-list.compact-mode .meta-pills { margin-bottom: 6px; gap: 5px; }
+    .archive-list.compact-mode .meta-pill { font-size: 0.74rem; padding: 2px 8px; }
+    .archive-list.compact-mode .card-desc,
+    .archive-list.compact-mode .card-note { display: none; }
+    .archive-list.compact-mode .item-card.show-details .card-desc,
+    .archive-list.compact-mode .item-card.show-details .card-note { display: block; }
+    .archive-list.compact-mode .card-tags { margin-bottom: 6px; gap: 4px; }
+    .archive-list.compact-mode .card-tag { font-size: 0.73rem; padding: 1px 8px; }
+    .archive-list.compact-mode .review-bar {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px 10px;
+      padding: 6px 9px;
+      margin-bottom: 7px;
+    }
+    .archive-list.compact-mode .no-votes-hint { display: none; }
+    .archive-list.compact-mode .vote-btn { padding: 3px 8px; font-size: 0.73rem; }
+    .archive-list.compact-mode .card-footer { padding-top: 6px; font-size: 0.74rem; }
+
     .hidden { display: none !important; }
 
     @media (max-width: 680px) {
@@ -896,6 +978,8 @@
       .grid-2 { grid-template-columns: 1fr; gap: 0; }
       .video-card-layout { flex-direction: column; }
       .card-thumb-link { width: 100%; }
+      .archive-list.compact-mode .video-card-layout { flex-direction: column; align-items: stretch; }
+      .archive-list.compact-mode .card-thumb-link { width: 100%; }
       .yt-preview { flex-direction: column; align-items: flex-start; }
       .yt-thumb-wrap { width: 100%; }
       .tab-btn { font-size: 0.85rem; padding: 9px 6px; }
@@ -912,7 +996,7 @@
           <div class="brand">
             <div class="brand-icon"><img src="logo.png" alt="Гјан База" /></div>
             <div>
-              <h1>Гјан База <span class="version-tag">v3.7</span></h1>
+              <h1>Гјан База <span class="version-tag">v3.8</span></h1>
               <div class="user-badge">Предлози за превод и Архива</div>
             </div>
           </div>
@@ -941,7 +1025,7 @@
         <div class="brand">
           <div class="brand-icon"><img src="logo.png" alt="Гјан База" /></div>
           <div>
-            <h1>Гјан База <span class="version-tag">v3.7</span></h1>
+            <h1>Гјан База <span class="version-tag">v3.8</span></h1>
             <div class="user-badge">Најавен/а како: <strong id="displayUser"></strong></div>
           </div>
         </div>
@@ -1150,7 +1234,13 @@
           <div id="archiveViewBanner" class="archive-info-pill hidden">
             ✓ Реализирани видеа (преведени и сослушани)
           </div>
-          <button type="button" id="refreshArchiveBtn" class="icon-btn">↻ Освежи</button>
+          <div class="archive-head-actions">
+            <label class="compact-toggle" for="compactModeToggle">
+              <input type="checkbox" id="compactModeToggle" />
+              <span>Компактен преглед</span>
+            </label>
+            <button type="button" id="refreshArchiveBtn" class="icon-btn">↻ Освежи</button>
+          </div>
         </div>
 
         <div class="filters-panel">
@@ -1206,6 +1296,7 @@
 
     const STORAGE_KEY = 'archive_auth_v1';
     const THEME_KEY = 'archive_theme_v1';
+    const COMPACT_KEY = 'archive_compact_v1';
 
     const state = {
       accessCode: '',
@@ -1350,6 +1441,22 @@
         const current = document.documentElement.getAttribute('data-theme');
         applyTheme(current === 'dark' ? 'light' : 'dark');
       });
+    });
+
+    /* ---------- КОМПАКТЕН ПРЕГЛЕД ---------- */
+    function applyCompactMode(enabled) {
+      const isCompact = Boolean(enabled);
+      $('archiveList').classList.toggle('compact-mode', isCompact);
+      $('compactModeToggle').checked = isCompact;
+      localStorage.setItem(COMPACT_KEY, isCompact ? '1' : '0');
+    }
+
+    (function initCompactMode() {
+      applyCompactMode(localStorage.getItem(COMPACT_KEY) === '1');
+    })();
+
+    $('compactModeToggle').addEventListener('change', e => {
+      applyCompactMode(e.target.checked);
     });
 
     /* ---------- СПРЕЧИ СЛУЧАЈНО ПРАЌАЊЕ НА ФОРМА СО ENTER ---------- */
@@ -1570,7 +1677,42 @@
       renderQuickFillChips('videoTopicChips', state.lists.topics, 'ytTopic');
     }
 
-    /* ---------- БРЗИ ХАШТАГОВИ ОД НАСЛОВОТ (EN + МК) ---------- */
+    /* ---------- НЕЧЛЕНУВАНИ МАКЕДОНСКИ ХАШТАГОВИ ОД НАСЛОВОТ ---------- */
+    const MK_ARTICLE_EXCEPTIONS = new Set([
+      'живот', 'пилот', 'робот', 'патриот', 'бојкот', 'компот', 'шепот', 'ропот',
+      'топот', 'кикот', 'трепот', 'азот', 'лето', 'свето', 'злато', 'фото', 'мото',
+      'врата', 'плата', 'салата', 'палата', 'лопата', 'соната', 'граната', 'карта',
+      'порта', 'торта', 'сорта', 'лента', 'мента', 'рента', 'пошта', 'башта', 'мечта',
+      'суета', 'диета', 'монета', 'планета', 'комета', 'анкета', 'ракета', 'уста',
+      'паста', 'листа', 'писта', 'доста', 'проста', 'места', 'невеста', 'чистота',
+      'доброта', 'убавина', 'приоритет', 'квалитет', 'идентитет', 'менталитет'
+    ]);
+
+    function stripMacedonianArticle(word) {
+      if (!word) return '';
+      const orig = String(word).trim();
+      const lower = orig.toLowerCase();
+      if (!/^[а-шѓќљњџѕ]+$/.test(lower)) return orig;
+      if (MK_ARTICLE_EXCEPTIONS.has(lower)) return orig;
+
+      let stem = lower;
+      if (lower === 'умот') stem = 'ум';
+      else if (lower.length >= 6 && /(?:њето|ството|ието|јето)$/.test(lower)) stem = lower.slice(0, -2);
+      else if (lower.length >= 5 && /(?:ето|ото)$/.test(lower)) stem = lower.slice(0, -2);
+      else if (lower.length >= 6 && /(?:оста|еста)$/.test(lower)) stem = lower.slice(0, -3) + 'ст';
+      else if (lower.length >= 5 && /ата$/.test(lower)) stem = lower.slice(0, -2);
+      else if (lower.length >= 5 && /[вѓжзјклмнпрфхцчџшќљњ]та$/.test(lower)) stem = lower.slice(0, -2);
+      else if (lower.length >= 6 && /(?:ски|чки|шки|ји)от$/.test(lower)) stem = lower.slice(0, -2);
+      else if (lower.length >= 7 && /ениот$/.test(lower)) stem = lower.slice(0, -3);
+      else if (lower.length >= 6 && /[бвгджзјклмнпрстфхцчџш]ниот$/.test(lower)) stem = lower.slice(0, -4) + 'ен';
+      else if (lower.length >= 5 && /[бвгджзклмнпрстфхцчџш]иот$/.test(lower)) stem = lower.slice(0, -3);
+      else if (lower.length >= 5 && /от$/.test(lower)) stem = lower.slice(0, -2);
+      else if (lower.length >= 6 && /ите$/.test(lower)) stem = lower.slice(0, -2);
+
+      if (stem.length < 2) return orig;
+      return stem.charAt(0).toUpperCase() + stem.slice(1);
+    }
+
     function extractQuickTagsFromText(sourceText, isMacedonian) {
       const source = (sourceText || '').trim();
       if (!source) return [];
@@ -1609,7 +1751,10 @@
 
       const candidates = [];
       const addCandidate = raw => {
-        const tag = normalizeTag(raw);
+        const prepared = isMacedonian
+          ? String(raw || '').trim().split(/\s+/).map(w => stripMacedonianArticle(w)).join(' ')
+          : raw;
+        const tag = normalizeTag(prepared);
         if (tag && tag.length >= 3 && !candidates.some(c => c.toLowerCase() === tag.toLowerCase())) {
           candidates.push(tag);
         }
@@ -2631,7 +2776,7 @@
 
       const votersBox = barEl.querySelector('.review-voters');
       if (reviews.length === 0) {
-        votersBox.textContent = 'Сè уште никој не го прегледал.';
+        votersBox.innerHTML = '<span class="no-votes-hint">Сè уште никој не го прегледал.</span>';
       } else {
         const order = { yes: 0, watched: 1, no: 2 };
         const sorted = reviews.slice().sort((a, b) => (order[a.vote] ?? 3) - (order[b.vote] ?? 3));
@@ -2715,6 +2860,7 @@
             <div class="card-footer">
               <span>${escapeHtml(v.date || '')}${v.addedBy ? ' · ' + escapeHtml(v.addedBy) : ''}</span>
               <div class="card-actions">
+                ${(v.description || v.note) ? '<button type="button" class="mini-btn js-toggle-details">Опис ▾</button>' : ''}
                 <button type="button" class="mini-btn js-edit-video">✎ Измени</button>
                 <button type="button" class="mini-btn js-copy-link">Копирај линк</button>
                 <a class="mini-btn" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener">Отвори ↗</a>
@@ -2752,6 +2898,14 @@
         $('filterTopic').value = v.topic;
         renderArchiveList();
       });
+
+      const detailsBtn = card.querySelector('.js-toggle-details');
+      if (detailsBtn) {
+        detailsBtn.addEventListener('click', () => {
+          const expanded = card.classList.toggle('show-details');
+          detailsBtn.textContent = expanded ? 'Скриј опис ▴' : 'Опис ▾';
+        });
+      }
 
       card.querySelector('.js-edit-video').addEventListener('click', () => startEditVideo(v));
 
@@ -2813,6 +2967,7 @@
         <div class="card-footer">
           <span>${escapeHtml(m.date || '')}${m.addedBy ? ' · ' + escapeHtml(m.addedBy) : ''}</span>
           <div class="card-actions">
+            ${m.note ? '<button type="button" class="mini-btn js-toggle-details">Белешка ▾</button>' : ''}
             <button type="button" class="mini-btn js-edit-murli">✎ Измени</button>
             <button type="button" class="mini-btn js-copy-link">Копирај линк</button>
             <a class="mini-btn" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener">Отвори ↗</a>
@@ -2839,6 +2994,14 @@
         $('filterTopic').value = m.topic;
         renderArchiveList();
       });
+
+      const detailsBtn = card.querySelector('.js-toggle-details');
+      if (detailsBtn) {
+        detailsBtn.addEventListener('click', () => {
+          const expanded = card.classList.toggle('show-details');
+          detailsBtn.textContent = expanded ? 'Скриј белешка ▴' : 'Белешка ▾';
+        });
+      }
 
       card.querySelector('.js-edit-murli').addEventListener('click', () => startEditMurli(m));
       bindCopyButton(card.querySelector('.js-copy-link'), cleanUrl);
