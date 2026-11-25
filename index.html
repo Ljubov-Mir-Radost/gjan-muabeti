@@ -40,6 +40,7 @@
       --danger-border: #fecaca;
       --shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
       --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+      --shadow-pop: 0 14px 36px rgba(15, 23, 42, 0.16);
       --radius: 16px;
       --radius-sm: 10px;
     }
@@ -77,6 +78,7 @@
       --danger-border: rgba(239, 68, 68, 0.32);
       --shadow: 0 10px 34px rgba(0, 0, 0, 0.35);
       --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.28);
+      --shadow-pop: 0 16px 42px rgba(0, 0, 0, 0.55);
     }
 
     * { box-sizing: border-box; }
@@ -88,37 +90,46 @@
       background-color: var(--bg);
       background-image: var(--bg-accent);
       color: var(--text);
-      line-height: 1.55;
-      padding: 18px 14px 56px;
+      line-height: 1.5;
+      padding: 16px 14px 56px;
       transition: background-color 0.2s ease, color 0.2s ease;
     }
 
-    .container { max-width: 940px; margin: 0 auto; }
+    .container { max-width: 1180px; margin: 0 auto; }
     .auth-wrap { max-width: 440px; margin: 48px auto 0; }
 
     .card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 26px;
+      padding: 20px 22px 24px;
       box-shadow: var(--shadow);
       transition: background-color 0.2s ease, border-color 0.2s ease;
     }
 
+    /* ================= ЕДНОРЕДЕН COMMAND ХЕДЕР (ДЕСКТОП) ================= */
     .topbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 14px;
-      margin-bottom: 22px;
-      flex-wrap: wrap;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: nowrap;
     }
 
-    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .auth-wrap .topbar {
+      padding-bottom: 0;
+      border-bottom: none;
+      margin-bottom: 18px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; flex-shrink: 0; }
 
     .brand-icon {
-      width: 48px;
-      height: 48px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       background: radial-gradient(circle, #1e1b4b 0%, #090e1a 100%);
       border: 1px solid rgba(129, 140, 248, 0.3);
@@ -129,6 +140,8 @@
       flex-shrink: 0;
       box-shadow: 0 4px 12px rgba(15, 23, 42, 0.16);
     }
+
+    .auth-wrap .brand-icon { width: 46px; height: 46px; }
 
     [data-theme="dark"] .brand-icon {
       background: transparent;
@@ -150,68 +163,84 @@
 
     h1 {
       margin: 0;
-      font-size: 1.28rem;
+      font-size: 1.18rem;
       font-weight: 700;
       letter-spacing: -0.02em;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
+      white-space: nowrap;
     }
 
     .version-tag {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 600;
       color: var(--muted);
       background: var(--surface);
       border: 1px solid var(--border);
-      padding: 2px 7px;
+      padding: 1px 6px;
       border-radius: 99px;
     }
 
-    .user-badge { font-size: 0.84rem; color: var(--muted); margin-top: 2px; }
+    .user-badge { font-size: 0.8rem; color: var(--muted); margin-top: 1px; }
     .user-badge strong { color: var(--text); font-weight: 600; }
 
-    .topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .desktop-user-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 36px;
+      padding: 0 11px;
+      border-radius: 9px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-soft);
+      white-space: nowrap;
+    }
+
+    .topbar-actions { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
 
     .icon-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      height: 38px;
-      padding: 0 12px;
-      border-radius: 10px;
+      height: 36px;
+      padding: 0 11px;
+      border-radius: 9px;
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text-soft);
-      font-size: 0.84rem;
+      font-size: 0.82rem;
       font-weight: 600;
       cursor: pointer;
       transition: 0.15s ease;
     }
     .icon-btn:hover { background: var(--surface-hover); border-color: var(--border-strong); color: var(--text); }
     .icon-btn.danger:hover { color: var(--danger); border-color: var(--danger-border); background: var(--danger-bg); }
-    .icon-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .icon-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
 
     .show-sm-inline { display: none; }
+    .show-sm-block { display: none; }
 
     .tabs {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-      margin-bottom: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
       background: var(--surface);
       border: 1px solid var(--border);
-      padding: 5px;
-      border-radius: 13px;
+      padding: 4px;
+      border-radius: 11px;
     }
 
     .tab-btn {
       border: none;
       background: transparent;
-      padding: 10px 10px;
-      border-radius: 9px;
-      font-size: 0.9rem;
+      padding: 7px 13px;
+      border-radius: 8px;
+      font-size: 0.86rem;
       font-weight: 600;
       color: var(--muted);
       cursor: pointer;
@@ -226,12 +255,18 @@
     .tab-btn.active { background: var(--card); color: var(--primary); box-shadow: var(--shadow-sm); }
 
     .count-pill {
-      font-size: 0.72rem;
+      font-size: 0.71rem;
       font-weight: 700;
-      padding: 1px 7px;
+      padding: 1px 6px;
       border-radius: 99px;
       background: var(--primary-soft);
       color: var(--primary);
+    }
+
+    /* Средни екрани (таблет 681px–960px): табовите одат уредно во втор ред */
+    @media (max-width: 960px) and (min-width: 681px) {
+      .topbar { flex-wrap: wrap; gap: 10px; }
+      .tabs { order: 3; width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); }
     }
 
     .edit-banner {
@@ -266,7 +301,7 @@
     .banner-btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
     .banner-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    .form-wrap { max-width: 740px; margin: 0 auto; }
+    .form-wrap { max-width: 740px; margin: 4px auto 0; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .field { margin-bottom: 18px; }
 
@@ -324,7 +359,6 @@
       color: var(--text);
     }
 
-    .label-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .hint { font-weight: 400; font-size: 0.79rem; color: var(--muted); }
 
     .auto-badge {
@@ -347,7 +381,7 @@
     select,
     textarea {
       width: 100%;
-      padding: 11px 13px;
+      padding: 10px 13px;
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       font-size: 15px;
@@ -364,7 +398,7 @@
       box-shadow: 0 0 0 3px var(--primary-soft);
     }
 
-    textarea { resize: vertical; min-height: 110px; }
+    textarea { resize: vertical; min-height: 105px; }
 
     .yt-preview {
       display: none;
@@ -400,7 +434,7 @@
       bottom: 5px;
       background: rgba(15, 23, 42, 0.88);
       color: #fff;
-      font-size: 0.71rem;
+      font-size: 0.7rem;
       font-weight: 700;
       padding: 2px 6px;
       border-radius: 5px;
@@ -413,7 +447,7 @@
       top: 5px;
       background: rgba(79, 70, 229, 0.92);
       color: #fff;
-      font-size: 0.69rem;
+      font-size: 0.68rem;
       font-weight: 700;
       padding: 2px 6px;
       border-radius: 5px;
@@ -508,17 +542,19 @@
     .chips-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
     .chip {
       border: 1px solid var(--border);
-      background: var(--surface);
+      background: var(--card);
       color: var(--text-soft);
-      font-size: 0.8rem;
+      font-size: 0.78rem;
+      font-weight: 500;
       padding: 4px 10px;
       border-radius: 99px;
       cursor: pointer;
       transition: 0.12s;
       user-select: none;
+      white-space: nowrap;
     }
     .chip:hover { border-color: var(--primary); color: var(--primary); }
-    .chip.selected { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .chip.selected { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
 
     .selected-tags-box { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
     .selected-tags-box:empty { display: none; }
@@ -547,10 +583,10 @@
 
     .alert {
       display: none;
-      padding: 12px 14px;
+      padding: 11px 14px;
       border-radius: 10px;
-      font-size: 0.89rem;
-      margin-bottom: 16px;
+      font-size: 0.88rem;
+      margin-bottom: 14px;
       border: 1px solid transparent;
     }
     .alert.visible { display: block; }
@@ -562,9 +598,9 @@
       border: none;
       background: linear-gradient(135deg, #4f46e5, #6366f1);
       color: #fff;
-      font-size: 0.98rem;
+      font-size: 0.96rem;
       font-weight: 600;
-      padding: 13px 18px;
+      padding: 12px 18px;
       border-radius: 11px;
       cursor: pointer;
       transition: transform 0.1s, filter 0.15s;
@@ -574,38 +610,128 @@
     .btn-primary:active:not(:disabled) { transform: scale(0.995); }
     .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; box-shadow: none; }
 
-    .archive-head {
+    /* ================= КОМПАКТНА ДЕСКТОП ФИЛТЕР-ЛЕНТА ================= */
+    .library-toolbar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
       display: flex;
-      justify-content: space-between;
+      flex-wrap: wrap;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
+      gap: 8px;
+    }
+
+    .archive-head { display: contents; }
+
+    .sub-tabs {
+      order: 1;
+      display: inline-flex;
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 3px;
+      border-radius: 9px;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+
+    .sub-tab-btn {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.81rem;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .sub-tab-btn.active { background: var(--primary-soft); color: var(--primary); }
+
+    .archive-info-pill {
+      order: 1;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--success);
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      padding: 6px 11px;
+      border-radius: 9px;
+      white-space: nowrap;
+    }
+
+    .search-row {
+      order: 2;
+      flex: 1 1 200px;
+      min-width: 170px;
+      display: flex;
+      align-items: stretch;
+      gap: 6px;
+      margin: 0;
+    }
+
+    #archiveSearch {
+      height: 36px;
+      padding: 0 11px;
+      font-size: 0.85rem;
+      background: var(--card);
+      border-radius: 9px;
+    }
+
+    .filters-drawer,
+    .filters-drawer-body {
+      display: contents;
+    }
+
+    .filters-grid {
+      order: 3;
+      display: flex;
+      align-items: center;
+      gap: 6px;
       flex-wrap: wrap;
     }
 
+    .filters-grid select {
+      width: auto;
+      max-width: 152px;
+      height: 36px;
+      padding: 0 10px;
+      font-size: 0.81rem;
+      background: var(--card);
+      border-radius: 9px;
+      cursor: pointer;
+    }
+
     .archive-head-actions {
+      order: 4;
       display: flex;
       align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
+      gap: 6px;
+      flex-shrink: 0;
+      margin-left: auto;
     }
 
     .compact-toggle {
       display: inline-flex;
       align-items: center;
       justify-content: flex-start;
-      gap: 7px;
-      height: 38px;
-      padding: 0 12px;
+      gap: 6px;
+      height: 36px;
+      padding: 0 10px;
       margin-bottom: 0;
-      border-radius: 10px;
+      border-radius: 9px;
       border: 1px solid var(--border);
-      background: var(--surface);
+      background: var(--card);
       color: var(--text-soft);
-      font-size: 0.84rem;
+      font-size: 0.81rem;
       font-weight: 600;
       cursor: pointer;
       user-select: none;
+      white-space: nowrap;
       transition: 0.15s ease;
     }
     .compact-toggle:hover {
@@ -619,64 +745,20 @@
       color: var(--primary);
     }
     .compact-toggle input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
+      width: 15px;
+      height: 15px;
       margin: 0;
       accent-color: var(--primary);
       cursor: pointer;
     }
     .compact-toggle svg { width: 15px; height: 15px; flex-shrink: 0; }
 
-    .archive-info-pill {
-      font-size: 0.86rem;
-      font-weight: 600;
-      color: var(--success);
-      background: var(--success-bg);
-      border: 1px solid var(--success-border);
-      padding: 7px 13px;
-      border-radius: 10px;
+    #refreshArchiveBtn {
+      height: 36px;
+      width: 36px;
+      padding: 0;
+      background: var(--card);
     }
-
-    .sub-tabs {
-      display: inline-flex;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 4px;
-      border-radius: 10px;
-      gap: 4px;
-    }
-
-    .sub-tab-btn {
-      border: none;
-      background: transparent;
-      color: var(--muted);
-      font-size: 0.86rem;
-      font-weight: 600;
-      padding: 7px 14px;
-      border-radius: 7px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
-    }
-    .sub-tab-btn.active { background: var(--card); color: var(--primary); box-shadow: var(--shadow-sm); }
-
-    .filters-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      padding: 14px;
-      margin-bottom: 16px;
-    }
-
-    .search-row {
-      display: flex;
-      align-items: stretch;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-    .search-row input { flex: 1; min-width: 0; }
 
     /* Мобилни контроли за филтри (скриени на десктоп) */
     .mobile-filter-btn,
@@ -684,33 +766,157 @@
     .filters-backdrop,
     .filters-drawer-head,
     .filters-drawer-foot,
-    .tag-bar-label {
+    .tag-bar-label,
+    .mobile-tag-search {
       display: none;
     }
 
-    .filters-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 10px;
-    }
-    .filters-grid select { padding: 9px 11px; font-size: 0.86rem; background: var(--card); }
-
+    /* ================= ТОП-7 ХАШТАГОВИ + ПОПОВЕР (ДЕСКТОП) ================= */
     .tag-filter-bar {
+      order: 5;
+      flex: 1 0 100%;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: 6px;
-      margin-top: 12px;
-      padding-top: 10px;
+      padding-top: 9px;
+      margin-top: 2px;
       border-top: 1px solid var(--border);
+    }
+
+    .tag-chip-extra { display: none; }
+
+    .tag-popover-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .all-tags-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid var(--primary-border);
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: 0.14s ease;
+      white-space: nowrap;
+    }
+    .all-tags-btn:hover,
+    .all-tags-btn[aria-expanded="true"] {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .tag-popover {
+      position: absolute;
+      top: calc(100% + 7px);
+      left: 0;
+      z-index: 600;
+      width: 310px;
+      max-width: calc(100vw - 36px);
+      background: var(--card);
+      border: 1px solid var(--border-strong);
+      border-radius: 13px;
+      box-shadow: var(--shadow-pop);
+      padding: 10px;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .tag-popover.open { display: flex; }
+    .tag-popover.align-right { left: auto; right: 0; }
+
+    .tag-popover-top {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tag-popover-search {
+      height: 34px !important;
+      padding: 0 10px !important;
+      font-size: 0.83rem !important;
+      border-radius: 8px !important;
+    }
+
+    .tag-sort-btn {
+      height: 34px;
+      padding: 0 9px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .tag-sort-btn:hover { color: var(--text); border-color: var(--border-strong); }
+
+    .tag-popover-list {
+      max-height: 255px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding-right: 2px;
+    }
+
+    .tag-popover-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: var(--text-soft);
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 6px 9px;
+      border-radius: 7px;
+      cursor: pointer;
+      text-align: left;
+      transition: 0.1s;
+    }
+    .tag-popover-item:hover { background: var(--surface-hover); color: var(--text); }
+    .tag-popover-item.selected {
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .tag-popover-count {
+      font-size: 0.73rem;
+      color: var(--muted);
+      background: var(--surface);
+      padding: 1px 6px;
+      border-radius: 99px;
+    }
+    .tag-popover-item.selected .tag-popover-count {
+      background: var(--primary);
+      color: #fff;
+    }
+    .tag-popover-empty {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      padding: 16px 8px;
     }
 
     .results-meta {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
-      font-size: 0.84rem;
+      margin-bottom: 10px;
+      font-size: 0.81rem;
       color: var(--muted);
       gap: 10px;
       flex-wrap: wrap;
@@ -720,31 +926,32 @@
       border: none;
       background: none;
       color: var(--primary);
-      font-size: 0.83rem;
+      font-size: 0.81rem;
       font-weight: 600;
       cursor: pointer;
       padding: 2px 6px;
     }
     .clear-filters-btn:hover { text-decoration: underline; }
 
-    .archive-list { display: flex; flex-direction: column; gap: 14px; }
+    /* ================= STUDIO КАРТИЧКИ (ДЕСКТОП) ================= */
+    .archive-list { display: flex; flex-direction: column; gap: 11px; }
 
     .item-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 15px;
+      border-radius: 13px;
+      padding: 13px 15px;
       transition: border-color 0.15s;
     }
     .item-card:hover { border-color: var(--border-strong); }
 
-    .video-card-layout { display: flex; gap: 16px; align-items: flex-start; }
+    .video-card-layout { display: flex; gap: 15px; align-items: flex-start; }
 
     .card-thumb-link {
       position: relative;
-      width: 200px;
+      width: 192px;
       aspect-ratio: 16/9;
-      border-radius: 10px;
+      border-radius: 9px;
       overflow: hidden;
       flex-shrink: 0;
       background: var(--border);
@@ -753,36 +960,46 @@
       justify-content: center;
       text-decoration: none;
       color: var(--muted);
-      font-size: 1.6rem;
+      font-size: 1.5rem;
     }
     .card-thumb-link img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.2s; }
     .card-thumb-link:hover img { transform: scale(1.03); }
 
-    .card-body { flex: 1; min-width: 0; }
+    .card-body {
+      flex: 1;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: 10px;
+      row-gap: 7px;
+      align-items: start;
+    }
 
     .card-header-row {
+      grid-column: 1;
+      grid-row: 1;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       gap: 10px;
-      margin-bottom: 8px;
+      min-width: 0;
     }
 
     .card-title-wrap { min-width: 0; flex: 1; }
 
     .card-title {
-      font-size: 1.03rem;
+      font-size: 1rem;
       font-weight: 700;
       color: var(--text);
       text-decoration: none;
-      line-height: 1.35;
+      line-height: 1.3;
       word-break: break-word;
       display: block;
     }
     .card-title:hover { color: var(--primary); }
 
     .card-subtitle-en {
-      font-size: 0.8rem;
+      font-size: 0.77rem;
       color: var(--muted);
       margin-top: 2px;
       word-break: break-word;
@@ -790,8 +1007,9 @@
 
     .status-select {
       width: auto;
-      padding: 5px 10px;
-      font-size: 0.78rem;
+      height: 28px;
+      padding: 0 10px;
+      font-size: 0.76rem;
       font-weight: 700;
       border-radius: 99px;
       cursor: pointer;
@@ -802,16 +1020,40 @@
     .status-select.st-translated { background: var(--purple-bg); color: var(--purple); border-color: var(--purple-border); }
     .status-select.st-done { background: var(--success-bg); color: var(--success); border-color: var(--success-border); }
 
-    .meta-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 9px; }
+    .card-actions {
+      grid-column: 2;
+      grid-row: 1;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .card-meta-band,
+    .card-desc,
+    .user-desc-details,
+    .card-note,
+    .review-bar {
+      grid-column: 1 / -1;
+    }
+
+    .card-meta-band {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .meta-pills { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 5px; }
     .meta-pills:empty { display: none; }
     .meta-pill {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      font-size: 0.78rem;
+      gap: 4px;
+      font-size: 0.75rem;
       font-weight: 600;
-      padding: 3px 9px;
-      border-radius: 7px;
+      padding: 2px 8px;
+      border-radius: 6px;
       background: var(--card);
       border: 1px solid var(--border);
       color: var(--text-soft);
@@ -819,13 +1061,34 @@
     }
     .meta-pill:hover { border-color: var(--primary); color: var(--primary); }
 
-    .card-desc { font-size: 0.88rem; color: var(--text-soft); margin: 0 0 10px; white-space: pre-line; }
+    .card-date-meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      white-space: nowrap;
+      padding: 0 3px;
+    }
+
+    .card-tags { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 5px; }
+    .card-tags:empty { display: none; }
+    .card-tag {
+      border: 1px solid var(--primary-border);
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 99px;
+      cursor: pointer;
+    }
+    .card-tag:hover { filter: brightness(1.08); }
+
+    .card-desc { font-size: 0.86rem; color: var(--text-soft); margin: 0; white-space: pre-line; }
 
     /* Дополнителен кориснички опис — секогаш собран, се отвора со клик */
     .user-desc-details {
-      margin: 0 0 10px;
+      margin: 0;
       border: 1px solid var(--border);
-      border-radius: 9px;
+      border-radius: 8px;
       background: var(--card);
       overflow: hidden;
     }
@@ -835,8 +1098,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      padding: 6px 10px;
-      font-size: 0.8rem;
+      padding: 5px 10px;
+      font-size: 0.78rem;
       font-weight: 600;
       color: var(--primary);
       cursor: pointer;
@@ -846,7 +1109,7 @@
     .user-desc-details summary::-webkit-details-marker { display: none; }
     .user-desc-details summary:hover { background: var(--primary-soft); }
     .user-desc-chevron {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       transition: transform 0.15s ease;
       display: inline-block;
     }
@@ -854,43 +1117,31 @@
     .user-desc-body {
       padding: 8px 11px 10px;
       border-top: 1px solid var(--border);
-      font-size: 0.86rem;
+      font-size: 0.85rem;
       color: var(--text-soft);
       white-space: pre-line;
       word-break: break-word;
     }
 
     .card-note {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--muted);
       background: var(--card);
       border-left: 3px solid var(--primary);
-      padding: 6px 10px;
+      padding: 5px 10px;
       border-radius: 0 7px 7px 0;
-      margin-bottom: 10px;
     }
 
-    .card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
-    .card-tags:empty { display: none; }
-    .card-tag {
-      border: 1px solid var(--primary-border);
-      background: var(--primary-soft);
-      color: var(--primary);
-      font-size: 0.77rem;
-      font-weight: 600;
-      padding: 2px 9px;
-      border-radius: 99px;
-      cursor: pointer;
-    }
-    .card-tag:hover { filter: brightness(1.08); }
-
+    /* Тимски став — еден чист хоризонтален ред на десктоп */
     .review-bar {
       display: flex;
-      flex-direction: column;
-      gap: 7px;
-      padding: 9px 11px;
-      margin-bottom: 10px;
-      border-radius: 10px;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px 12px;
+      padding: 6px 10px;
+      border-radius: 9px;
       background: var(--card);
       border: 1px solid var(--border);
     }
@@ -899,11 +1150,11 @@
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
 
     .review-label {
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 600;
       color: var(--muted);
       margin-right: 2px;
@@ -913,9 +1164,9 @@
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text-soft);
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 600;
-      padding: 4px 10px;
+      padding: 3px 9px;
       border-radius: 99px;
       cursor: pointer;
       transition: 0.14s ease;
@@ -944,7 +1195,7 @@
       flex-wrap: wrap;
       align-items: center;
       gap: 5px;
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       color: var(--muted);
     }
 
@@ -954,7 +1205,7 @@
       gap: 4px;
       padding: 2px 8px;
       border-radius: 99px;
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       font-weight: 600;
       border: 1px solid transparent;
     }
@@ -962,32 +1213,27 @@
     .voter-pill.v-no { background: var(--danger-bg); color: var(--danger); border-color: var(--danger-border); }
     .voter-pill.v-watched { background: var(--info-bg); color: var(--info); border-color: var(--info-border); }
 
-    .card-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      padding-top: 9px;
-      border-top: 1px solid var(--border);
-      font-size: 0.78rem;
-      color: var(--muted);
-      flex-wrap: wrap;
-    }
-
-    .card-actions { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
-
     .mini-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 28px;
+      padding: 0 8px;
       border: 1px solid var(--border);
       background: var(--card);
       color: var(--text-soft);
-      font-size: 0.77rem;
+      font-size: 0.75rem;
       font-weight: 600;
-      padding: 4px 10px;
       border-radius: 7px;
       text-decoration: none;
       cursor: pointer;
+      white-space: nowrap;
+      transition: 0.14s ease;
     }
     .mini-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .mini-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+    .mini-btn.icon-only-desktop { width: 28px; padding: 0; }
 
     .empty-state {
       text-align: center;
@@ -999,48 +1245,33 @@
       font-size: 0.92rem;
     }
 
-    /* Компактен преглед */
+    /* ================= КОМПАКТЕН ПРЕГЛЕД (ДЕСКТОП) ================= */
     .js-toggle-details { display: none; }
-    .archive-list.compact-mode .js-toggle-details { display: inline-block; }
+    .archive-list.compact-mode .js-toggle-details { display: inline-flex; }
 
-    .archive-list.compact-mode { gap: 9px; }
+    .archive-list.compact-mode { gap: 8px; }
     .archive-list.compact-mode .item-card {
-      padding: 11px 13px;
-      border-radius: 12px;
+      padding: 10px 13px;
+      border-radius: 11px;
     }
     .archive-list.compact-mode .video-card-layout {
-      gap: 12px;
+      gap: 13px;
       align-items: center;
     }
     .archive-list.compact-mode .card-thumb-link {
-      width: 138px;
+      width: 152px;
       border-radius: 8px;
     }
-    .archive-list.compact-mode .card-header-row { margin-bottom: 5px; }
-    .archive-list.compact-mode .card-title { font-size: 0.95rem; line-height: 1.3; }
-    .archive-list.compact-mode .card-subtitle-en { font-size: 0.75rem; margin-top: 1px; }
-    .archive-list.compact-mode .meta-pills { margin-bottom: 6px; gap: 5px; }
-    .archive-list.compact-mode .meta-pill { font-size: 0.74rem; padding: 2px 8px; }
+    .archive-list.compact-mode .card-body { row-gap: 5px; }
+    .archive-list.compact-mode .card-title { font-size: 0.94rem; line-height: 1.28; }
+    .archive-list.compact-mode .card-subtitle-en { font-size: 0.74rem; margin-top: 1px; }
     .archive-list.compact-mode .card-desc,
     .archive-list.compact-mode .card-note { display: none; }
     .archive-list.compact-mode .item-card.show-details .card-desc,
     .archive-list.compact-mode .item-card.show-details .card-note { display: block; }
-    .archive-list.compact-mode .user-desc-details { margin-bottom: 6px; }
-    .archive-list.compact-mode .user-desc-details summary { padding: 4px 9px; font-size: 0.75rem; }
-    .archive-list.compact-mode .card-tags { margin-bottom: 6px; gap: 4px; }
-    .archive-list.compact-mode .card-tag { font-size: 0.73rem; padding: 1px 8px; }
-    .archive-list.compact-mode .review-bar {
-      flex-direction: row;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px 10px;
-      padding: 6px 9px;
-      margin-bottom: 7px;
-    }
+    .archive-list.compact-mode .user-desc-details summary { padding: 4px 9px; font-size: 0.74rem; }
+    .archive-list.compact-mode .review-bar { padding: 5px 9px; }
     .archive-list.compact-mode .no-votes-hint { display: none; }
-    .archive-list.compact-mode .vote-btn { padding: 3px 8px; font-size: 0.73rem; }
-    .archive-list.compact-mode .card-footer { padding-top: 6px; font-size: 0.74rem; }
 
     .hidden { display: none !important; }
 
@@ -1051,20 +1282,24 @@
       .card { padding: 12px 11px; border-radius: 14px; }
       .hide-sm { display: none !important; }
       .show-sm-inline { display: inline-flex; }
+      .show-sm-block { display: block; }
 
-      /* 1. Хедер во 1 ред */
+      /* 1. Хедер во 1 ред + 4 табови во следен 1 ред */
       .topbar {
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         gap: 8px;
         margin-bottom: 10px;
+        padding-bottom: 0;
+        border-bottom: none;
       }
-      .brand { gap: 8px; }
+      .brand { order: 1; gap: 8px; flex: 1 1 auto; }
       .brand-icon { width: 34px; height: 34px; }
       .auth-wrap .brand-icon { width: 42px; height: 42px; }
       h1 { font-size: 1.04rem; gap: 5px; }
       .version-tag { font-size: 0.64rem; padding: 1px 6px; }
       .user-badge { font-size: 0.74rem; margin-top: 0; line-height: 1.25; }
-      .topbar-actions { gap: 6px; }
+      .desktop-user-pill { display: none; }
+      .topbar-actions { order: 2; gap: 6px; }
       .topbar .icon-btn {
         height: 34px;
         width: 34px;
@@ -1072,12 +1307,13 @@
         border-radius: 9px;
       }
 
-      /* 2. Сите 4 главни табови во 1 ред */
       .tabs {
+        order: 3;
+        width: 100%;
         display: flex;
         gap: 3px;
         padding: 3px;
-        margin-bottom: 10px;
+        margin-top: 2px;
         border-radius: 11px;
       }
       .tab-btn {
@@ -1090,14 +1326,26 @@
       }
       .count-pill { font-size: 0.65rem; padding: 1px 5px; }
 
-      /* 3. Под-лента (Видеа/Мурли + Компактен + Освежи) во 1 ред */
+      /* 2. Мобилна библиотека: враќање на 1-редна под-лента + 1-редно пребарување со „Филтри“ */
+      .library-toolbar {
+        display: block;
+        background: transparent;
+        border: none;
+        padding: 0;
+        margin-bottom: 8px;
+      }
+
       .archive-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         flex-wrap: nowrap;
         gap: 6px;
         margin-bottom: 10px;
       }
-      .sub-tabs { padding: 3px; gap: 2px; border-radius: 9px; }
+      .sub-tabs { padding: 3px; gap: 2px; border-radius: 9px; background: var(--surface); }
       .sub-tab-btn { font-size: 0.78rem; padding: 6px 9px; gap: 4px; }
+      .sub-tab-btn.active { background: var(--card); box-shadow: var(--shadow-sm); }
       .archive-info-pill {
         font-size: 0.76rem;
         padding: 6px 10px;
@@ -1105,33 +1353,29 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
-      .archive-head-actions { gap: 5px; flex-wrap: nowrap; flex-shrink: 0; }
+      .archive-head-actions { gap: 5px; flex-wrap: nowrap; flex-shrink: 0; margin-left: 0; }
       .compact-toggle {
         height: 34px;
         padding: 0 8px;
         gap: 5px;
         border-radius: 9px;
+        background: var(--surface);
       }
       #refreshArchiveBtn {
         height: 34px;
         width: 34px;
         padding: 0;
         border-radius: 9px;
+        background: var(--surface);
       }
 
-      /* 4. Пребарување + копче „Филтри“ во 1 ред */
-      .filters-panel {
-        background: transparent;
-        border: none;
-        padding: 0;
-        margin-bottom: 8px;
-      }
-      .search-row { gap: 6px; margin-bottom: 0; }
+      .search-row { gap: 6px; margin-bottom: 0; width: 100%; }
       #archiveSearch {
         height: 40px;
         padding: 8px 11px;
         font-size: 15px;
         border-radius: 10px;
+        background: var(--surface);
       }
       .mobile-filter-btn {
         display: inline-flex;
@@ -1158,7 +1402,6 @@
         color: var(--primary);
       }
 
-      /* Активни филтри-чипови под пребарувањето */
       .active-filters-bar {
         display: flex;
         flex-wrap: wrap;
@@ -1180,7 +1423,7 @@
         cursor: pointer;
       }
 
-      /* Долен панел (Bottom Sheet) за филтри и хаштагови */
+      /* Долен панел (Bottom Sheet) за филтри и хаштагови на мобилен */
       .filters-backdrop {
         display: block;
         position: fixed;
@@ -1200,6 +1443,7 @@
       }
 
       .filters-drawer {
+        display: flex;
         position: fixed;
         left: 0;
         right: 0;
@@ -1210,7 +1454,6 @@
         border-radius: 18px 18px 0 0;
         box-shadow: 0 -10px 36px rgba(0, 0, 0, 0.35);
         max-height: 82vh;
-        display: flex;
         flex-direction: column;
         transform: translateY(105%);
         visibility: hidden;
@@ -1242,22 +1485,28 @@
       }
 
       .filters-drawer-body {
+        display: block;
         padding: 14px 16px;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         flex: 1;
       }
       .filters-grid {
+        display: grid;
         grid-template-columns: 1fr;
         gap: 10px;
       }
       .filters-grid select {
+        width: 100%;
+        max-width: none;
+        height: auto;
         padding: 10px 12px;
         font-size: 15px;
       }
       .tag-filter-bar {
         margin-top: 14px;
         padding-top: 12px;
+        border-top: 1px solid var(--border);
       }
       .tag-bar-label {
         display: block;
@@ -1267,6 +1516,17 @@
         color: var(--muted);
         margin-bottom: 4px;
       }
+      .mobile-tag-search {
+        display: block;
+        width: 100%;
+        height: 36px;
+        padding: 0 10px;
+        font-size: 14px;
+        margin-bottom: 6px;
+        border-radius: 8px;
+      }
+      .tag-chip-extra { display: inline-flex; }
+      .tag-popover-wrap { display: none !important; }
 
       .filters-drawer-foot {
         display: flex;
@@ -1300,11 +1560,33 @@
       .yt-preview { flex-direction: column; align-items: flex-start; }
       .yt-thumb-wrap { width: 100%; }
 
-      /* Вистински компактен преглед и на мобилен: мала сликичка лево до насловот */
+      .card-body {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+      .card-actions {
+        width: 100%;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        padding-top: 7px;
+        border-top: 1px solid var(--border);
+      }
+      .mini-btn.icon-only-desktop {
+        width: auto;
+        padding: 0 9px;
+      }
+      .review-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+
+      /* Компактен преглед на мобилен: мала сликичка лево до насловот */
       .archive-list.compact-mode .item-card { padding: 10px; }
       .archive-list.compact-mode .video-card-layout {
         display: grid;
-        grid-template-columns: 110px 1fr;
+        grid-template-columns: 110px minmax(0, 1fr);
         column-gap: 10px;
         row-gap: 6px;
         align-items: start;
@@ -1321,19 +1603,16 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 4px;
-        margin-bottom: 0;
       }
       .archive-list.compact-mode .card-title { font-size: 0.89rem; line-height: 1.25; }
-      .archive-list.compact-mode .status-select { padding: 3px 8px; font-size: 0.72rem; }
-      .archive-list.compact-mode .meta-pills,
+      .archive-list.compact-mode .status-select { height: 24px; padding: 0 8px; font-size: 0.72rem; }
+      .archive-list.compact-mode .card-meta-band,
       .archive-list.compact-mode .card-desc,
       .archive-list.compact-mode .user-desc-details,
       .archive-list.compact-mode .card-note,
-      .archive-list.compact-mode .card-tags,
       .archive-list.compact-mode .review-bar,
-      .archive-list.compact-mode .card-footer {
+      .archive-list.compact-mode .card-actions {
         grid-column: 1 / -1;
-        margin-bottom: 0;
       }
     }
   </style>
@@ -1344,11 +1623,11 @@
     <!-- ЕКРАН ЗА НАЈАВА -->
     <div id="authCard" class="auth-wrap">
       <div class="card">
-        <div class="topbar" style="margin-bottom: 18px;">
+        <div class="topbar">
           <div class="brand">
             <div class="brand-icon"><img src="logo.png" alt="Гјан База" /></div>
             <div>
-              <h1>Гјан База <span class="version-tag">v4.0</span></h1>
+              <h1>Гјан База <span class="version-tag">v4.1</span></h1>
               <div class="user-badge">Предлози за превод и Архива</div>
             </div>
           </div>
@@ -1373,17 +1652,32 @@
 
     <!-- ГЛАВНА АПЛИКАЦИЈА -->
     <div id="appCard" class="card hidden">
-      <div class="topbar">
+      <header class="topbar">
         <div class="brand">
           <div class="brand-icon"><img src="logo.png" alt="Гјан База" /></div>
           <div>
-            <h1>Гјан База <span class="version-tag">v4.0</span></h1>
-            <div class="user-badge">
-              <span class="hide-sm">Најавен/а како: </span><strong id="displayUser"></strong>
+            <h1>Гјан База <span class="version-tag">v4.1</span></h1>
+            <div class="user-badge show-sm-block">
+              <strong id="displayUser" class="js-display-user"></strong>
             </div>
           </div>
         </div>
+
+        <nav class="tabs" aria-label="Главна навигација">
+          <button type="button" class="tab-btn active" data-tab="proposals">
+            Предлози <span id="proposalsTotalBadge" class="count-pill">0</span>
+          </button>
+          <button type="button" class="tab-btn" data-tab="video">+ Видео</button>
+          <button type="button" class="tab-btn" data-tab="murli">+ Мурли</button>
+          <button type="button" class="tab-btn" data-tab="archive">
+            Архива <span id="archiveTotalBadge" class="count-pill">0</span>
+          </button>
+        </nav>
+
         <div class="topbar-actions">
+          <span class="desktop-user-pill" title="Најавен корисник">
+            👤 <span class="js-display-user"></span>
+          </span>
           <button type="button" class="icon-btn theme-toggle-btn" title="Светла / Ноќна тема">🌙</button>
           <button type="button" class="icon-btn danger" id="logoutBtn" title="Одјави се" aria-label="Одјави се">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1394,18 +1688,7 @@
             <span class="hide-sm">Одјави се</span>
           </button>
         </div>
-      </div>
-
-      <div class="tabs">
-        <button type="button" class="tab-btn active" data-tab="proposals">
-          Предлози <span id="proposalsTotalBadge" class="count-pill">0</span>
-        </button>
-        <button type="button" class="tab-btn" data-tab="video">+ Видео</button>
-        <button type="button" class="tab-btn" data-tab="murli">+ Мурли</button>
-        <button type="button" class="tab-btn" data-tab="archive">
-          Архива <span id="archiveTotalBadge" class="count-pill">0</span>
-        </button>
-      </div>
+      </header>
 
       <div id="globalAlert" class="alert"></div>
 
@@ -1591,39 +1874,38 @@
 
       <!-- ТАБ: ПРЕДЛОЗИ И АРХИВА -->
       <div id="libraryTab">
-        <div class="archive-head">
-          <div id="librarySubTabs" class="sub-tabs">
-            <button type="button" class="sub-tab-btn active" data-archive-type="videos">
-              Видеа <span id="videosCountBadge" class="count-pill">0</span>
-            </button>
-            <button type="button" class="sub-tab-btn" data-archive-type="murli">
-              Мурли <span id="murliCountBadge" class="count-pill">0</span>
-            </button>
+        <div class="library-toolbar">
+          <div class="archive-head">
+            <div id="librarySubTabs" class="sub-tabs">
+              <button type="button" class="sub-tab-btn active" data-archive-type="videos">
+                Видеа <span id="videosCountBadge" class="count-pill">0</span>
+              </button>
+              <button type="button" class="sub-tab-btn" data-archive-type="murli">
+                Мурли <span id="murliCountBadge" class="count-pill">0</span>
+              </button>
+            </div>
+            <div id="archiveViewBanner" class="archive-info-pill hidden">
+              ✓ Реализирани
+            </div>
+            <div class="archive-head-actions">
+              <label class="compact-toggle" id="compactToggleLabel" for="compactModeToggle" title="Компактен преглед">
+                <input type="checkbox" id="compactModeToggle" />
+                <svg class="show-sm-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="8" y1="6" x2="21" y2="6"></line>
+                  <line x1="8" y1="12" x2="21" y2="12"></line>
+                  <line x1="8" y1="18" x2="21" y2="18"></line>
+                  <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                  <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                  <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+                <span class="hide-sm">Компактен</span>
+              </label>
+              <button type="button" id="refreshArchiveBtn" class="icon-btn" title="Освежи" aria-label="Освежи">
+                <span id="refreshIcon">↻</span>
+              </button>
+            </div>
           </div>
-          <div id="archiveViewBanner" class="archive-info-pill hidden">
-            ✓ Реализирани <span class="hide-sm">видеа (преведени и сослушани)</span>
-          </div>
-          <div class="archive-head-actions">
-            <label class="compact-toggle" id="compactToggleLabel" for="compactModeToggle" title="Компактен преглед">
-              <input type="checkbox" id="compactModeToggle" />
-              <svg class="show-sm-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <line x1="8" y1="6" x2="21" y2="6"></line>
-                <line x1="8" y1="12" x2="21" y2="12"></line>
-                <line x1="8" y1="18" x2="21" y2="18"></line>
-                <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                <line x1="3" y1="18" x2="3.01" y2="18"></line>
-              </svg>
-              <span class="hide-sm">Компактен преглед</span>
-            </label>
-            <button type="button" id="refreshArchiveBtn" class="icon-btn" title="Освежи" aria-label="Освежи">
-              <span id="refreshIcon">↻</span>
-              <span id="refreshText" class="hide-sm">Освежи</span>
-            </button>
-          </div>
-        </div>
 
-        <div class="filters-panel">
           <div class="search-row">
             <input type="search" id="archiveSearch" placeholder="🔍 Пребарувај наслов, предавач, #хаштаг..." />
             <button type="button" id="openFiltersBtn" class="mobile-filter-btn" aria-expanded="false" aria-controls="filtersDrawer">
@@ -1661,7 +1943,7 @@
                 </select>
                 <select id="filterSort">
                   <option value="newest">Најнови прво</option>
-                  <option value="votes">Најмногу „Да“ предлози</option>
+                  <option value="votes">Најмногу „Да“</option>
                   <option value="oldest">Најстари прво</option>
                   <option value="shortest">Најкратки прво</option>
                   <option value="longest">Најдолги прво</option>
@@ -1702,6 +1984,7 @@
     const STORAGE_KEY = 'archive_auth_v1';
     const THEME_KEY = 'archive_theme_v1';
     const COMPACT_KEY = 'archive_compact_v1';
+    const TOP_TAGS_LIMIT = 7;
 
     const state = {
       accessCode: '',
@@ -1711,6 +1994,7 @@
       libraryView: 'proposals',
       archiveType: 'videos',
       activeFilterTag: '',
+      tagPopoverSort: 'count', // 'count' | 'alpha'
       videoTags: [],
       fetchedTitleMkTags: [],
       aiSuggestedTags: [],
@@ -1865,7 +2149,7 @@
       applyCompactMode(e.target.checked);
     });
 
-    /* ---------- МОБИЛЕН ПАНЕЛ ЗА ФИЛТРИ (BOTTOM SHEET) ---------- */
+    /* ---------- МОБИЛЕН ПАНЕЛ ЗА ФИЛТРИ + ДЕСКТОП ПОПОВЕР ЗА ХАШТАГОВИ ---------- */
     function openFiltersDrawer() {
       $('filtersDrawer').classList.add('open');
       $('filtersBackdrop').classList.add('open');
@@ -1880,14 +2164,28 @@
       document.body.style.overflow = '';
     }
 
+    function closeTagPopover() {
+      const pop = document.querySelector('.tag-popover.open');
+      if (pop) pop.classList.remove('open');
+      const btn = document.querySelector('.all-tags-btn[aria-expanded="true"]');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    }
+
     $('openFiltersBtn').addEventListener('click', openFiltersDrawer);
     $('closeFiltersBtn').addEventListener('click', closeFiltersDrawer);
     $('filtersBackdrop').addEventListener('click', closeFiltersDrawer);
     $('drawerApplyFiltersBtn').addEventListener('click', closeFiltersDrawer);
 
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.tag-popover-wrap')) {
+        closeTagPopover();
+      }
+    });
+
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && $('filtersDrawer').classList.contains('open')) {
-        closeFiltersDrawer();
+      if (e.key === 'Escape') {
+        if ($('filtersDrawer').classList.contains('open')) closeFiltersDrawer();
+        closeTagPopover();
       }
     });
 
@@ -1895,6 +2193,7 @@
       if (window.innerWidth > 680 && $('filtersDrawer').classList.contains('open')) {
         closeFiltersDrawer();
       }
+      closeTagPopover();
     });
 
     /* ---------- СПРЕЧИ СЛУЧАЈНО ПРАЌАЊЕ НА ФОРМА СО ENTER ---------- */
@@ -1942,7 +2241,7 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify({ name: state.userName, code: state.accessCode }));
         state.lists = res.lists || { topics: [], speakers: [], hashtags: [] };
         state.archive = res.archive || { videos: [], murli: [] };
-        $('displayUser').textContent = state.userName;
+        document.querySelectorAll('.js-display-user').forEach(el => { el.textContent = state.userName; });
         $('authCard').classList.add('hidden');
         $('appCard').classList.remove('hidden');
         renderAllLists();
@@ -1963,6 +2262,7 @@
 
     $('logoutBtn').addEventListener('click', () => {
       closeFiltersDrawer();
+      closeTagPopover();
       localStorage.removeItem(STORAGE_KEY);
       state.accessCode = '';
       $('appCard').classList.add('hidden');
@@ -1973,6 +2273,7 @@
     /* ---------- ГЛАВНИ ТАБОВИ ---------- */
     function switchMainTab(tab) {
       closeFiltersDrawer();
+      closeTagPopover();
       document.querySelectorAll('.tab-btn').forEach(b => {
         b.classList.toggle('active', b.dataset.tab === tab);
       });
@@ -3042,10 +3343,8 @@
     $('refreshArchiveBtn').addEventListener('click', async () => {
       const btn = $('refreshArchiveBtn');
       const icon = $('refreshIcon');
-      const txt = $('refreshText');
       btn.disabled = true;
       icon.classList.add('spin-icon');
-      if (txt) txt.textContent = 'Се вчитува...';
       try {
         const res = await apiCall({ action: 'getArchive' });
         if (res.ok) {
@@ -3061,7 +3360,6 @@
       } finally {
         btn.disabled = false;
         icon.classList.remove('spin-icon');
-        if (txt) txt.textContent = 'Освежи';
       }
     });
 
@@ -3121,21 +3419,148 @@
         return;
       }
 
-      const sortedTags = Array.from(tagMap.values()).sort((a, b) => b.count - a.count);
-      bar.innerHTML = '<span class="tag-bar-label">Хаштагови</span>';
-      sortedTags.forEach(obj => {
+      const sortedTags = Array.from(tagMap.values()).sort(
+        (a, b) => (b.count - a.count) || a.label.localeCompare(b.label, 'mk')
+      );
+      const activeLower = state.activeFilterTag.toLowerCase();
+
+      bar.innerHTML = '<span class="tag-bar-label">Хаштагови (' + sortedTags.length + ')</span>';
+
+      // Мобилно поле за пребарување низ хаштагови во Bottom Sheet (кога има > 10 тагови)
+      let mobileSearchInput = null;
+      if (sortedTags.length > 10) {
+        mobileSearchInput = document.createElement('input');
+        mobileSearchInput.type = 'search';
+        mobileSearchInput.className = 'mobile-tag-search';
+        mobileSearchInput.placeholder = '🔍 Барај хаштаг...';
+        bar.appendChild(mobileSearchInput);
+      }
+
+      // Прикажи Топ 7 директно (на десктоп секогаш се гледа и активниот таг ако е надвор од Топ 7)
+      const mobileChipBtns = [];
+      sortedTags.forEach((obj, idx) => {
+        const isActive = activeLower === obj.label.toLowerCase();
+        const isPrimary = idx < TOP_TAGS_LIMIT || isActive;
         const btn = document.createElement('button');
         btn.type = 'button';
-        const isActive = state.activeFilterTag.toLowerCase() === obj.label.toLowerCase();
-        btn.className = 'chip' + (isActive ? ' selected' : '');
+        btn.className = 'chip ' + (isPrimary ? 'tag-chip-primary' : 'tag-chip-extra') + (isActive ? ' selected' : '');
         btn.textContent = `${obj.label} (${obj.count})`;
+        btn.dataset.tagSearch = obj.label.toLowerCase();
         btn.addEventListener('click', () => {
           state.activeFilterTag = isActive ? '' : obj.label;
           renderArchiveTagBar();
           renderArchiveList();
         });
         bar.appendChild(btn);
+        mobileChipBtns.push(btn);
       });
+
+      if (mobileSearchInput) {
+        mobileSearchInput.addEventListener('input', () => {
+          const q = mobileSearchInput.value.trim().toLowerCase();
+          mobileChipBtns.forEach(b => {
+            b.classList.toggle('hidden', Boolean(q && !b.dataset.tagSearch.includes(q)));
+          });
+        });
+      }
+
+      // Десктоп копче „# Сите (N) ▾“ + лебдечко прозорче со пребарување (кога има > 7 хаштагови)
+      if (sortedTags.length > TOP_TAGS_LIMIT) {
+        const wrap = document.createElement('div');
+        wrap.className = 'tag-popover-wrap';
+
+        const toggleBtn = document.createElement('button');
+        toggleBtn.type = 'button';
+        toggleBtn.className = 'all-tags-btn';
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        toggleBtn.textContent = `# Сите (${sortedTags.length}) ▾`;
+
+        const popover = document.createElement('div');
+        popover.className = 'tag-popover';
+        popover.setAttribute('role', 'dialog');
+        popover.setAttribute('aria-label', 'Сите хаштагови');
+
+        const topRow = document.createElement('div');
+        topRow.className = 'tag-popover-top';
+
+        const popSearch = document.createElement('input');
+        popSearch.type = 'search';
+        popSearch.className = 'tag-popover-search';
+        popSearch.placeholder = '🔍 Барај хаштаг...';
+
+        const sortBtn = document.createElement('button');
+        sortBtn.type = 'button';
+        sortBtn.className = 'tag-sort-btn';
+        sortBtn.title = 'Промени подредување';
+        sortBtn.textContent = state.tagPopoverSort === 'alpha' ? 'А–Ш' : 'По број';
+
+        topRow.appendChild(popSearch);
+        topRow.appendChild(sortBtn);
+
+        const listBox = document.createElement('div');
+        listBox.className = 'tag-popover-list';
+
+        const renderPopoverItems = () => {
+          const q = popSearch.value.trim().toLowerCase();
+          let list = sortedTags.slice();
+          if (state.tagPopoverSort === 'alpha') {
+            list.sort((a, b) => a.label.localeCompare(b.label, 'mk'));
+          }
+          if (q) {
+            list = list.filter(t => t.label.toLowerCase().includes(q));
+          }
+          listBox.innerHTML = '';
+          if (list.length === 0) {
+            listBox.innerHTML = '<div class="tag-popover-empty">Нема пронајден хаштаг.</div>';
+            return;
+          }
+          list.forEach(obj => {
+            const isSel = activeLower === obj.label.toLowerCase();
+            const itemBtn = document.createElement('button');
+            itemBtn.type = 'button';
+            itemBtn.className = 'tag-popover-item' + (isSel ? ' selected' : '');
+            itemBtn.innerHTML = `<span>${escapeHtml(obj.label)}</span><span class="tag-popover-count">${obj.count}</span>`;
+            itemBtn.addEventListener('click', () => {
+              state.activeFilterTag = isSel ? '' : obj.label;
+              closeTagPopover();
+              renderArchiveTagBar();
+              renderArchiveList();
+            });
+            listBox.appendChild(itemBtn);
+          });
+        };
+
+        popSearch.addEventListener('input', renderPopoverItems);
+        sortBtn.addEventListener('click', () => {
+          state.tagPopoverSort = state.tagPopoverSort === 'count' ? 'alpha' : 'count';
+          sortBtn.textContent = state.tagPopoverSort === 'alpha' ? 'А–Ш' : 'По број';
+          renderPopoverItems();
+        });
+
+        toggleBtn.addEventListener('click', e => {
+          e.stopPropagation();
+          const willOpen = !popover.classList.contains('open');
+          closeTagPopover();
+          if (willOpen) {
+            renderPopoverItems();
+            popover.classList.remove('align-right');
+            popover.classList.add('open');
+            toggleBtn.setAttribute('aria-expanded', 'true');
+            const rect = popover.getBoundingClientRect();
+            if (rect.right > window.innerWidth - 12) {
+              popover.classList.add('align-right');
+            }
+            setTimeout(() => popSearch.focus(), 20);
+          }
+        });
+
+        popover.appendChild(topRow);
+        popover.appendChild(listBox);
+        wrap.appendChild(toggleBtn);
+        wrap.appendChild(popover);
+        bar.appendChild(wrap);
+      }
+
       bar.classList.remove('hidden');
     }
 
@@ -3263,6 +3688,10 @@
       return 'st-todo';
     }
 
+    const SVG_EDIT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>';
+    const SVG_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+    const SVG_OPEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>';
+
     function renderReviewBar(barEl, v) {
       const reviews = Array.isArray(v.reviews) ? v.reviews : [];
       const meKey = (state.userName || '').trim().toLowerCase();
@@ -3330,6 +3759,7 @@
       const safeUrl = /^https?:\/\//i.test(cleanUrl) ? cleanUrl : '#';
       const primaryTitle = v.titleMk || v.title || 'Без наслов';
       const showEnSub = v.titleMk && v.title && v.titleMk.toLowerCase() !== v.title.toLowerCase();
+      const dateAuthor = [v.date, v.addedBy].filter(Boolean).join(' · ');
 
       const card = document.createElement('article');
       card.className = 'item-card';
@@ -3354,9 +3784,19 @@
                 <option value="Реализирано" ${v.status === 'Реализирано' ? 'selected' : ''}>Реализирано ✓</option>
               </select>
             </div>
-            <div class="meta-pills">
-              ${v.speaker ? `<button type="button" class="meta-pill js-filter-speaker">🎙 ${escapeHtml(v.speaker)}</button>` : ''}
-              ${v.topic ? `<button type="button" class="meta-pill js-filter-topic">📁 ${escapeHtml(v.topic)}</button>` : ''}
+            <div class="card-actions">
+              ${(v.description || v.note) ? '<button type="button" class="mini-btn js-toggle-details">Опис ▾</button>' : ''}
+              <button type="button" class="mini-btn icon-only-desktop js-edit-video" title="Измени" aria-label="Измени">${SVG_EDIT}<span class="show-sm-inline">Измени</span></button>
+              <button type="button" class="mini-btn icon-only-desktop js-copy-link" title="Копирај линк" aria-label="Копирај линк">${SVG_COPY}<span class="show-sm-inline">Копирај</span></button>
+              <a class="mini-btn icon-only-desktop" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener" title="Отвори на YouTube" aria-label="Отвори">${SVG_OPEN}<span class="show-sm-inline">Отвори</span></a>
+            </div>
+            <div class="card-meta-band">
+              <div class="meta-pills">
+                ${v.speaker ? `<button type="button" class="meta-pill js-filter-speaker">🎙 ${escapeHtml(v.speaker)}</button>` : ''}
+                ${v.topic ? `<button type="button" class="meta-pill js-filter-topic">📁 ${escapeHtml(v.topic)}</button>` : ''}
+              </div>
+              ${dateAuthor ? `<span class="card-date-meta">${escapeHtml(dateAuthor)}</span>` : ''}
+              <div class="card-tags"></div>
             </div>
             ${v.description ? `<p class="card-desc">${escapeHtml(v.description)}</p>` : ''}
             ${v.userDescription ? `
@@ -3369,17 +3809,7 @@
               </details>
             ` : ''}
             ${v.note ? `<div class="card-note">📝 ${escapeHtml(v.note)}</div>` : ''}
-            <div class="card-tags"></div>
             <div class="review-bar js-review-bar"></div>
-            <div class="card-footer">
-              <span>${escapeHtml(v.date || '')}${v.addedBy ? ' · ' + escapeHtml(v.addedBy) : ''}</span>
-              <div class="card-actions">
-                ${(v.description || v.note) ? '<button type="button" class="mini-btn js-toggle-details">Опис ▾</button>' : ''}
-                <button type="button" class="mini-btn js-edit-video">✎ Измени</button>
-                <button type="button" class="mini-btn js-copy-link">Копирај линк</button>
-                <a class="mini-btn" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener">Отвори ↗</a>
-              </div>
-            </div>
           </div>
         </div>
       `;
@@ -3417,7 +3847,7 @@
       if (detailsBtn) {
         detailsBtn.addEventListener('click', () => {
           const expanded = card.classList.toggle('show-details');
-          detailsBtn.textContent = expanded ? 'Скриј опис ▴' : 'Опис ▾';
+          detailsBtn.textContent = expanded ? 'Скриј ▴' : 'Опис ▾';
         });
       }
 
@@ -3466,26 +3896,31 @@
     function buildMurliCard(m) {
       const cleanUrl = sanitizeUrl(m.url);
       const safeUrl = /^https?:\/\//i.test(cleanUrl) ? cleanUrl : '#';
+      const dateAuthor = [m.date, m.addedBy].filter(Boolean).join(' · ');
       const card = document.createElement('article');
       card.className = 'item-card';
 
       card.innerHTML = `
-        <div class="card-header-row">
-          <a class="card-title" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener">📜 ${escapeHtml(m.title || cleanUrl)}</a>
-        </div>
-        <div class="meta-pills">
-          ${m.topic ? `<button type="button" class="meta-pill js-filter-topic">📁 ${escapeHtml(m.topic)}</button>` : ''}
-        </div>
-        ${m.note ? `<div class="card-note">${escapeHtml(m.note)}</div>` : ''}
-        <div class="card-tags"></div>
-        <div class="card-footer">
-          <span>${escapeHtml(m.date || '')}${m.addedBy ? ' · ' + escapeHtml(m.addedBy) : ''}</span>
+        <div class="card-body">
+          <div class="card-header-row">
+            <div class="card-title-wrap">
+              <a class="card-title" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener">📜 ${escapeHtml(m.title || cleanUrl)}</a>
+            </div>
+          </div>
           <div class="card-actions">
             ${m.note ? '<button type="button" class="mini-btn js-toggle-details">Белешка ▾</button>' : ''}
-            <button type="button" class="mini-btn js-edit-murli">✎ Измени</button>
-            <button type="button" class="mini-btn js-copy-link">Копирај линк</button>
-            <a class="mini-btn" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener">Отвори ↗</a>
+            <button type="button" class="mini-btn icon-only-desktop js-edit-murli" title="Измени" aria-label="Измени">${SVG_EDIT}<span class="show-sm-inline">Измени</span></button>
+            <button type="button" class="mini-btn icon-only-desktop js-copy-link" title="Копирај линк" aria-label="Копирај линк">${SVG_COPY}<span class="show-sm-inline">Копирај</span></button>
+            <a class="mini-btn icon-only-desktop" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener" title="Отвори" aria-label="Отвори">${SVG_OPEN}<span class="show-sm-inline">Отвори</span></a>
           </div>
+          <div class="card-meta-band">
+            <div class="meta-pills">
+              ${m.topic ? `<button type="button" class="meta-pill js-filter-topic">📁 ${escapeHtml(m.topic)}</button>` : ''}
+            </div>
+            ${dateAuthor ? `<span class="card-date-meta">${escapeHtml(dateAuthor)}</span>` : ''}
+            <div class="card-tags"></div>
+          </div>
+          ${m.note ? `<div class="card-note">${escapeHtml(m.note)}</div>` : ''}
         </div>
       `;
 
@@ -3513,7 +3948,7 @@
       if (detailsBtn) {
         detailsBtn.addEventListener('click', () => {
           const expanded = card.classList.toggle('show-details');
-          detailsBtn.textContent = expanded ? 'Скриј белешка ▴' : 'Белешка ▾';
+          detailsBtn.textContent = expanded ? 'Скриј ▴' : 'Белешка ▾';
         });
       }
 
@@ -3526,9 +3961,9 @@
       btn.addEventListener('click', async () => {
         try {
           await navigator.clipboard.writeText(text);
-          const orig = btn.textContent;
-          btn.textContent = '✓ Копирано';
-          setTimeout(() => { btn.textContent = orig; }, 1400);
+          const origHtml = btn.innerHTML;
+          btn.innerHTML = '✓<span class="show-sm-inline">Копирано</span>';
+          setTimeout(() => { btn.innerHTML = origHtml; }, 1400);
         } catch (_) {}
       });
     }
