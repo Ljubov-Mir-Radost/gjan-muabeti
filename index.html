@@ -790,6 +790,45 @@
 
     .card-desc { font-size: 0.88rem; color: var(--text-soft); margin: 0 0 10px; white-space: pre-line; }
 
+    /* Дополнителен кориснички опис — секогаш собран, се отвора со клик */
+    .user-desc-details {
+      margin: 0 0 10px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--card);
+      overflow: hidden;
+    }
+    .user-desc-details summary {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--primary);
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.14s ease;
+    }
+    .user-desc-details summary::-webkit-details-marker { display: none; }
+    .user-desc-details summary:hover { background: var(--primary-soft); }
+    .user-desc-chevron {
+      font-size: 0.82rem;
+      transition: transform 0.15s ease;
+      display: inline-block;
+    }
+    .user-desc-details[open] .user-desc-chevron { transform: rotate(180deg); }
+    .user-desc-body {
+      padding: 8px 11px 10px;
+      border-top: 1px solid var(--border);
+      font-size: 0.86rem;
+      color: var(--text-soft);
+      white-space: pre-line;
+      word-break: break-word;
+    }
+
     .card-note {
       font-size: 0.82rem;
       color: var(--muted);
@@ -955,6 +994,8 @@
     .archive-list.compact-mode .card-note { display: none; }
     .archive-list.compact-mode .item-card.show-details .card-desc,
     .archive-list.compact-mode .item-card.show-details .card-note { display: block; }
+    .archive-list.compact-mode .user-desc-details { margin-bottom: 6px; }
+    .archive-list.compact-mode .user-desc-details summary { padding: 4px 9px; font-size: 0.75rem; }
     .archive-list.compact-mode .card-tags { margin-bottom: 6px; gap: 4px; }
     .archive-list.compact-mode .card-tag { font-size: 0.73rem; padding: 1px 8px; }
     .archive-list.compact-mode .review-bar {
@@ -996,7 +1037,7 @@
           <div class="brand">
             <div class="brand-icon"><img src="logo.png" alt="Гјан База" /></div>
             <div>
-              <h1>Гјан База <span class="version-tag">v3.8</span></h1>
+              <h1>Гјан База <span class="version-tag">v3.9</span></h1>
               <div class="user-badge">Предлози за превод и Архива</div>
             </div>
           </div>
@@ -1025,7 +1066,7 @@
         <div class="brand">
           <div class="brand-icon"><img src="logo.png" alt="Гјан База" /></div>
           <div>
-            <h1>Гјан База <span class="version-tag">v3.8</span></h1>
+            <h1>Гјан База <span class="version-tag">v3.9</span></h1>
             <div class="user-badge">Најавен/а како: <strong id="displayUser"></strong></div>
           </div>
         </div>
@@ -1036,11 +1077,11 @@
       </div>
 
       <div class="tabs">
-        <button type="button" class="tab-btn active" data-tab="video">+ Видео</button>
-        <button type="button" class="tab-btn" data-tab="murli">+ Мурли</button>
-        <button type="button" class="tab-btn" data-tab="proposals">
+        <button type="button" class="tab-btn active" data-tab="proposals">
           Предлози <span id="proposalsTotalBadge" class="count-pill">0</span>
         </button>
+        <button type="button" class="tab-btn" data-tab="video">+ Видео</button>
+        <button type="button" class="tab-btn" data-tab="murli">+ Мурли</button>
         <button type="button" class="tab-btn" data-tab="archive">
           Архива <span id="archiveTotalBadge" class="count-pill">0</span>
         </button>
@@ -1048,8 +1089,8 @@
 
       <div id="globalAlert" class="alert"></div>
 
-      <!-- ТАБ 1: ДОДАДИ / ИЗМЕНИ YOUTUBE ВИДЕО ИЛИ ПЛЕЈЛИСТА -->
-      <div id="videoTab" class="form-wrap">
+      <!-- ТАБ: ДОДАДИ / ИЗМЕНИ YOUTUBE ВИДЕО ИЛИ ПЛЕЈЛИСТА -->
+      <div id="videoTab" class="form-wrap hidden">
         <div id="videoEditBanner" class="edit-banner hidden">
           <span id="videoEditLabel">Режим на измена</span>
           <div class="edit-banner-actions">
@@ -1151,7 +1192,7 @@
 
           <div class="field">
             <label for="ytDesc">
-              Опис / Резиме
+              Краток AI опис / Резиме
               <span class="hint">Слободно можеш да го дотераш</span>
             </label>
             <div id="aiStatus" class="ai-status">
@@ -1165,6 +1206,14 @@
           </div>
 
           <div class="field">
+            <label for="ytUserDesc">
+              Дополнителен опис (кориснички)
+              <span class="hint">Опционално — стои собрано во Предлози и се отвора со клик</span>
+            </label>
+            <textarea id="ytUserDesc" placeholder="Внеси подетален личен опис, поенти или цитати доколку има потреба..."></textarea>
+          </div>
+
+          <div class="field">
             <label for="ytNote">Забелешка <span class="hint">(опционално)</span></label>
             <input type="text" id="ytNote" placeholder="На пр. приоритет, 7 дела, интересен дел..." />
           </div>
@@ -1173,7 +1222,7 @@
         </form>
       </div>
 
-      <!-- ТАБ 2: ДОДАДИ / ИЗМЕНИ МУРЛИ -->
+      <!-- ТАБ: ДОДАДИ / ИЗМЕНИ МУРЛИ -->
       <div id="murliTab" class="form-wrap hidden">
         <div id="murliEditBanner" class="edit-banner hidden">
           <span id="murliEditLabel">Режим на измена (Мурли)</span>
@@ -1220,8 +1269,8 @@
         </form>
       </div>
 
-      <!-- ТАБ 3 & 4: ПРЕДЛОЗИ И АРХИВА -->
-      <div id="libraryTab" class="hidden">
+      <!-- ТАБ: ПРЕДЛОЗИ И АРХИВА -->
+      <div id="libraryTab">
         <div class="archive-head">
           <div id="librarySubTabs" class="sub-tabs">
             <button type="button" class="sub-tab-btn active" data-archive-type="videos">
@@ -1509,8 +1558,7 @@
         $('appCard').classList.remove('hidden');
         renderAllLists();
         updateArchiveCounts();
-        populateArchiveFilters();
-        renderArchiveList();
+        switchMainTab('proposals');
       } catch (err) {
         showAlert('authError', 'Не може да се поврзе со серверот. Провери дали API_URL е точен.', 'error');
       } finally {
@@ -1705,7 +1753,7 @@
       else if (lower.length >= 6 && /(?:ски|чки|шки|ји)от$/.test(lower)) stem = lower.slice(0, -2);
       else if (lower.length >= 7 && /ениот$/.test(lower)) stem = lower.slice(0, -3);
       else if (lower.length >= 6 && /[бвгджзјклмнпрстфхцчџш]ниот$/.test(lower)) stem = lower.slice(0, -4) + 'ен';
-      else if (lower.length >= 5 && /[бвгджзклмнпрстфхцчџш]иот$/.test(lower)) stem = lower.slice(0, -3);
+      else if (lower.length >= 5 && /[бвгджзјклмнпрстфхцчџш]иот$/.test(lower)) stem = lower.slice(0, -3);
       else if (lower.length >= 5 && /от$/.test(lower)) stem = lower.slice(0, -2);
       else if (lower.length >= 6 && /ите$/.test(lower)) stem = lower.slice(0, -2);
 
@@ -1968,6 +2016,7 @@
       $('ytTopic').value = v.topic || '';
       $('ytStatus').value = v.status || 'За превод';
       $('ytDesc').value = v.description || '';
+      $('ytUserDesc').value = v.userDescription || '';
       $('ytNote').value = v.note || '';
       state.videoTags = (v.hashtags || []).slice();
 
@@ -1975,7 +2024,7 @@
       $('ytPlaylistBadge').classList.toggle('hidden', !isPl);
       $('ytDurationBadge').textContent = v.duration || '—';
       $('ytChannelText').textContent = isPl ? 'Режим на измена (Плејлиста)' : 'Режим на измена';
-      $('ytFullTitleText').textContent = 'Кликни „Повторно YouTube + AI“ горе за одново да се повлечат насловот (EN + МК), траењето, сликичката и резимето.';
+      $('ytFullTitleText').textContent = 'Кликни „Повторно YouTube + AI“ горе за одново да се повлечат насловот (EN + МК), траењето, сликичката и AI резимето (твојот дополнителен опис останува зачуван).';
       $('ytPreview').classList.add('visible');
       $('playlistSwitchBar').classList.add('hidden');
       $('titleModeBadge').classList.add('hidden');
@@ -2436,6 +2485,7 @@
               titleMk: $('ytTitleMkInput').value.trim(),
               duration: state.currentVideo ? state.currentVideo.duration : state.editingVideo.duration,
               description: $('ytDesc').value.trim(),
+              userDescription: $('ytUserDesc').value.trim(),
               speaker: $('ytSpeaker').value.trim(),
               topic: $('ytTopic').value.trim(),
               hashtags: state.videoTags,
@@ -2452,6 +2502,7 @@
               titleMk: $('ytTitleMkInput').value.trim(),
               duration: state.currentVideo ? state.currentVideo.duration : '',
               description: $('ytDesc').value.trim(),
+              userDescription: $('ytUserDesc').value.trim(),
               speaker: $('ytSpeaker').value.trim(),
               topic: $('ytTopic').value.trim(),
               hashtags: state.videoTags,
@@ -2712,7 +2763,8 @@
         if (query) {
           const hay = [
             item.title, item.titleMk, item.topic, item.speaker, item.description,
-            item.note, item.addedBy, (item.hashtags || []).join(' '),
+            item.userDescription, item.note, item.addedBy,
+            (item.hashtags || []).join(' '),
             (item.reviews || []).map(r => r.user).join(' ')
           ].join(' ').toLowerCase();
           if (!hay.includes(query)) return false;
@@ -2854,6 +2906,15 @@
               ${v.topic ? `<button type="button" class="meta-pill js-filter-topic">📁 ${escapeHtml(v.topic)}</button>` : ''}
             </div>
             ${v.description ? `<p class="card-desc">${escapeHtml(v.description)}</p>` : ''}
+            ${v.userDescription ? `
+              <details class="user-desc-details">
+                <summary>
+                  <span>📄 Дополнителен опис</span>
+                  <span class="user-desc-chevron">▾</span>
+                </summary>
+                <div class="user-desc-body">${escapeHtml(v.userDescription)}</div>
+              </details>
+            ` : ''}
             ${v.note ? `<div class="card-note">📝 ${escapeHtml(v.note)}</div>` : ''}
             <div class="card-tags"></div>
             <div class="review-bar js-review-bar"></div>
