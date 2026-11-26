@@ -263,7 +263,6 @@
       color: var(--primary);
     }
 
-    /* Средни екрани (таблет 681px–960px): табовите одат уредно во втор ред */
     @media (max-width: 960px) and (min-width: 681px) {
       .topbar { flex-wrap: wrap; gap: 10px; }
       .tabs { order: 3; width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); }
@@ -411,6 +410,76 @@
       align-items: center;
     }
     .yt-preview.visible { display: flex; }
+
+    /* Мурли преглед и бекап-поле за залепување извадок */
+    .murli-preview {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      padding: 11px 13px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+    .murli-preview.visible { display: flex; }
+    .murli-preview-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .murli-meta-badges {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+    .murli-pill {
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 99px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+    }
+    .murli-pill.info {
+      background: var(--info-bg);
+      color: var(--info);
+      border-color: var(--info-border);
+    }
+    .murli-pill.warn {
+      background: var(--warn-bg);
+      color: var(--warn);
+      border-color: var(--warn-border);
+    }
+    .murli-page-title {
+      font-size: 0.8rem;
+      color: var(--muted);
+      word-break: break-word;
+    }
+    .murli-paste-box {
+      padding: 12px;
+      background: var(--surface);
+      border: 1px dashed var(--primary-border);
+      border-radius: 11px;
+      margin-bottom: 16px;
+    }
+    .murli-paste-box textarea {
+      min-height: 85px;
+      background: var(--card);
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .murli-paste-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
 
     .yt-thumb-wrap {
       position: relative;
@@ -760,7 +829,6 @@
       background: var(--card);
     }
 
-    /* Мобилни контроли за филтри (скриени на десктоп) */
     .mobile-filter-btn,
     .active-filters-bar,
     .filters-backdrop,
@@ -1084,7 +1152,6 @@
 
     .card-desc { font-size: 0.86rem; color: var(--text-soft); margin: 0; white-space: pre-line; }
 
-    /* Дополнителен кориснички опис — секогаш собран, се отвора со клик */
     .user-desc-details {
       margin: 0;
       border: 1px solid var(--border);
@@ -1130,9 +1197,9 @@
       border-left: 3px solid var(--primary);
       padding: 5px 10px;
       border-radius: 0 7px 7px 0;
+      white-space: pre-line;
     }
 
-    /* Тимски став — еден чист хоризонтален ред на десктоп */
     .review-bar {
       display: flex;
       flex-direction: row;
@@ -1284,7 +1351,6 @@
       .show-sm-inline { display: inline-flex; }
       .show-sm-block { display: block; }
 
-      /* 1. Хедер во 1 ред + 4 табови во следен 1 ред */
       .topbar {
         flex-wrap: wrap;
         gap: 8px;
@@ -1326,7 +1392,6 @@
       }
       .count-pill { font-size: 0.65rem; padding: 1px 5px; }
 
-      /* 2. Мобилна библиотека: враќање на 1-редна под-лента + 1-редно пребарување со „Филтри“ */
       .library-toolbar {
         display: block;
         background: transparent;
@@ -1423,7 +1488,6 @@
         cursor: pointer;
       }
 
-      /* Долен панел (Bottom Sheet) за филтри и хаштагови на мобилен */
       .filters-backdrop {
         display: block;
         position: fixed;
@@ -1553,7 +1617,6 @@
         font-size: 0.77rem;
       }
 
-      /* Форми и картички на мобилен */
       .grid-2 { grid-template-columns: 1fr; gap: 0; }
       .video-card-layout { flex-direction: column; gap: 10px; }
       .card-thumb-link { width: 100%; }
@@ -1582,7 +1645,6 @@
         gap: 6px;
       }
 
-      /* Компактен преглед на мобилен: мала сликичка лево до насловот */
       .archive-list.compact-mode .item-card { padding: 10px; }
       .archive-list.compact-mode .video-card-layout {
         display: grid;
@@ -1627,7 +1689,7 @@
           <div class="brand">
             <div class="brand-icon"><img src="logo.png" alt="Гјан База" /></div>
             <div>
-              <h1>Гјан База <span class="version-tag">v4.1</span></h1>
+              <h1>Гјан База <span class="version-tag">v4.2</span></h1>
               <div class="user-badge">Предлози за превод и Архива</div>
             </div>
           </div>
@@ -1656,7 +1718,7 @@
         <div class="brand">
           <div class="brand-icon"><img src="logo.png" alt="Гјан База" /></div>
           <div>
-            <h1>Гјан База <span class="version-tag">v4.1</span></h1>
+            <h1>Гјан База <span class="version-tag">v4.2</span></h1>
             <div class="user-badge show-sm-block">
               <strong id="displayUser" class="js-display-user"></strong>
             </div>
@@ -1784,7 +1846,7 @@
 
           <div class="field">
             <label for="ytTagInput">
-              Хаштагови
+              Хаштагови (за Видеа)
               <span class="hint">Избери од предлозите подолу или напиши нов + Enter</span>
             </label>
             <div id="ytSelectedTags" class="selected-tags-box"></div>
@@ -1830,42 +1892,90 @@
         <div id="murliEditBanner" class="edit-banner hidden">
           <span id="murliEditLabel">Режим на измена (Мурли)</span>
           <div class="edit-banner-actions">
+            <button type="button" id="rerunMurliAiEditBtn" class="banner-btn primary">↻ Повторно Вчитај + AI</button>
             <button type="button" id="cancelMurliEditBtn" class="banner-btn">Откажи</button>
           </div>
         </div>
 
         <form id="murliForm">
           <div class="field">
-            <label for="murliUrl">Линк до Мурли</label>
-            <input type="text" id="murliUrl" inputmode="url" placeholder="Залепи линк до Мурли..." required />
+            <label for="murliUrl">
+              Линк до Мурли
+              <span class="hint">brahmakumaris.com/murli, веб-страни, PDF или Google Docs</span>
+            </label>
+            <div class="url-input-row">
+              <input type="text" id="murliUrl" inputmode="url" placeholder="Залепи линк до Мурли..." required />
+              <button type="button" id="fetchMurliBtn" class="fetch-btn">Вчитај</button>
+            </div>
+          </div>
+
+          <div id="murliDuplicateAlert" class="alert error"></div>
+
+          <div id="murliPreview" class="murli-preview">
+            <div class="murli-preview-top">
+              <div id="murliMetaBadges" class="murli-meta-badges"></div>
+              <button type="button" id="toggleMurliPasteBtn" class="mini-btn">📋 Залепи извадок</button>
+            </div>
+            <div id="murliPageTitleText" class="murli-page-title"></div>
+          </div>
+
+          <div id="murliPasteBox" class="murli-paste-box hidden">
+            <label for="murliPasteInput">
+              Залепи извадок од Мурли (бекап за заштитени страни)
+              <span class="hint">Првите неколку редови / Суштина</span>
+            </label>
+            <textarea id="murliPasteInput" placeholder="Залепи текст од Мурли тука и кликни Анализирај..."></textarea>
+            <div class="murli-paste-actions">
+              <span class="hint">AI ќе извлече наслов, тема, хаштагови и суштина</span>
+              <button type="button" id="analyzeMurliPasteBtn" class="banner-btn primary">✨ Анализирај извадок</button>
+            </div>
           </div>
 
           <div class="grid-2">
             <div class="field">
-              <label for="murliTitle">Наслов / Датум на Мурли</label>
-              <input type="text" id="murliTitle" placeholder="На пр. Сакар Мурли — 15.11.2026" required />
+              <label for="murliTitle">
+                Наслов / Датум на Мурли
+                <span id="murliTitleAutoHint" class="auto-badge hidden"></span>
+              </label>
+              <input type="text" id="murliTitle" placeholder="На пр. Авијакт Мурли — 10.12.1984" required />
             </div>
 
             <div class="field">
-              <label for="murliTopic">Тема</label>
-              <input type="text" id="murliTopic" list="topicsDatalist" placeholder="Избери или внеси..." required />
+              <label for="murliTopic">
+                Мурли тема
+                <span id="murliTopicAutoHint" class="auto-badge hidden"></span>
+              </label>
+              <input type="text" id="murliTopic" list="murliTopicsDatalist" placeholder="Избери или внеси..." required />
+              <datalist id="murliTopicsDatalist"></datalist>
               <div id="murliTopicChips" class="chips-wrap"></div>
             </div>
           </div>
 
           <div class="field">
             <label for="murliTagInput">
-              Хаштагови
-              <span class="hint">Enter или запирка за нов таг</span>
+              Мурли хаштагови
+              <span class="hint">Одвоени од видео-базата · Enter или запирка за нов таг</span>
             </label>
             <div id="murliSelectedTags" class="selected-tags-box"></div>
-            <input type="text" id="murliTagInput" placeholder="На пр. Mansa Sakash (Enter за #MansaSakash)" />
+            <input type="text" id="murliTagInput" placeholder="На пр. Сметки, Севадари (Enter за #Сметки)" />
+            <div id="murliExtractedTags" class="quick-extract-row hidden"></div>
+            <div id="murliAiTagSuggestions" class="quick-extract-row ai-tags-box hidden"></div>
             <div id="murliTagChips" class="chips-wrap"></div>
           </div>
 
           <div class="field">
-            <label for="murliNote">Забелешка <span class="hint">(опционално)</span></label>
-            <textarea id="murliNote" style="min-height: 85px;" placeholder="Кратка белешка или поента..."></textarea>
+            <label for="murliNote">
+              Забелешка / Суштина
+              <span class="hint">Автоматско AI резиме — слободно дотерај го</span>
+            </label>
+            <div id="murliAiStatus" class="ai-status">
+              <div class="ai-status-left">
+                <div id="murliAiSpinner" class="spinner hidden"></div>
+                <span id="murliAiStatusText"></span>
+              </div>
+              <button type="button" id="murliAiActionBtn" class="small-action-btn hidden"></button>
+            </div>
+            <textarea id="murliNote" style="min-height: 105px;" placeholder="Кратка суштина, поента или лична белешка..."></textarea>
           </div>
 
           <button type="submit" id="saveMurliBtn" class="btn-primary">Зачувај Мурли</button>
@@ -1989,16 +2099,18 @@
     const state = {
       accessCode: '',
       userName: '',
-      lists: { topics: [], speakers: [], hashtags: [] },
+      lists: { topics: [], speakers: [], hashtags: [], murliTopics: [], murliHashtags: [] },
       archive: { videos: [], murli: [] },
       libraryView: 'proposals',
       archiveType: 'videos',
       activeFilterTag: '',
-      tagPopoverSort: 'count', // 'count' | 'alpha'
+      tagPopoverSort: 'count',
       videoTags: [],
       fetchedTitleMkTags: [],
       aiSuggestedTags: [],
       murliTags: [],
+      murliExtractedTags: [],
+      murliAiSuggestedTags: [],
       currentVideo: null,
       showingFullTitle: false,
       lastFetchedId: null,
@@ -2010,12 +2122,29 @@
       userEditedTopic: false,
       topicAutoFilled: false,
       pendingAiSummary: null,
+      currentMurli: null,
+      lastFetchedMurliUrl: null,
+      userEditedMurliTitle: false,
+      userEditedMurliTopic: false,
+      userEditedMurliNote: false,
+      pendingMurliAiSummary: null,
       editingVideo: null,
       editingMurli: null,
       returnAfterEdit: 'proposals'
     };
 
     const $ = id => document.getElementById(id);
+
+    function normalizeLists(raw) {
+      const src = raw || {};
+      return {
+        topics: Array.isArray(src.topics) ? src.topics : [],
+        speakers: Array.isArray(src.speakers) ? src.speakers : [],
+        hashtags: Array.isArray(src.hashtags) ? src.hashtags : [],
+        murliTopics: Array.isArray(src.murliTopics) ? src.murliTopics : [],
+        murliHashtags: Array.isArray(src.murliHashtags) ? src.murliHashtags : []
+      };
+    }
 
     function sanitizeUrl(raw) {
       if (!raw) return '';
@@ -2203,6 +2332,8 @@
           e.preventDefault();
           if (e.target.id === 'ytUrl') {
             handleYouTubeInput(false, true);
+          } else if (e.target.id === 'murliUrl') {
+            handleMurliInput(true);
           }
         }
       });
@@ -2239,7 +2370,7 @@
           return;
         }
         localStorage.setItem(STORAGE_KEY, JSON.stringify({ name: state.userName, code: state.accessCode }));
-        state.lists = res.lists || { topics: [], speakers: [], hashtags: [] };
+        state.lists = normalizeLists(res.lists);
         state.archive = res.archive || { videos: [], murli: [] };
         document.querySelectorAll('.js-display-user').forEach(el => { el.textContent = state.userName; });
         $('authCard').classList.add('hidden');
@@ -2335,14 +2466,15 @@
       badge.onclick = null;
     }
 
-    /* ---------- ЛИСТИ И ЧИПОВИ ---------- */
+    /* ---------- ОДВОЕНИ ЛИСТИ И ЧИПОВИ (ВИДЕА vs. МУРЛИ) ---------- */
     function renderAllLists() {
       $('speakersDatalist').innerHTML = state.lists.speakers.map(s => `<option value="${escapeAttr(s)}">`).join('');
       $('topicsDatalist').innerHTML = state.lists.topics.map(t => `<option value="${escapeAttr(t)}">`).join('');
+      $('murliTopicsDatalist').innerHTML = state.lists.murliTopics.map(t => `<option value="${escapeAttr(t)}">`).join('');
 
       renderQuickFillChips('speakerChips', state.lists.speakers, 'ytSpeaker');
       renderQuickFillChips('videoTopicChips', state.lists.topics, 'ytTopic');
-      renderQuickFillChips('murliTopicChips', state.lists.topics, 'murliTopic');
+      renderQuickFillChips('murliTopicChips', state.lists.murliTopics, 'murliTopic');
 
       renderHashtagPicker('video');
       renderHashtagPicker('murli');
@@ -2352,7 +2484,7 @@
       const box = $(containerId);
       const input = $(inputId);
       box.innerHTML = '';
-      items.slice(0, 12).forEach(item => {
+      (items || []).slice(0, 12).forEach(item => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'chip' + (input.value.trim().toLowerCase() === item.toLowerCase() ? ' selected' : '');
@@ -2363,11 +2495,13 @@
             state.userEditedSpeaker = true;
             state.speakerAutoFilled = false;
             clearBadge('speakerAutoHint');
-          }
-          if (inputId === 'ytTopic') {
+          } else if (inputId === 'ytTopic') {
             state.userEditedTopic = true;
             state.topicAutoFilled = false;
             clearBadge('topicAutoHint');
+          } else if (inputId === 'murliTopic') {
+            state.userEditedMurliTopic = true;
+            clearBadge('murliTopicAutoHint');
           }
           renderQuickFillChips(containerId, items, inputId);
         });
@@ -2399,8 +2533,19 @@
       renderQuickFillChips('videoTopicChips', state.lists.topics, 'ytTopic');
     });
 
+    $('murliTitle').addEventListener('input', () => {
+      state.userEditedMurliTitle = true;
+      clearBadge('murliTitleAutoHint');
+    });
+
     $('murliTopic').addEventListener('input', () => {
-      renderQuickFillChips('murliTopicChips', state.lists.topics, 'murliTopic');
+      state.userEditedMurliTopic = true;
+      clearBadge('murliTopicAutoHint');
+      renderQuickFillChips('murliTopicChips', state.lists.murliTopics, 'murliTopic');
+    });
+
+    $('murliNote').addEventListener('input', () => {
+      state.userEditedMurliNote = true;
     });
 
     function applySuggestedSpeaker(name, labelText) {
@@ -2415,6 +2560,12 @@
       state.topicAutoFilled = true;
       setBadge('topicAutoHint', labelText);
       renderQuickFillChips('videoTopicChips', state.lists.topics, 'ytTopic');
+    }
+
+    function applySuggestedMurliTopic(name, labelText) {
+      $('murliTopic').value = name;
+      setBadge('murliTopicAutoHint', labelText);
+      renderQuickFillChips('murliTopicChips', state.lists.murliTopics, 'murliTopic');
     }
 
     /* ---------- НЕЧЛЕНУВАНИ МАКЕДОНСКИ ХАШТАГОВИ ОД НАСЛОВОТ ---------- */
@@ -2518,7 +2669,7 @@
       return candidates.slice(0, 5);
     }
 
-    function renderQuickChipRow(boxId, labelText, tags) {
+    function renderQuickChipRow(boxId, labelText, tags, mode = 'video') {
       const box = $(boxId);
       if (!tags || tags.length === 0) {
         box.innerHTML = '';
@@ -2526,7 +2677,8 @@
         return;
       }
 
-      const lowerSelected = new Set(state.videoTags.map(t => t.toLowerCase()));
+      const selectedArr = mode === 'video' ? state.videoTags : state.murliTags;
+      const lowerSelected = new Set(selectedArr.map(t => t.toLowerCase()));
       box.innerHTML = `<span class="quick-extract-label">${escapeHtml(labelText)}</span>`;
       tags.forEach(tag => {
         const isAdded = lowerSelected.has(tag.toLowerCase());
@@ -2534,7 +2686,7 @@
         btn.type = 'button';
         btn.className = 'quick-chip' + (isAdded ? ' selected' : '');
         btn.textContent = (isAdded ? '✓ ' : '+ ') + tag;
-        btn.addEventListener('click', () => toggleTag('video', tag));
+        btn.addEventListener('click', () => toggleTag(mode, tag));
         box.appendChild(btn);
       });
       box.classList.remove('hidden');
@@ -2542,7 +2694,7 @@
 
     function renderQuickTitleTags(cleanTitle) {
       const tags = extractQuickTagsFromText(cleanTitle, false);
-      renderQuickChipRow('titleQuickTags', 'Од насловот (EN):', tags);
+      renderQuickChipRow('titleQuickTags', 'Од насловот (EN):', tags, 'video');
     }
 
     function renderQuickTitleMkTags() {
@@ -2556,33 +2708,21 @@
         tags = extractQuickTagsFromText(mkText, true);
       }
 
-      renderQuickChipRow('titleMkQuickTags', 'Од насловот (МК):', tags);
+      renderQuickChipRow('titleMkQuickTags', 'Од насловот (МК):', tags, 'video');
     }
 
     function renderAiTagSuggestions() {
-      const box = $('aiTagSuggestions');
-      if (!state.aiSuggestedTags || state.aiSuggestedTags.length === 0) {
-        box.innerHTML = '';
-        box.classList.add('hidden');
-        return;
-      }
+      renderQuickChipRow('aiTagSuggestions', '✨ AI предлози (кликни за избор):', state.aiSuggestedTags, 'video');
+    }
 
-      const lowerSelected = new Set(state.videoTags.map(t => t.toLowerCase()));
-      box.innerHTML = '<span class="quick-extract-label">✨ AI предлози (кликни за избор):</span>';
-      state.aiSuggestedTags.forEach(tag => {
-        const isAdded = lowerSelected.has(tag.toLowerCase());
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'quick-chip' + (isAdded ? ' selected' : '');
-        btn.textContent = (isAdded ? '✓ ' : '+ ') + tag;
-        btn.addEventListener('click', () => toggleTag('video', tag));
-        box.appendChild(btn);
-      });
-      box.classList.remove('hidden');
+    function renderMurliSuggestedTags() {
+      renderQuickChipRow('murliExtractedTags', 'Од страницата (МК):', state.murliExtractedTags, 'murli');
+      renderQuickChipRow('murliAiTagSuggestions', '✨ AI предлози (кликни за избор):', state.murliAiSuggestedTags, 'murli');
     }
 
     function renderHashtagPicker(mode) {
       const selectedArr = mode === 'video' ? state.videoTags : state.murliTags;
+      const sourcePool = mode === 'video' ? state.lists.hashtags : state.lists.murliHashtags;
       const selectedBox = $(mode === 'video' ? 'ytSelectedTags' : 'murliSelectedTags');
       const chipsBox = $(mode === 'video' ? 'videoTagChips' : 'murliTagChips');
 
@@ -2597,7 +2737,7 @@
 
       chipsBox.innerHTML = '';
       const lowerSelected = new Set(selectedArr.map(t => t.toLowerCase()));
-      state.lists.hashtags.slice(0, 18).forEach(tag => {
+      (sourcePool || []).slice(0, 18).forEach(tag => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'chip' + (lowerSelected.has(tag.toLowerCase()) ? ' selected' : '');
@@ -2610,6 +2750,8 @@
         renderAiTagSuggestions();
         renderQuickTitleTags($('ytTitleInput').value.trim());
         renderQuickTitleMkTags();
+      } else {
+        renderMurliSuggestedTags();
       }
     }
 
@@ -2763,16 +2905,35 @@
     });
 
     function startEditMurli(m) {
-      state.editingMurli = m;
-      $('murliEditLabel').textContent = 'Уредуваш Мурли: ' + (m.title || m.url);
+      const cleanUrl = sanitizeUrl(m.url);
+      state.editingMurli = { ...m, url: cleanUrl };
+      state.lastFetchedMurliUrl = cleanUrl;
+      state.currentMurli = null;
+      state.userEditedMurliTitle = Boolean(m.title);
+      state.userEditedMurliTopic = Boolean(m.topic);
+      state.userEditedMurliNote = Boolean(m.note);
+      state.pendingMurliAiSummary = null;
+      state.murliExtractedTags = [];
+      state.murliAiSuggestedTags = [];
+
+      $('murliEditLabel').textContent = 'Уредуваш Мурли: ' + (m.title || cleanUrl);
       $('murliEditBanner').classList.remove('hidden');
       $('saveMurliBtn').textContent = 'Зачувај измени';
+      $('saveMurliBtn').disabled = false;
 
-      $('murliUrl').value = sanitizeUrl(m.url);
+      $('murliUrl').value = cleanUrl;
       $('murliTitle').value = m.title || '';
       $('murliTopic').value = m.topic || '';
       $('murliNote').value = m.note || '';
+      $('murliPasteInput').value = '';
       state.murliTags = (m.hashtags || []).slice();
+
+      $('murliPreview').classList.remove('visible');
+      $('murliPasteBox').classList.add('hidden');
+      hideAlert('murliDuplicateAlert');
+      hideMurliAiStatus();
+      clearBadge('murliTitleAutoHint');
+      clearBadge('murliTopicAutoHint');
       renderAllLists();
 
       hideAlert('globalAlert');
@@ -2786,6 +2947,13 @@
       $('saveMurliBtn').textContent = 'Зачувај Мурли';
       $('murliForm').reset();
       state.murliTags = [];
+      state.murliExtractedTags = [];
+      state.murliAiSuggestedTags = [];
+      state.userEditedMurliTitle = false;
+      state.userEditedMurliTopic = false;
+      state.userEditedMurliNote = false;
+      state.pendingMurliAiSummary = null;
+      resetMurliPreview();
       renderAllLists();
     }
 
@@ -2794,6 +2962,329 @@
       state.archiveType = 'murli';
       switchMainTab('proposals');
     });
+
+    $('rerunMurliAiEditBtn').addEventListener('click', () => {
+      if (!state.editingMurli) return;
+      handleMurliInput(true);
+    });
+
+    /* ---------- АВТОМАТСКО ЧИТАЊЕ НА МУРЛИ ЛИНК + AI ВО ПОЗАДИНА ---------- */
+    let murliUrlTimer = null;
+    $('murliUrl').addEventListener('input', () => {
+      if (state.editingMurli) return;
+      clearTimeout(murliUrlTimer);
+      murliUrlTimer = setTimeout(() => handleMurliInput(false), 550);
+    });
+    $('murliUrl').addEventListener('paste', () => {
+      if (state.editingMurli) return;
+      clearTimeout(murliUrlTimer);
+      murliUrlTimer = setTimeout(() => handleMurliInput(false), 150);
+    });
+
+    $('fetchMurliBtn').addEventListener('click', () => {
+      handleMurliInput(true);
+    });
+
+    $('toggleMurliPasteBtn').addEventListener('click', () => {
+      const box = $('murliPasteBox');
+      const willShow = box.classList.contains('hidden');
+      box.classList.toggle('hidden', !willShow);
+      if (willShow) $('murliPasteInput').focus();
+    });
+
+    $('analyzeMurliPasteBtn').addEventListener('click', async () => {
+      const pasted = $('murliPasteInput').value.trim();
+      if (!pasted) {
+        setMurliAiStatus('warn', 'Залепи барем неколку редови текст од Мурли.', false);
+        return;
+      }
+      const meta = state.currentMurli || {
+        canonicalUrl: sanitizeUrl($('murliUrl').value),
+        title: $('murliTitle').value.trim(),
+        murliType: 'Мурли',
+        dateStr: '',
+        isPdf: false,
+        rawText: '',
+        extractedTopicsEn: []
+      };
+      const fetchKey = 'paste:' + Date.now();
+      state.lastFetchedMurliUrl = fetchKey;
+      await runBackgroundMurliSummary(meta, fetchKey, pasted);
+    });
+
+    function setMurliAiStatus(type, text, showSpinner, actionLabel, actionFn) {
+      const box = $('murliAiStatus');
+      box.className = 'ai-status visible ' + type;
+      $('murliAiSpinner').classList.toggle('hidden', !showSpinner);
+      $('murliAiStatusText').textContent = text;
+      const btn = $('murliAiActionBtn');
+      if (actionLabel && actionFn) {
+        btn.textContent = actionLabel;
+        btn.classList.remove('hidden');
+        btn.onclick = actionFn;
+      } else {
+        btn.classList.add('hidden');
+        btn.onclick = null;
+      }
+    }
+
+    function hideMurliAiStatus() { $('murliAiStatus').className = 'ai-status'; }
+
+    function resetMurliPreview() {
+      state.lastFetchedMurliUrl = null;
+      state.currentMurli = null;
+      state.murliExtractedTags = [];
+      state.murliAiSuggestedTags = [];
+      state.pendingMurliAiSummary = null;
+      $('murliPreview').classList.remove('visible');
+      $('murliMetaBadges').innerHTML = '';
+      $('murliPageTitleText').textContent = '';
+      $('murliPasteBox').classList.add('hidden');
+      $('murliPasteInput').value = '';
+      hideAlert('murliDuplicateAlert');
+      hideMurliAiStatus();
+      clearBadge('murliTitleAutoHint');
+      clearBadge('murliTopicAutoHint');
+      renderMurliSuggestedTags();
+      $('saveMurliBtn').disabled = false;
+    }
+
+    function renderMurliPreviewBox(meta) {
+      const badges = [];
+      if (meta.murliType) badges.push(`<span class="murli-pill">📜 ${escapeHtml(meta.murliType)}</span>`);
+      if (meta.dateStr) badges.push(`<span class="murli-pill info">📅 ${escapeHtml(meta.dateStr)}</span>`);
+      if (meta.isPdf) badges.push('<span class="murli-pill info">PDF</span>');
+      if (meta.fetchFailed) badges.push('<span class="murli-pill warn">Заштитена страна</span>');
+
+      $('murliMetaBadges').innerHTML = badges.join('');
+      const caption = [
+        meta.pageTitle || '',
+        meta.subtitleEn ? '„' + meta.subtitleEn + '“' : ''
+      ].filter(Boolean).join(' · ');
+      $('murliPageTitleText').textContent = caption || meta.canonicalUrl || '';
+      $('murliPreview').classList.add('visible');
+    }
+
+    async function handleMurliInput(manualTrigger = false) {
+      const rawUrl = sanitizeUrl($('murliUrl').value);
+      if (!rawUrl) {
+        if (!state.editingMurli) resetMurliPreview();
+        return;
+      }
+
+      if (!/^https?:\/\/.+\..+/i.test(rawUrl)) {
+        if (manualTrigger) {
+          showAlert('murliDuplicateAlert', 'Внеси валиден веб-линк до Мурли (да почнува со https://).', 'error');
+        }
+        return;
+      }
+
+      const fetchKey = rawUrl.replace(/\/+$/, '').toLowerCase();
+      if (!manualTrigger && fetchKey === state.lastFetchedMurliUrl) return;
+
+      const isEditMode = Boolean(state.editingMurli);
+      state.lastFetchedMurliUrl = fetchKey;
+
+      if (!isEditMode) {
+        state.currentMurli = null;
+        state.userEditedMurliTitle = false;
+        state.userEditedMurliTopic = false;
+        state.userEditedMurliNote = false;
+        state.pendingMurliAiSummary = null;
+        state.murliExtractedTags = [];
+        state.murliAiSuggestedTags = [];
+        $('murliTitle').value = '';
+        $('murliTopic').value = '';
+        $('murliNote').value = '';
+        $('murliPasteBox').classList.add('hidden');
+        $('murliPasteInput').value = '';
+        clearBadge('murliTitleAutoHint');
+        clearBadge('murliTopicAutoHint');
+        renderMurliSuggestedTags();
+        renderQuickFillChips('murliTopicChips', state.lists.murliTopics, 'murliTopic');
+      } else {
+        // При измена не ги пребришувај веќе пополнетите полиња без клик
+        state.userEditedMurliTitle = Boolean($('murliTitle').value.trim());
+        state.userEditedMurliTopic = Boolean($('murliTopic').value.trim());
+        state.userEditedMurliNote = Boolean($('murliNote').value.trim());
+        state.murliExtractedTags = [];
+        state.murliAiSuggestedTags = [];
+        renderMurliSuggestedTags();
+      }
+
+      hideAlert('murliDuplicateAlert');
+      hideAlert('globalAlert');
+      $('saveMurliBtn').disabled = true;
+      $('fetchMurliBtn').disabled = true;
+      $('fetchMurliBtn').textContent = '...';
+      if (isEditMode) {
+        $('rerunMurliAiEditBtn').disabled = true;
+        $('rerunMurliAiEditBtn').textContent = 'Се вчитува...';
+      }
+
+      let blockSaveForDuplicate = false;
+      setMurliAiStatus('loading', 'Ја читам Мурли страницата...', true);
+
+      try {
+        const meta = await apiCall({
+          action: 'fetchMurliMeta',
+          url: rawUrl,
+          ignoreUrl: isEditMode ? state.editingMurli.url : ''
+        });
+
+        if (state.lastFetchedMurliUrl !== fetchKey) return;
+
+        if (!meta.ok) {
+          showAlert('murliDuplicateAlert', meta.error || 'Грешка при читање на Мурли линкот.', 'error');
+          hideMurliAiStatus();
+          return;
+        }
+
+        state.currentMurli = meta;
+        state.murliExtractedTags = Array.isArray(meta.extractedTopicsMk) ? meta.extractedTopicsMk.slice() : [];
+        renderMurliPreviewBox(meta);
+        renderMurliSuggestedTags();
+
+        if (meta.title) {
+          const curTitle = $('murliTitle').value.trim();
+          if (!state.userEditedMurliTitle || !curTitle) {
+            $('murliTitle').value = meta.title;
+            setBadge('murliTitleAutoHint', 'Авто-препознато');
+          } else if (curTitle.toLowerCase() !== meta.title.toLowerCase()) {
+            setBadge('murliTitleAutoHint', 'Предлог: ' + meta.title.slice(0, 38) + ' (кликни)', () => {
+              $('murliTitle').value = meta.title;
+              setBadge('murliTitleAutoHint', 'Авто-препознато');
+            });
+          }
+        }
+
+        if (meta.suggestedTopic) {
+          const curTopic = $('murliTopic').value.trim();
+          if (!state.userEditedMurliTopic && !curTopic) {
+            applySuggestedMurliTopic(meta.suggestedTopic, 'Од Мурли база');
+          }
+        }
+
+        if (meta.duplicate) {
+          blockSaveForDuplicate = true;
+          showAlert(
+            'murliDuplicateAlert',
+            `Овој Мурли линк веќе е внесен во базата (од ${meta.duplicate.addedBy || 'член'}, датум: ${meta.duplicate.date}).`,
+            'error'
+          );
+          hideMurliAiStatus();
+          return;
+        }
+
+        $('saveMurliBtn').disabled = false;
+
+        if (meta.fetchFailed) {
+          $('murliPasteBox').classList.remove('hidden');
+          setMurliAiStatus('warn', meta.fetchError || 'Страницата не можеше да се прочита — залепи извадок погоре за AI анализа.', false);
+          return;
+        }
+
+        await runBackgroundMurliSummary(meta, fetchKey, '');
+      } catch (err) {
+        if (state.lastFetchedMurliUrl !== fetchKey) return;
+        $('murliPasteBox').classList.remove('hidden');
+        setMurliAiStatus('warn', 'Грешка при читање на линкот — можеш да залепиш извадок или да внесеш рачно.', false);
+      } finally {
+        $('fetchMurliBtn').disabled = false;
+        $('fetchMurliBtn').textContent = 'Вчитај';
+        if (state.editingMurli) {
+          $('rerunMurliAiEditBtn').disabled = false;
+          $('rerunMurliAiEditBtn').textContent = '↻ Повторно Вчитај + AI';
+        }
+        $('saveMurliBtn').disabled = blockSaveForDuplicate;
+      }
+    }
+
+    async function runBackgroundMurliSummary(meta, fetchKey, pastedText = '') {
+      setMurliAiStatus(
+        'loading',
+        meta.isPdf && !pastedText
+          ? 'AI го чита PDF фајлот и подготвува тема и суштина...'
+          : 'AI ја чита содржината на Мурли и подготвува предлози...',
+        true
+      );
+
+      try {
+        const res = await apiCall({
+          action: 'summarizeMurli',
+          url: meta.canonicalUrl || sanitizeUrl($('murliUrl').value),
+          title: $('murliTitle').value.trim() || meta.title || '',
+          murliType: meta.murliType || 'Мурли',
+          dateStr: meta.dateStr || '',
+          isPdf: Boolean(meta.isPdf),
+          rawText: meta.rawText || '',
+          pastedText: pastedText,
+          extractedTopicsEn: meta.extractedTopicsEn || []
+        });
+
+        if (state.lastFetchedMurliUrl !== fetchKey) return;
+
+        if (!res.ok) {
+          setMurliAiStatus('warn', 'AI анализата не успеа — внеси рачно.', false, 'Повтори', () => runBackgroundMurliSummary(meta, fetchKey, pastedText));
+          return;
+        }
+
+        if (res.suggestedTitle) {
+          const aiTitle = res.suggestedTitle.trim();
+          const curTitle = $('murliTitle').value.trim();
+          if (!state.userEditedMurliTitle && (!curTitle || !curTitle.includes(':'))) {
+            $('murliTitle').value = aiTitle;
+            setBadge('murliTitleAutoHint', 'AI наслов');
+          } else if (curTitle.toLowerCase() !== aiTitle.toLowerCase()) {
+            setBadge('murliTitleAutoHint', '✨ AI наслов (кликни)', () => {
+              $('murliTitle').value = aiTitle;
+              setBadge('murliTitleAutoHint', 'AI наслов');
+            });
+          }
+        }
+
+        if (res.suggestedTopic) {
+          const aiTopic = res.suggestedTopic.trim();
+          const curTopic = $('murliTopic').value.trim();
+          if (!state.userEditedMurliTopic && !curTopic) {
+            applySuggestedMurliTopic(aiTopic, 'AI предлог');
+          } else if (curTopic.toLowerCase() !== aiTopic.toLowerCase()) {
+            setBadge('murliTopicAutoHint', 'AI: ' + aiTopic + ' (кликни)', () => {
+              applySuggestedMurliTopic(aiTopic, 'AI предлог');
+            });
+          }
+        }
+
+        if (Array.isArray(res.suggestedHashtags) && res.suggestedHashtags.length > 0) {
+          state.murliAiSuggestedTags = res.suggestedHashtags.slice();
+          renderMurliSuggestedTags();
+        }
+
+        const isOkSource = res.source === 'ai_text' || res.source === 'ai_pdf' || res.source === 'ai_pasted';
+        const style = isOkSource ? 'success' : 'warn';
+
+        if (res.summary) {
+          if (state.userEditedMurliNote && $('murliNote').value.trim()) {
+            state.pendingMurliAiSummary = res.summary;
+            setMurliAiStatus(style, res.statusText + ' (готово)', false, 'Вметни текст', () => {
+              $('murliNote').value = state.pendingMurliAiSummary || '';
+              setMurliAiStatus(style, res.statusText, false);
+            });
+          } else {
+            $('murliNote').value = res.summary;
+            setMurliAiStatus(style, res.statusText, false, 'Повтори AI', () => {
+              state.userEditedMurliNote = false;
+              runBackgroundMurliSummary(meta, fetchKey, pastedText);
+            });
+          }
+        } else {
+          setMurliAiStatus('warn', res.statusText || 'AI не врати суштина — внеси рачно.', false);
+        }
+      } catch (err) {
+        if (state.lastFetchedMurliUrl !== fetchKey) return;
+        setMurliAiStatus('warn', 'Неуспешно AI поврзување — внеси рачно.', false, 'Повтори', () => runBackgroundMurliSummary(meta, fetchKey, pastedText));
+      }
+    }
 
     /* ---------- YOUTUBE ВИДЕО / ПЛЕЈЛИСТА + AI ВО ПОЗАДИНА ---------- */
     let urlTimer = null;
@@ -3208,7 +3699,7 @@
           return;
         }
 
-        if (res.lists) state.lists = res.lists;
+        if (res.lists) state.lists = normalizeLists(res.lists);
         if (res.archive) state.archive = res.archive;
 
         if (isEdit) {
@@ -3271,7 +3762,7 @@
           return;
         }
 
-        if (res.lists) state.lists = res.lists;
+        if (res.lists) state.lists = normalizeLists(res.lists);
         if (res.archive) state.archive = res.archive;
 
         if (isEdit) {
@@ -3348,7 +3839,7 @@
       try {
         const res = await apiCall({ action: 'getArchive' });
         if (res.ok) {
-          if (res.lists) state.lists = res.lists;
+          if (res.lists) state.lists = normalizeLists(res.lists);
           if (res.archive) state.archive = res.archive;
           renderAllLists();
           updateArchiveCounts();
@@ -3426,7 +3917,6 @@
 
       bar.innerHTML = '<span class="tag-bar-label">Хаштагови (' + sortedTags.length + ')</span>';
 
-      // Мобилно поле за пребарување низ хаштагови во Bottom Sheet (кога има > 10 тагови)
       let mobileSearchInput = null;
       if (sortedTags.length > 10) {
         mobileSearchInput = document.createElement('input');
@@ -3436,7 +3926,6 @@
         bar.appendChild(mobileSearchInput);
       }
 
-      // Прикажи Топ 7 директно (на десктоп секогаш се гледа и активниот таг ако е надвор од Топ 7)
       const mobileChipBtns = [];
       sortedTags.forEach((obj, idx) => {
         const isActive = activeLower === obj.label.toLowerCase();
@@ -3464,7 +3953,6 @@
         });
       }
 
-      // Десктоп копче „# Сите (N) ▾“ + лебдечко прозорче со пребарување (кога има > 7 хаштагови)
       if (sortedTags.length > TOP_TAGS_LIMIT) {
         const wrap = document.createElement('div');
         wrap.className = 'tag-popover-wrap';
